@@ -88,3 +88,7 @@ publishing {
 		// retrieving dependencies.
 	}
 }
+
+remapJar {
+    archiveFileName = "${project.archives_base_name}-${version}+${minecraft_version}.jar"
+}
