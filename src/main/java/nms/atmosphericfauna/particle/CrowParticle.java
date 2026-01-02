@@ -20,6 +20,7 @@ public class CrowParticle extends FaunaParticle {
     private State state = State.FLYING;
     private int perchTimer = 0;
     private final float flySpeed = 0.15f;
+    private final double initialY;
 
     protected CrowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
         super(level, x, y, z, Util.getSprite("crow_fly"));
@@ -28,6 +29,7 @@ public class CrowParticle extends FaunaParticle {
         this.gravity = 0;
         this.quadSize = 0.5f;
         this.hasPhysics = false;
+        this.initialY = y;
 
         this.xd = (Math.random() - 0.5) * flySpeed;
         this.zd = (Math.random() - 0.5) * flySpeed;
@@ -70,6 +72,11 @@ public class CrowParticle extends FaunaParticle {
         this.xd += (Math.random() - 0.5) * 0.02;
         this.zd += (Math.random() - 0.5) * 0.02;
         this.yd += (Math.random() - 0.5) * 0.01;
+
+        // If bird is 15 blocks above where it spawned, push it down hard
+        if (this.y > this.initialY + 15) {
+            this.yd -= 0.04;
+        }
 
         // Clamp speed
         double speed = Math.sqrt(xd * xd + yd * yd + zd * zd);
