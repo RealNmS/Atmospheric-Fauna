@@ -1,38 +1,26 @@
 {
-	"schemaVersion": 1,
-	"id": "atmospheric-fauna",
-	"version": "${version}",
-	"name": "Atmospheric Fauna",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/atmospheric-fauna/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"nms.atmosphericfauna.AtmosphericFauna"
-		],
-		"client": [
-			"nms.atmosphericfauna.AtmosphericFaunaClient"
-		]
-	},
-	"mixins": [
-		"atmospheric-fauna.mixins.json",
-		{
-			"config": "atmospheric-fauna.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.18.4",
-		"minecraft": "~1.21.11",
-		"java": ">=21",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "atmospheric-fauna",
+  "version": "${version}",
+  "name": "Atmospheric Fauna",
+  "description": "Adding life to the skies!",
+  "authors": ["Me!"],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "MIT",
+  "icon": "assets/atmospheric-fauna/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["nms.atmosphericfauna.AtmosphericFauna"],
+    "client": ["nms.atmosphericfauna.AtmosphericFaunaClient"]
+  },
+  "mixins": ["atmospheric-fauna.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
 }
