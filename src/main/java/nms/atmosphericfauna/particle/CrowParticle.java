@@ -31,15 +31,15 @@ public class CrowParticle extends FaunaParticle {
 
     private final float flySpeed = 0.20f;
     private final double steerStrength = 0.0075;
-    private final double minFlightHeight = 2.5;
-    private final double maxFlightHeight = 85.0;
+    private final double minFlightHeight = 2.5; // how many blocks above ground
+    private final double maxFlightHeight = 85.0; // how many blocks from void
     private final double maxVerticalSpeed = 0.30;
     private final double verticalSteerFactor = 1.25;
     private final double takeoffClimb = 2.5;
 
     private final double perchingChance = 0.005;
-    private final int perchingTime = 600;
-    private final int perchingDistance = 10;
+    private final int perchingTime = 600; // base time spent perched
+    private final int perchingDistance = 10; // how many blocks down to scan for landing spots
 
     private final double goalRadius = 50.0;
     private final int goalDurationMin = 80;
