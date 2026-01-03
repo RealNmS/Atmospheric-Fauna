@@ -33,9 +33,9 @@ public class CrowParticle extends FaunaParticle {
     private final int goalDurationMax = 160;
     private final double steerStrength = 0.005;
     private final double lookAheadMultiplier = 5.0;
-    private final double minFlightHeight = 2.5; // min blocks above ground to remain flying
-    private final double maxVerticalSpeed = 0.25; // cap vertical velocity
-    private final double verticalSteerFactor = 1.5; // give vertical steering extra weight
+    private final double minFlightHeight = 2.5;
+    private final double maxVerticalSpeed = 0.25;
+    private final double verticalSteerFactor = 1.5;
     private final double takeoffClimb = 2.5;
     private final int perchingTime = 600;
 
@@ -75,7 +75,7 @@ public class CrowParticle extends FaunaParticle {
             case DYING -> tickDying();
         }
 
-        // ONLY FOR TESTING: Prints status to console every 1 second (20 ticks)
+        // ONLY FOR TESTING
         if (this.age % 10 == 0) {
             System.out.println("Crow #" + this.hashCode() + " | State: " + this.state + " | Height: "
                     + String.format("%.2f", this.y));
@@ -229,7 +229,7 @@ public class CrowParticle extends FaunaParticle {
         return !level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
     }
 
-    // Helper: find top-most solid block near the given x,z by scanning downward
+    // Find top-most solid block near the given x,z by scanning downward
     private double sampleGroundHeight(double px, double pz) {
         int startY = (int) Math.ceil(this.y);
         for (int y = startY; y >= Math.max(0, startY - 20); y--) {
