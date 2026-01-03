@@ -6,6 +6,10 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import nms.atmosphericfauna.Util;
+import net.minecraft.world.entity.player.Player;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CrowParticle extends FaunaParticle {
 
@@ -26,6 +30,10 @@ public class CrowParticle extends FaunaParticle {
     private int landingCooldown = 0;
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
+    private BlockPos perchBlockPos = null; // stores actual perch while perched
+
+    // FLOCKING: global registry of active crow particles (thread-safe iteration)
+    private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
 
     // --- CONSTANTS ---
 
@@ -36,6 +44,16 @@ public class CrowParticle extends FaunaParticle {
     private final double maxVerticalSpeed = 0.30;
     private final double verticalSteerFactor = 1.25;
     private final double takeoffClimb = 2.5;
+
+    private final double flockRadius = 12.0;
+    private final double cohesionStrength = 0.02;
+    private final double alignmentStrength = 0.015;
+    private final double separationDistance = 1.5;
+    private final double separationStrength = 0.06;
+    private final double flockGoalBias = 0.40;
+
+    private final double scareRadius = 10.0; // horizontal distance that startles perched crows
+    private final double scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
 
     private final double perchingChance = 0.005;
     private final int perchingTime = 600; // base time spent perched
@@ -59,6 +77,13 @@ public class CrowParticle extends FaunaParticle {
         this.xd = (Math.random() - 0.5) * flySpeed;
         this.zd = (Math.random() - 0.5) * flySpeed;
         this.yd = 0.05;
+        ALL_CROWS.add(this);
+    }
+
+    @Override
+    public void remove() {
+        ALL_CROWS.remove(this);
+        super.remove();
     }
 
     @Override
@@ -95,6 +120,98 @@ public class CrowParticle extends FaunaParticle {
 
     // --- BEHAVIORS ---
 
+    // Returns other crow particles within radius (in the same level)
+    private List<CrowParticle> getNeighbors(double radius) {
+        double rsq = radius * radius;
+        List<CrowParticle> out = new ArrayList<>();
+        for (CrowParticle other : ALL_CROWS) {
+            if (other == this)
+                continue;
+            if (other.level != this.level)
+                continue;
+            double dx = other.x - this.x;
+            double dy = other.y - this.y;
+            double dz = other.z - this.z;
+            if (dx * dx + dy * dy + dz * dz <= rsq) {
+                out.add(other);
+            }
+        }
+        return out;
+    }
+
+    // Ask nearby flockmates to go land on the given perch (same BlockPos)
+    private void groupPerch(BlockPos target) {
+        if (target == null)
+            return;
+        for (CrowParticle nb : getNeighbors(flockRadius)) {
+            if (nb == this)
+                continue;
+            if (nb.state == State.FLYING && nb.landingCooldown == 0) {
+                nb.state = State.LANDING;
+                nb.landingBlockPos = target;
+                nb.landingTargetY = target.getY() + 1.0 + nb.quadSize;
+                nb.goalTimer = 10;
+                nb.goalX = target.getX() + 0.5;
+                nb.goalY = nb.landingTargetY + 0.5;
+                nb.goalZ = target.getZ() + 0.5;
+            }
+        }
+    }
+
+    // Ask nearby perched flockmates to take off with this crow
+    private void groupTakeoff() {
+        for (CrowParticle nb : getNeighbors(flockRadius)) {
+            if (nb == this)
+                continue;
+            if (nb.state == State.PERCHED) {
+                nb.state = State.TAKING_OFF;
+                nb.setSprite(Util.getSprite("crow_fly"));
+                nb.perchTimer = 5; // short window so they start their takeoff sequence quickly
+                nb.landingCooldown = 100;
+                nb.perchBlockPos = null;
+            }
+        }
+    }
+
+    // Scare nearby perched crows into a quick, directional takeoff away from the
+    // source player
+    private void scareTakeoff(Player source) {
+        // vector away from player
+        double dx = this.x - source.getX();
+        double dz = this.z - source.getZ();
+        double mag = Math.sqrt(dx * dx + dz * dz);
+        if (mag < 0.001) {
+            dx = (Math.random() - 0.5);
+            dz = (Math.random() - 0.5);
+            mag = Math.sqrt(dx * dx + dz * dz);
+        }
+        this.xd = (dx / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
+        this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
+        this.yd = 0.12 + Math.random() * 0.08;
+        this.state = State.TAKING_OFF;
+        this.setSprite(Util.getSprite("crow_fly"));
+        this.perchTimer = 12;
+        this.landingCooldown = 100;
+        this.perchBlockPos = null;
+        // Prompt group takeoff so flockmates flee too
+        groupTakeoff();
+    }
+
+    // Generic takeoff when the perch block disappears
+    private void perchBlockRemovedTakeoff() {
+        // small random push
+        this.xd += (Math.random() - 0.5) * 0.08;
+        this.zd += (Math.random() - 0.5) * 0.08;
+        this.yd = 0.12 + Math.random() * 0.05;
+        this.state = State.TAKING_OFF;
+        this.setSprite(Util.getSprite("crow_fly"));
+        this.perchTimer = 10;
+        this.landingCooldown = 100;
+        this.perchBlockPos = null;
+        // Tell flockmates to also take off
+        groupTakeoff();
+    }
+
     private void tickFlying() {
         // Make sure we don't repeatedly pick goals that end up at ground level
         double groundY = sampleGroundHeight(this.x, this.z);
@@ -107,6 +224,63 @@ public class CrowParticle extends FaunaParticle {
 
         if (Double.isNaN(goalX) || goalTimer-- <= 0 || distSqToGoal < 0.5 * 0.5) {
             chooseNewGoal();
+        }
+
+        // FLOCK: compute neighbors and produce cohesion/alignment/separation forces
+        List<CrowParticle> neighbors = getNeighbors(flockRadius);
+        if (!neighbors.isEmpty()) {
+            double cx = 0, cy = 0, cz = 0;
+            double avx = 0, avy = 0, avz = 0;
+            int count = 0;
+            for (CrowParticle nb : neighbors) {
+                cx += nb.x;
+                cy += nb.y;
+                cz += nb.z;
+                avx += nb.xd;
+                avy += nb.yd;
+                avz += nb.zd;
+                count++;
+            }
+            cx /= count;
+            cy /= count;
+            cz /= count;
+            avx /= count;
+            avy /= count;
+            avz /= count;
+
+            // Cohesion: steer toward center
+            double cohX = (cx - this.x) * cohesionStrength;
+            double cohY = (cy - this.y) * cohesionStrength;
+            double cohZ = (cz - this.z) * cohesionStrength;
+
+            // Alignment: attempt to match velocity
+            double aliX = (avx - this.xd) * alignmentStrength;
+            double aliY = (avy - this.yd) * alignmentStrength;
+            double aliZ = (avz - this.zd) * alignmentStrength;
+
+            // Separation: push away from very close neighbors
+            double sepX = 0, sepY = 0, sepZ = 0;
+            for (CrowParticle nb : neighbors) {
+                double dx = this.x - nb.x;
+                double dy = this.y - nb.y;
+                double dz = this.z - nb.z;
+                double d2 = dx * dx + dy * dy + dz * dz;
+                if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
+                    double d = Math.sqrt(d2);
+                    double factor = (separationDistance - d) / separationDistance;
+                    sepX += (dx / d) * factor;
+                    sepY += (dy / d) * factor;
+                    sepZ += (dz / d) * factor;
+                }
+            }
+            sepX *= separationStrength;
+            sepY *= separationStrength;
+            sepZ *= separationStrength;
+
+            // Apply small flocking influence directly to velocity (before clamping)
+            this.xd += cohX + aliX + sepX;
+            this.yd += cohY + aliY + sepY;
+            this.zd += cohZ + aliZ + sepZ;
         }
 
         // If we're too close to ground, force a climb goal immediately
@@ -190,6 +364,21 @@ public class CrowParticle extends FaunaParticle {
 
         // Check for landing-scan behavior (rarer and only if cooldown expired)
         if (landingCooldown == 0 && Math.random() < this.perchingChance) {
+            // Prefer to join a nearby perched crow (flock perching)
+            for (CrowParticle nb : getNeighbors(12.0)) {
+                if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
+                    BlockPos target = nb.perchBlockPos;
+                    if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
+                        this.state = State.LANDING;
+                        this.landingBlockPos = target;
+                        this.landingTargetY = target.getY() + 1.0 + this.quadSize;
+                        // Invite flockmates to land on the same perch
+                        groupPerch(target);
+                        return;
+                    }
+                }
+            }
+
             for (int i = 1; i <= this.perchingDistance; i++) {
                 BlockPos below = BlockPos.containing(x, y - i, z);
                 if (!level.getBlockState(below).isAir()
@@ -208,6 +397,10 @@ public class CrowParticle extends FaunaParticle {
                     this.landingTargetY = below.getY() + 1.0 + this.quadSize;
                     break;
                 }
+            }
+            // If we just selected a perch, invite nearby flockmates to land there as well
+            if (this.state == State.LANDING && this.landingBlockPos != null) {
+                groupPerch(this.landingBlockPos);
             }
         }
     }
@@ -236,6 +429,31 @@ public class CrowParticle extends FaunaParticle {
         } else {
             ny = this.y + (Math.random() - 0.5) * 2.0 + forwardBiasY * 1.5; // gentler vertical wander
             ny = Math.max(ny, ground + minFlightHeight);
+        }
+
+        // If there's a flock nearby, bias the goal toward the flock center so they move
+        // together
+        List<CrowParticle> neighbors = getNeighbors(flockRadius);
+        if (!neighbors.isEmpty()) {
+            double cx = 0, cy = 0, cz = 0;
+            for (CrowParticle nb : neighbors) {
+                cx += nb.x;
+                cy += nb.y;
+                cz += nb.z;
+            }
+            cx /= neighbors.size();
+            cy /= neighbors.size();
+            cz /= neighbors.size();
+            double baseX = this.x + nx;
+            double baseY = ny;
+            double baseZ = this.z + nz;
+            // mix toward center
+            this.goalX = baseX * (1.0 - flockGoalBias) + cx * flockGoalBias;
+            this.goalY = baseY * (1.0 - flockGoalBias) + cy * flockGoalBias;
+            this.goalZ = baseZ * (1.0 - flockGoalBias) + cz * flockGoalBias;
+            // keep goals updating a bit more frequently so the flock stays cohesive
+            this.goalTimer = Math.min(this.goalTimer, (goalDurationMin + goalDurationMax) / 4);
+            return;
         }
 
         this.goalX = this.x + nx;
@@ -285,6 +503,8 @@ public class CrowParticle extends FaunaParticle {
                     this.state = State.PERCHED;
                     this.setSprite(Util.getSprite("crow_perch"));
                     this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
+                    // Record the actual perch block so flockmates can join
+                    this.perchBlockPos = this.landingBlockPos;
                 } else {
                     // Landing block disappeared — abort landing
                     this.state = State.FLYING;
@@ -303,10 +523,31 @@ public class CrowParticle extends FaunaParticle {
         this.zd = 0;
         this.yd = 0;
 
+        // If the block we're perching on disappears, take off
+        if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
+            perchBlockRemovedTakeoff();
+            return;
+        }
+
+        // If a player gets too close, scare the crow and make it fly off
+        double scareRadiusSq = scareRadius * scareRadius;
+        for (Player p : this.level.players()) {
+            double dx = p.getX() - this.x;
+            double dz = p.getZ() - this.z;
+            double distSq = dx * dx + dz * dz;
+            double dy = Math.abs(p.getY() - this.y);
+            if (distSq <= scareRadiusSq && dy < 3.0) {
+                scareTakeoff(p);
+                return;
+            }
+        }
+
         if (perchTimer-- <= 0) {
             this.state = State.TAKING_OFF;
             this.setSprite(Util.getSprite("crow_fly"));
             this.perchTimer = 20;
+            // Tell nearby perched flockmates to also take off
+            groupTakeoff();
         }
     }
 
@@ -314,6 +555,8 @@ public class CrowParticle extends FaunaParticle {
         // Clear any previous landing target
         this.landingTargetY = Double.NaN;
         this.landingBlockPos = null;
+        // clear recorded perch so other crows no longer try to use it
+        this.perchBlockPos = null;
 
         // Break collision with perch
         this.setPos(this.x, this.y + 0.05, this.z);
