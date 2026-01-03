@@ -215,7 +215,7 @@ public class CrowParticle extends FaunaParticle {
     // in current motion direction
     private void chooseNewGoal() {
         double forwardBiasX = this.xd;
-        double forwardBiasY = this.yd * 0.5;
+        double forwardBiasY = this.yd;
         double forwardBiasZ = this.zd;
 
         double randRadius = 2.5 + Math.random() * (goalRadius - 2.5);
