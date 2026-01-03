@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CrowParticle extends FaunaParticle {
 
@@ -34,6 +35,11 @@ public class CrowParticle extends FaunaParticle {
 
     // FLOCKING: global registry of active crow particles (thread-safe iteration)
     private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
+
+    // Active count cap
+    private static final int MAX_ACTIVE_CROWS = 120; // configurable max active crows
+    private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
+    private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
     // --- CONSTANTS ---
 
@@ -78,11 +84,27 @@ public class CrowParticle extends FaunaParticle {
         this.zd = (Math.random() - 0.5) * flySpeed;
         this.yd = 0.05;
         ALL_CROWS.add(this);
+
+        // Respect active cap: if we're already at maximum, remove this instance
+        // immediately
+        if (ACTIVE_COUNT.get() >= MAX_ACTIVE_CROWS) {
+            // not counted, just remove and don't increment the active counter
+            this.remove();
+            return;
+        }
+        ACTIVE_COUNT.incrementAndGet();
+        this.counted = true;
     }
 
     @Override
     public void remove() {
         ALL_CROWS.remove(this);
+        if (this.counted) {
+            int val = ACTIVE_COUNT.decrementAndGet();
+            if (val < 0)
+                ACTIVE_COUNT.set(0);
+            this.counted = false;
+        }
         super.remove();
     }
 
@@ -96,7 +118,15 @@ public class CrowParticle extends FaunaParticle {
             landingCooldown--;
 
         if (this.age++ >= this.lifetime) {
-            this.state = State.DYING;
+            if (this.state != State.DYING) {
+                this.state = State.DYING;
+                if (this.counted) {
+                    int val = ACTIVE_COUNT.decrementAndGet();
+                    if (val < 0)
+                        ACTIVE_COUNT.set(0);
+                    this.counted = false;
+                }
+            }
         }
 
         switch (state) {
@@ -604,6 +634,9 @@ public class CrowParticle extends FaunaParticle {
 
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
                 double velocityX, double velocityY, double velocityZ) {
+            // Prevent creating when we are at the cap
+            if (ACTIVE_COUNT.get() >= MAX_ACTIVE_CROWS)
+                return null;
             return new CrowParticle(level, x, y, z, this.sprite);
         }
     }
