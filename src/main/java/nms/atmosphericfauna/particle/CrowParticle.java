@@ -39,6 +39,7 @@ public class CrowParticle extends FaunaParticle {
 
     private final double perchingChance = 0.005;
     private final int perchingTime = 600;
+    private final int perchingDistance = 10;
 
     private final double goalRadius = 50.0;
     private final int goalDurationMin = 80;
@@ -189,7 +190,7 @@ public class CrowParticle extends FaunaParticle {
 
         // Check for landing-scan behavior (rarer and only if cooldown expired)
         if (landingCooldown == 0 && Math.random() < this.perchingChance) {
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= this.perchingDistance; i++) {
                 BlockPos below = BlockPos.containing(x, y - i, z);
                 if (!level.getBlockState(below).isAir()
                         && level.getBlockState(below.above()).isAir()
