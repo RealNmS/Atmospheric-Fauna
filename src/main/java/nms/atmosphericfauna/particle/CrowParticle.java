@@ -32,11 +32,12 @@ public class CrowParticle extends FaunaParticle {
     private final float flySpeed = 0.20f;
     private final double steerStrength = 0.005;
     private final double minFlightHeight = 2.5;
+    private final double maxFlightHeight = 85.0;
     private final double maxVerticalSpeed = 0.25;
     private final double verticalSteerFactor = 1.5;
     private final double takeoffClimb = 2.5;
 
-    private final double perchingChance = 0.005;
+    private final double perchingChance = 0.00000005;
     private final int perchingTime = 600;
 
     private final double goalRadius = 50.0;
@@ -113,6 +114,16 @@ public class CrowParticle extends FaunaParticle {
             this.goalTimer = Math.max(this.goalTimer, 20);
         }
 
+        // If we're too high above allowed flight height, bias/force a downward goal so
+        // the crow returns downward
+        double ceiling = groundY + maxFlightHeight;
+        if (this.y >= ceiling - 0.5) {
+            // prefer a point below the ceiling so it starts heading down
+            this.goalY = Math.min(this.goalY, ceiling - 2.0 - Math.random() * 2.0);
+            // shorten goal so it updates sooner
+            this.goalTimer = Math.min(this.goalTimer, 40);
+        }
+
         // Desired vector towards the goal
         double desiredX = goalX - this.x;
         double desiredY = goalY - this.y;
@@ -128,6 +139,11 @@ public class CrowParticle extends FaunaParticle {
             double steerX = desiredX - this.xd;
             double steerY = (desiredY - this.yd) * verticalSteerFactor; // stronger vertical steering
             double steerZ = desiredZ - this.zd;
+
+            // If currently above ceiling, add a small extra downward bias to steering
+            if (this.y >= ceiling - 0.5) {
+                steerY -= 0.02 * verticalSteerFactor;
+            }
 
             double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
             if (steerMag > steerStrength) {
@@ -213,6 +229,9 @@ public class CrowParticle extends FaunaParticle {
         if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
             // force an upward goal to climb away from the perch/ground
             ny = this.y + 2.5 + Math.random() * 2.5;
+        } else if (this.y >= ground + maxFlightHeight - 1.0) {
+            // If we're currently above the allowed max height, pick a lower next goal
+            ny = Math.max(ground + minFlightHeight, ground + maxFlightHeight - 2.0 - Math.random() * 3.0);
         } else {
             ny = this.y + (Math.random() - 0.5) * 2.0 + forwardBiasY * 1.5; // gentler vertical wander
             ny = Math.max(ny, ground + minFlightHeight);
