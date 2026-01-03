@@ -1,11 +1,12 @@
 package nms.atmosphericfauna.particle;
 
+import nms.atmosphericfauna.Util;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
-import nms.atmosphericfauna.Util;
 import net.minecraft.world.entity.player.Player;
 import java.util.List;
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package nms.atmosphericfauna;
 
+import nms.atmosphericfauna.spawning.AmbientSpawning;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -9,7 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 public class AtmosphericFauna implements ModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";

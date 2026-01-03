@@ -1,8 +1,9 @@
 package nms.atmosphericfauna;
 
+import nms.atmosphericfauna.particle.CrowParticle;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import nms.atmosphericfauna.particle.CrowParticle;
 
 public class AtmosphericFaunaClient implements ClientModInitializer {
 

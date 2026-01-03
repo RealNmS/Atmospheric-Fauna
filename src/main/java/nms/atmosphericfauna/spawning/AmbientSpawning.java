@@ -1,5 +1,7 @@
 package nms.atmosphericfauna.spawning;
 
+import nms.atmosphericfauna.AtmosphericFauna;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
@@ -9,7 +11,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
-import nms.atmosphericfauna.AtmosphericFauna;
 import java.util.List;
 
 public class AmbientSpawning {
