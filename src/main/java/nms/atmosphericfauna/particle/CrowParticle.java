@@ -20,7 +20,6 @@ public class CrowParticle extends FaunaParticle {
     private State state = State.FLYING;
     private int perchTimer = 0;
     private final float flySpeed = 0.15f;
-    private final double initialY;
 
     // Landing target: y-coordinate to land on (top of the block) and the block pos
     private Double landingTargetY = Double.NaN;
@@ -33,7 +32,6 @@ public class CrowParticle extends FaunaParticle {
         this.gravity = 0;
         this.quadSize = 0.5f;
         this.hasPhysics = false;
-        this.initialY = y;
 
         this.xd = (Math.random() - 0.5) * flySpeed;
         this.zd = (Math.random() - 0.5) * flySpeed;
@@ -77,11 +75,6 @@ public class CrowParticle extends FaunaParticle {
         this.zd += (Math.random() - 0.5) * 0.02;
         this.yd += (Math.random() - 0.5) * 0.01;
 
-        // If bird is 15 blocks above where it spawned, push it down hard
-        if (this.y > this.initialY + 15) {
-            this.yd -= 0.04;
-        }
-
         // Clamp speed
         double speed = Math.sqrt(xd * xd + yd * yd + zd * zd);
         if (speed > flySpeed) {
@@ -92,7 +85,7 @@ public class CrowParticle extends FaunaParticle {
 
         // Check EVERY tick with a small random chance (5%) and look up to 10 blocks
         // below
-        if (Math.random() < 0.05 && this.y > this.initialY + 2) {
+        if (Math.random() < 0.05) {
             for (int i = 1; i <= 10; i++) {
                 BlockPos below = BlockPos.containing(x, y - i, z);
                 // Only consider blocks that have an air space just above them and a collision
