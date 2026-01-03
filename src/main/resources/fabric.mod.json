@@ -3,11 +3,12 @@
   "id": "atmospheric-fauna",
   "version": "${version}",
   "name": "Atmospheric Fauna",
-  "description": "Adding life to the skies!",
-  "authors": ["Me!"],
+  "description": "Adds birds and stuff",
+  "authors": ["NmS"],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/project/atmospheric-fauna",
+    "sources": "https://github.com/RealNmS/Atmospheric-Fauna",
+    "issues": "https://github.com/RealNmS/Atmospheric-Fauna/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/atmospheric-fauna/icon.png",
