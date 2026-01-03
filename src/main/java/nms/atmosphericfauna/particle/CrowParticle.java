@@ -258,6 +258,7 @@ public class CrowParticle extends FaunaParticle {
                     this.zd = 0;
                     this.yd = 0;
                     this.state = State.PERCHED;
+                    this.setSprite(Util.getSprite("crow_perch"));
                     this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
                 } else {
                     // Landing block disappeared — abort landing
@@ -279,6 +280,7 @@ public class CrowParticle extends FaunaParticle {
 
         if (perchTimer-- <= 0) {
             this.state = State.TAKING_OFF;
+            this.setSprite(Util.getSprite("crow_fly"));
             this.perchTimer = 20;
         }
     }
