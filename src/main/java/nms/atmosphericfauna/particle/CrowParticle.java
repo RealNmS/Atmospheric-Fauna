@@ -30,11 +30,11 @@ public class CrowParticle extends FaunaParticle {
     // --- CONSTANTS ---
 
     private final float flySpeed = 0.20f;
-    private final double steerStrength = 0.005;
+    private final double steerStrength = 0.0075;
     private final double minFlightHeight = 2.5;
     private final double maxFlightHeight = 85.0;
-    private final double maxVerticalSpeed = 0.25;
-    private final double verticalSteerFactor = 1.5;
+    private final double maxVerticalSpeed = 0.30;
+    private final double verticalSteerFactor = 1.25;
     private final double takeoffClimb = 2.5;
 
     private final double perchingChance = 0.00000005;
