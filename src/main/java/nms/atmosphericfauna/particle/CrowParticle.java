@@ -27,6 +27,8 @@ public class CrowParticle extends FaunaParticle {
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
 
+    // --- CONSTANTS ---
+
     private final float flySpeed = 0.20f;
     private final double steerStrength = 0.005;
     private final double minFlightHeight = 2.5;
