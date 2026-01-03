@@ -183,7 +183,7 @@ public class CrowParticle extends FaunaParticle {
 
                     this.state = State.LANDING;
                     this.landingBlockPos = below;
-                    this.landingTargetY = below.getY() + 1.0;
+                    this.landingTargetY = below.getY() + 1.0 + this.quadSize;
                     break;
                 }
             }
