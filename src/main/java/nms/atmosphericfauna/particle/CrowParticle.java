@@ -37,7 +37,7 @@ public class CrowParticle extends FaunaParticle {
     private final double verticalSteerFactor = 1.25;
     private final double takeoffClimb = 2.5;
 
-    private final double perchingChance = 0.00000005;
+    private final double perchingChance = 0.005;
     private final int perchingTime = 600;
 
     private final double goalRadius = 50.0;
