@@ -19,7 +19,6 @@ public class CrowParticle extends FaunaParticle {
 
     private State state = State.FLYING;
     private int perchTimer = 0;
-    private final float flySpeed = 0.20f;
     private double goalX = Double.NaN;
     private double goalY = Double.NaN;
     private double goalZ = Double.NaN;
@@ -28,16 +27,19 @@ public class CrowParticle extends FaunaParticle {
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
 
-    private final double goalRadius = 50.0;
-    private final int goalDurationMin = 80;
-    private final int goalDurationMax = 160;
+    private final float flySpeed = 0.20f;
     private final double steerStrength = 0.005;
-    private final double lookAheadMultiplier = 5.0;
     private final double minFlightHeight = 2.5;
     private final double maxVerticalSpeed = 0.25;
     private final double verticalSteerFactor = 1.5;
     private final double takeoffClimb = 2.5;
+
     private final int perchingTime = 600;
+
+    private final double goalRadius = 50.0;
+    private final int goalDurationMin = 80;
+    private final int goalDurationMax = 160;
+    private final double lookAheadMultiplier = 5.0;
 
     // --- CONSTRUCTOR & TICK ---
 
