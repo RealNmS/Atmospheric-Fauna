@@ -6,7 +6,6 @@ import nms.atmosphericfauna.particle.CrowParticle;
 
 public class AtmosphericFaunaClient implements ClientModInitializer {
 
-    @SuppressWarnings("null")
     @Override
     public void onInitializeClient() {
         AtmosphericFauna.LOGGER.info("Registering Mod Particle Factories for " + AtmosphericFauna.MOD_ID);

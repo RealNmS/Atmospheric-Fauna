@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 
-@SuppressWarnings("null")
 public class Util {
     public static Identifier getId(String path) {
         return Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
