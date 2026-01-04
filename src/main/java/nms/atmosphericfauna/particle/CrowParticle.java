@@ -74,7 +74,7 @@ public class CrowParticle extends FaunaParticle {
     // --- CONSTRUCTOR & TICK ---
 
     protected CrowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
-        super(level, x, y, z, Util.getSprite("crow_fly"));
+        super(level, x, y, z, Util.getSprite("crow_fly_1"));
 
         this.lifetime = 2400;
         this.gravity = 0;
@@ -136,6 +136,18 @@ public class CrowParticle extends FaunaParticle {
             case PERCHED -> tickPerched();
             case TAKING_OFF -> tickTakingOff();
             case DYING -> tickDying();
+        }
+
+        if (state != State.DYING && state != State.PERCHED) {
+            if (this.age % 5 == 0) {
+                // flap wings
+                if (this.sprite.contents().name().getPath().startsWith("crow_fly_")) {
+                    int frame = Integer
+                            .parseInt(this.sprite.contents().name().getPath().substring("crow_fly_".length()));
+                    frame = (frame % 2) + 1;
+                    this.setSprite(Util.getSprite("crow_fly_" + frame));
+                }
+            }
         }
 
         // ONLY FOR TESTING
@@ -201,7 +213,7 @@ public class CrowParticle extends FaunaParticle {
                 continue;
             if (nb.state == State.PERCHED) {
                 nb.state = State.TAKING_OFF;
-                nb.setSprite(Util.getSprite("crow_fly"));
+                nb.setSprite(Util.getSprite("crow_fly_1"));
                 nb.perchTimer = 5; // short window so they start their takeoff sequence quickly
                 nb.landingCooldown = 100;
                 nb.perchBlockPos = null;
@@ -225,7 +237,7 @@ public class CrowParticle extends FaunaParticle {
         this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
         this.yd = 0.12 + Math.random() * 0.08;
         this.state = State.TAKING_OFF;
-        this.setSprite(Util.getSprite("crow_fly"));
+        this.setSprite(Util.getSprite("crow_fly_1"));
         this.perchTimer = 12;
         this.landingCooldown = 100;
         this.perchBlockPos = null;
@@ -240,7 +252,7 @@ public class CrowParticle extends FaunaParticle {
         this.zd += (Math.random() - 0.5) * 0.08;
         this.yd = 0.12 + Math.random() * 0.05;
         this.state = State.TAKING_OFF;
-        this.setSprite(Util.getSprite("crow_fly"));
+        this.setSprite(Util.getSprite("crow_fly_1"));
         this.perchTimer = 10;
         this.landingCooldown = 100;
         this.perchBlockPos = null;
@@ -537,7 +549,7 @@ public class CrowParticle extends FaunaParticle {
                     this.zd = 0;
                     this.yd = 0;
                     this.state = State.PERCHED;
-                    this.setSprite(Util.getSprite("crow_perch"));
+                    this.setSprite(Util.getSprite("crow_perch_1"));
                     this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
                     // Record the actual perch block so flockmates can join
                     this.perchBlockPos = this.landingBlockPos;
@@ -558,6 +570,11 @@ public class CrowParticle extends FaunaParticle {
         this.xd = 0;
         this.zd = 0;
         this.yd = 0;
+
+        if (Math.random() < 0.05) {
+            this.setSprite(Util.getSprite("crow_perch_"
+                    + (1 + (int) (Math.random() * 2))));
+        }
 
         // If the block we're perching on disappears, take off
         if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
@@ -580,7 +597,7 @@ public class CrowParticle extends FaunaParticle {
 
         if (perchTimer-- <= 0) {
             this.state = State.TAKING_OFF;
-            this.setSprite(Util.getSprite("crow_fly"));
+            this.setSprite(Util.getSprite("crow_fly_1"));
             this.perchTimer = 20;
             // Tell nearby perched flockmates to also take off
             groupTakeoff();
