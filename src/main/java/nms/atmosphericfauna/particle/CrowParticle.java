@@ -8,8 +8,11 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.Minecraft;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,9 +36,16 @@ public class CrowParticle extends FaunaParticle {
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
     private BlockPos perchBlockPos = null; // stores actual perch while perched
+    private String baseSpriteName = "crow_fly_1";
 
     // FLOCKING: global registry of active crow particles (thread-safe iteration)
     private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
+
+    // Cache which base sprites have a mirrored variant available (avoid repeated
+    // try/catch)
+    private static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
+    // Add this with your other fields
+    private boolean facingRight = false;
 
     // Active count cap
     private static final int MAX_ACTIVE_CROWS = 120; // configurable max active crows
@@ -85,6 +95,10 @@ public class CrowParticle extends FaunaParticle {
         this.zd = (Math.random() - 0.5) * flySpeed;
         this.yd = 0.05;
         ALL_CROWS.add(this);
+
+        // set initial base sprite and facing
+        this.baseSpriteName = "crow_fly_1";
+        updateSpriteFacing();
 
         // Respect active cap: if we're already at maximum, remove this instance
         // immediately
@@ -140,12 +154,12 @@ public class CrowParticle extends FaunaParticle {
 
         if (state != State.DYING && state != State.PERCHED) {
             if (this.age % 5 == 0) {
-                // flap wings
-                if (this.sprite.contents().name().getPath().startsWith("crow_fly_")) {
+                // flap wings using base sprite tracking so mirrored variants are preserved
+                if (this.baseSpriteName != null && this.baseSpriteName.startsWith("crow_fly_")) {
                     int frame = Integer
-                            .parseInt(this.sprite.contents().name().getPath().substring("crow_fly_".length()));
+                            .parseInt(this.baseSpriteName.substring("crow_fly_".length()));
                     frame = (frame % 2) + 1;
-                    this.setSprite(Util.getSprite("crow_fly_" + frame));
+                    setBaseSprite("crow_fly_" + frame);
                 }
             }
         }
@@ -162,6 +176,11 @@ public class CrowParticle extends FaunaParticle {
          * this.zd));
          * }
          */
+
+        // Update facing occasionally so sprites flip based on motion or nearby player
+        if (this.age % 3 == 0 && state != State.DYING && state != State.PERCHED) {
+            updateSpriteFacing();
+        }
 
         this.move(this.xd, this.yd, this.zd);
     }
@@ -213,7 +232,7 @@ public class CrowParticle extends FaunaParticle {
                 continue;
             if (nb.state == State.PERCHED) {
                 nb.state = State.TAKING_OFF;
-                nb.setSprite(Util.getSprite("crow_fly_1"));
+                nb.setBaseSprite("crow_fly_1");
                 nb.perchTimer = 5; // short window so they start their takeoff sequence quickly
                 nb.landingCooldown = 100;
                 nb.perchBlockPos = null;
@@ -237,7 +256,7 @@ public class CrowParticle extends FaunaParticle {
         this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
         this.yd = 0.12 + Math.random() * 0.08;
         this.state = State.TAKING_OFF;
-        this.setSprite(Util.getSprite("crow_fly_1"));
+        this.setBaseSprite("crow_fly_1");
         this.perchTimer = 12;
         this.landingCooldown = 100;
         this.perchBlockPos = null;
@@ -252,7 +271,7 @@ public class CrowParticle extends FaunaParticle {
         this.zd += (Math.random() - 0.5) * 0.08;
         this.yd = 0.12 + Math.random() * 0.05;
         this.state = State.TAKING_OFF;
-        this.setSprite(Util.getSprite("crow_fly_1"));
+        this.setBaseSprite("crow_fly_1");
         this.perchTimer = 10;
         this.landingCooldown = 100;
         this.perchBlockPos = null;
@@ -549,7 +568,7 @@ public class CrowParticle extends FaunaParticle {
                     this.zd = 0;
                     this.yd = 0;
                     this.state = State.PERCHED;
-                    this.setSprite(Util.getSprite("crow_perch_1"));
+                    this.setBaseSprite("crow_perch_1");
                     this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
                     // Record the actual perch block so flockmates can join
                     this.perchBlockPos = this.landingBlockPos;
@@ -572,8 +591,8 @@ public class CrowParticle extends FaunaParticle {
         this.yd = 0;
 
         if (Math.random() < 0.05) {
-            this.setSprite(Util.getSprite("crow_perch_"
-                    + (1 + (int) (Math.random() * 2))));
+            this.setBaseSprite("crow_perch_"
+                    + (1 + (int) (Math.random() * 2)));
         }
 
         // If the block we're perching on disappears, take off
@@ -597,7 +616,7 @@ public class CrowParticle extends FaunaParticle {
 
         if (perchTimer-- <= 0) {
             this.state = State.TAKING_OFF;
-            this.setSprite(Util.getSprite("crow_fly_1"));
+            this.setBaseSprite("crow_fly_1");
             this.perchTimer = 20;
             // Tell nearby perched flockmates to also take off
             groupTakeoff();
@@ -645,6 +664,84 @@ public class CrowParticle extends FaunaParticle {
             System.out
                     .println("Crow #" + this.hashCode() + " forcibly removed after exceeding death time limit.");
             this.remove();
+        }
+    }
+
+    // set the logical base sprite (e.g. "crow_fly_1" or "crow_perch_1") and update
+    // facing
+    private void setBaseSprite(String baseName) {
+        this.baseSpriteName = baseName;
+        updateSpriteFacing();
+    }
+
+    // compute desired facing: prefer motion if strong, otherwise face camera/player
+    // Improved facing logic: calculates movement relative to the camera's view
+    // plane
+    private void updateSpriteFacing() {
+        // 1. Calculate horizontal speed
+        double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
+        double motionThreshold = 0.01;
+
+        // 2. Only update facing if we are actually moving
+        if (horizSpeed > motionThreshold) {
+            Player player = Minecraft.getInstance().player;
+            if (player != null) {
+                // Get the player's view direction
+                float yaw = player.getYRot();
+
+                // Convert yaw to a look vector (approximate)
+                // Minecraft yaw: 0 is +Z, 90 is -X, 180 is -Z, 270 is +X
+                double yawRad = Math.toRadians(yaw);
+                double lookX = -Math.sin(yawRad);
+                double lookZ = Math.cos(yawRad);
+
+                // Calculate the camera's "Right" vector (Perpendicular to look)
+                // Cross product with Up vector (0,1,0) simplified for 2D
+                double rightX = -lookZ;
+                double rightZ = lookX;
+
+                // 3. Project bird motion onto the camera's Right vector (Dot Product)
+                double dot = (this.xd * rightX) + (this.zd * rightZ);
+
+                // If dot > 0, bird is moving to the screen's right.
+                // If dot < 0, bird is moving to the screen's left.
+                this.facingRight = dot > 0;
+            } else {
+                // Fallback if no player found (rare): just check world movement
+                this.facingRight = this.xd > 0;
+            }
+        }
+
+        // 4. Select the sprite name
+        // Assumption: Base sprite faces LEFT. _r sprite faces RIGHT.
+        String candidate = this.baseSpriteName + (this.facingRight ? "_r" : "");
+
+        // 5. Apply with caching (Your existing optimization)
+        Boolean hasMirror = MIRROR_SPRITE_CACHE.get(this.baseSpriteName);
+
+        // If we haven't checked this sprite yet, try to find the _r version
+        if (hasMirror == null) {
+            try {
+                // Try to grab the _r sprite
+                var sprite = Util.getSprite(candidate);
+
+                // If successful, cache TRUE and set sprite
+                MIRROR_SPRITE_CACHE.put(this.baseSpriteName, Boolean.TRUE);
+                this.setSprite(sprite);
+                return;
+            } catch (Exception ex) {
+                // If it fails (file missing), cache FALSE
+                MIRROR_SPRITE_CACHE.put(this.baseSpriteName, Boolean.FALSE);
+            }
+        }
+
+        // Apply based on cache
+        if (Boolean.TRUE.equals(MIRROR_SPRITE_CACHE.get(this.baseSpriteName))) {
+            // We have a mirror sprite, use candidate
+            this.setSprite(Util.getSprite(candidate));
+        } else {
+            // No mirror sprite exists, fallback to base
+            this.setSprite(Util.getSprite(this.baseSpriteName));
         }
     }
 
