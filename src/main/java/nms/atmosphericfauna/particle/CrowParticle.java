@@ -6,6 +6,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,8 @@ public class CrowParticle extends FaunaParticle {
     private int landingCooldown = 0;
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
+    private double landingOffsetX = 0.0;
+    private double landingOffsetZ = 0.0;
     private BlockPos perchBlockPos = null; // stores actual perch while perched
 
     private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
@@ -208,11 +211,14 @@ public class CrowParticle extends FaunaParticle {
             if (nb.state == State.FLYING && nb.landingCooldown == 0) {
                 nb.state = State.LANDING;
                 nb.landingBlockPos = target;
-                nb.landingTargetY = target.getY() + 1.0 + nb.quadSize;
+                // small random offset so flocked crows don't all land on the exact center
+                nb.landingOffsetX = (Math.random() - 0.5) * 0.8;
+                nb.landingOffsetZ = (Math.random() - 0.5) * 0.8;
+                nb.landingTargetY = target.getY() + 2.0 + nb.quadSize;
                 nb.goalTimer = 10;
-                nb.goalX = target.getX() + 0.5;
+                nb.goalX = target.getX() + 0.5 + nb.landingOffsetX;
                 nb.goalY = nb.landingTargetY + 0.5;
-                nb.goalZ = target.getZ() + 0.5;
+                nb.goalZ = target.getZ() + 0.5 + nb.landingOffsetZ;
             }
         }
     }
@@ -489,7 +495,7 @@ public class CrowParticle extends FaunaParticle {
                     if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
                         this.state = State.LANDING;
                         this.landingBlockPos = target;
-                        this.landingTargetY = target.getY() + 1.0 + this.quadSize;
+                        this.landingTargetY = target.getY() + 2.0 + this.quadSize;
                         groupPerch(target);
                         return;
                     }
@@ -497,23 +503,39 @@ public class CrowParticle extends FaunaParticle {
             }
 
             for (int i = 1; i <= this.perchingDistance; i++) {
-                BlockPos below = BlockPos.containing(x, y - i, z);
-                if (!level.getBlockState(below).isAir()
-                        && level.getBlockState(below.above()).isAir()
-                        && !level.getBlockState(below).getCollisionShape(level, below).isEmpty()) {
+                BlockPos below = BlockPos.containing(this.x, this.y - i, this.z);
+                BlockPos above = below.above();
 
-                    // Require a neighboring block (branch/cover) to avoid landing on open tree tops
-                    // / flat ground
-                    boolean hasNeighbor = !level.isEmptyBlock(below.north()) || !level.isEmptyBlock(below.south())
-                            || !level.isEmptyBlock(below.east()) || !level.isEmptyBlock(below.west());
-                    if (!hasNeighbor)
-                        continue;
+                // Basic checks: below must be solid, above must be air
+                if (level.getBlockState(below).isAir())
+                    continue;
+                if (!level.getBlockState(above).isAir())
+                    continue;
 
-                    this.state = State.LANDING;
-                    this.landingBlockPos = below;
-                    this.landingTargetY = below.getY() + 1.0 + this.quadSize;
-                    break;
-                }
+                // Ensure the top face is sturdy enough to land on (avoid tiny/wire blocks)
+                if (!level.getBlockState(below).isFaceSturdy(level, below, Direction.UP))
+                    continue;
+
+                // Ensure there's some collision shape to stand on
+                if (level.getBlockState(below).getCollisionShape(level, below).isEmpty())
+                    continue;
+
+                // Require a neighboring block (branch/cover) to avoid landing on open tree tops
+                // / flat ground
+                boolean hasNeighbor = !level.isEmptyBlock(below.north()) || !level.isEmptyBlock(below.south())
+                        || !level.isEmptyBlock(below.east()) || !level.isEmptyBlock(below.west());
+                if (!hasNeighbor)
+                    continue;
+
+                // Success: choose this block as perch. Use a corrected landing Y so the crow
+                // sits at
+                // block top (subtract quadSize rather than add to avoid floating too high)
+                this.state = State.LANDING;
+                this.landingBlockPos = below;
+                this.landingOffsetX = (Math.random() - 0.5) * 0.8;
+                this.landingOffsetZ = (Math.random() - 0.5) * 0.8;
+                this.landingTargetY = below.getY() + 2.0 + this.quadSize;
+                break;
             }
 
             if (this.state == State.LANDING && this.landingBlockPos != null) {
@@ -523,29 +545,95 @@ public class CrowParticle extends FaunaParticle {
     }
 
     private void tickLanding() {
-        this.yd = -0.1;
-        this.xd *= 0.95;
-        this.zd *= 0.95;
-
-        if (!Double.isNaN(this.landingTargetY)) {
-            if (this.y <= this.landingTargetY + 0.2) {
-                if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
-                    this.setPos(this.x, this.landingTargetY, this.z);
-                    this.xd = 0;
-                    this.zd = 0;
-                    this.yd = 0;
-                    this.state = State.PERCHED;
-                    this.setBaseSprite("crow_perch_1");
-                    this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
-                    this.perchBlockPos = this.landingBlockPos;
-                } else {
-                    this.state = State.FLYING;
-                }
-                this.landingTargetY = Double.NaN;
-                this.landingBlockPos = null;
-            }
-        } else {
+        // If target missing, abort to flying
+        if (this.landingBlockPos == null || Double.isNaN(this.landingTargetY)) {
             this.state = State.FLYING;
+            this.landingTargetY = Double.NaN;
+            this.landingBlockPos = null;
+            this.landingOffsetX = 0.0;
+            this.landingOffsetZ = 0.0;
+            return;
+        }
+
+        double targetX = this.landingBlockPos.getX() + 0.5 + this.landingOffsetX;
+        double targetZ = this.landingBlockPos.getZ() + 0.5 + this.landingOffsetZ;
+
+        // Gentle horizontal damping so steering is stable
+        this.xd *= 0.98;
+        this.zd *= 0.98;
+
+        // Estimate time to land
+        double verticalDist = this.y - this.landingTargetY;
+        double timeToLand;
+        if (this.yd < -0.001) {
+            timeToLand = verticalDist / -this.yd;
+            if (timeToLand < 0.1)
+                timeToLand = 0.1;
+        } else {
+            timeToLand = Math.max(0.5, verticalDist / 0.06);
+        }
+
+        double desiredXd = (targetX - this.x) / timeToLand;
+        double desiredZd = (targetZ - this.z) / timeToLand;
+
+        double maxLandingSpeed = 0.07;
+        double desiredHoriz = Math.sqrt(desiredXd * desiredXd + desiredZd * desiredZd);
+        if (desiredHoriz > maxLandingSpeed) {
+            double s = maxLandingSpeed / desiredHoriz;
+            desiredXd *= s;
+            desiredZd *= s;
+        }
+
+        double steerFactor = 0.25;
+        this.xd += (desiredXd - this.xd) * steerFactor;
+        this.zd += (desiredZd - this.zd) * steerFactor;
+
+        // gentle descent proportional to remaining distance
+        double descent = Math.min(0.20, Math.max(0.06, verticalDist * 0.03));
+        this.yd = -descent;
+
+        double dx = targetX - this.x;
+        double dz = targetZ - this.z;
+        double horizDist = Math.sqrt(dx * dx + dz * dz);
+        double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
+
+        // Snap if close and slow
+        if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) < 0.25 && horizSpeed < 0.06) {
+            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
+                this.setPos(targetX, this.landingTargetY, targetZ);
+                this.xd = 0;
+                this.zd = 0;
+                this.yd = 0;
+                this.state = State.PERCHED;
+                this.setBaseSprite("crow_perch_1");
+                this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
+                this.perchBlockPos = this.landingBlockPos;
+            } else {
+                this.state = State.FLYING;
+            }
+            this.landingTargetY = Double.NaN;
+            this.landingBlockPos = null;
+            return;
+        }
+
+        // Finalize if we pass the landing Y and are reasonably close horizontally
+        if (this.y <= this.landingTargetY + 0.2 && horizDist < 0.6) {
+            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
+                this.setPos(targetX, this.landingTargetY, targetZ);
+                this.xd = 0;
+                this.zd = 0;
+                this.yd = 0;
+                this.state = State.PERCHED;
+                this.setBaseSprite("crow_perch_1");
+                this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
+                this.perchBlockPos = this.landingBlockPos;
+            } else {
+                this.state = State.FLYING;
+            }
+            this.landingTargetY = Double.NaN;
+            this.landingBlockPos = null;
+            this.landingOffsetX = 0.0;
+            this.landingOffsetZ = 0.0;
         }
     }
 
@@ -588,6 +676,8 @@ public class CrowParticle extends FaunaParticle {
     private void tickTakingOff() {
         this.landingTargetY = Double.NaN;
         this.landingBlockPos = null;
+        this.landingOffsetX = 0.0;
+        this.landingOffsetZ = 0.0;
         this.perchBlockPos = null;
 
         this.setPos(this.x, this.y + 0.05, this.z);
