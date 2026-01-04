@@ -1,0 +1,6 @@
+{
+  "title.atmosphericfauna.config": "Atmospheric Fauna Configuration",
+  "category.atmosphericfauna.general": "General Settings",
+  "option.atmosphericfauna.max_active_crows": "Maximum Active Crows",
+  "option.atmosphericfauna.max_active_crows.tooltip": "Sets the maximum number of active crow particles in the world at any given time."
+}

@@ -48,7 +48,7 @@ public class CrowParticle extends FaunaParticle {
     private static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
     private boolean facingRight = false;
 
-    private static final int MAX_ACTIVE_CROWS = 120; // configurable max active crows
+    public static int maxActiveCrows = 120; // configurable max active crows
     private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
     private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
@@ -99,7 +99,7 @@ public class CrowParticle extends FaunaParticle {
         this.baseSpriteName = "crow_fly_1";
         updateSpriteFacing();
 
-        if (ACTIVE_COUNT.get() >= MAX_ACTIVE_CROWS) {
+        if (ACTIVE_COUNT.get() >= maxActiveCrows) {
             this.remove();
             return;
         }
@@ -778,7 +778,7 @@ public class CrowParticle extends FaunaParticle {
 
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
                 double velocityX, double velocityY, double velocityZ) {
-            if (ACTIVE_COUNT.get() >= MAX_ACTIVE_CROWS)
+            if (ACTIVE_COUNT.get() >= maxActiveCrows)
                 return null;
             return new CrowParticle(level, x, y, z, this.sprite);
         }
