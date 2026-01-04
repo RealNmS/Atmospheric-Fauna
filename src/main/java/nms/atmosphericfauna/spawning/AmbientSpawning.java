@@ -39,7 +39,7 @@ public class AmbientSpawning {
             140, // max height
             true, // spawn in bad weather
             true, // spawn during day
-            false, // spawn during night
+            true, // spawn during night
             BiomeTags.IS_OVERWORLD);
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
@@ -47,11 +47,11 @@ public class AmbientSpawning {
     // Future bird types can be added here
     );
 
-    private static final int SPAWN_RANGE_FROM_PLAYER = 48;
+    private static final int SPAWN_RANGE_FROM_PLAYER = 96;
     private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
     private static final int SPAWN_TICK_DELAY = 200; // ~10 seconds
-    private static final int ATTEMPTS_PER_TICK = 8; // number of candidate positions to try each spawn tick
-    private static final int SEARCH_RADIUS = 6; // radius around chosen point to search for a valid spawn position
+    private static final int ATTEMPTS_PER_TICK = 10; // number of candidate positions to try each spawn tick
+    private static final int SEARCH_RADIUS = 8; // radius around chosen point to search for a valid spawn position
 
     /**
      * This method is called from a server tick event to attempt ambient spawns.
@@ -86,6 +86,7 @@ public class AmbientSpawning {
     }
 
     private static void trySpawn(ServerLevel world, RandomSource random, SpawnData spawnData) {
+        System.out.println("Attempting to spawn Crow");
         // Only spawn if weather conditions are right
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             return;
@@ -131,6 +132,9 @@ public class AmbientSpawning {
                                 individualSpawnPos.getZ() + 0.5,
                                 1, 0, 0, 0, 0);
                         spawned++;
+                        System.out.println("Spawned Crow at "
+                                + individualSpawnPos.getX() + ", " + individualSpawnPos.getY() + ", "
+                                + individualSpawnPos.getZ());
                     }
                 }
                 // Success, don't keep trying more attempts this tick

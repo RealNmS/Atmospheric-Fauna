@@ -139,12 +139,17 @@ public class CrowParticle extends FaunaParticle {
         }
 
         // ONLY FOR TESTING
-        if (this.age % 10 == 0) {
-            System.out.println("Crow #" + this.hashCode() + " | State: " + this.state + " | Height: "
-                    + String.format("%.2f", this.y));
-            System.out.println("   Crow #" + this.hashCode() + " | xd: " + String.format("%.3f", this.xd) + " | yd: "
-                    + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f", this.zd));
-        }
+        /*
+         * if (this.age % 10 == 0) {
+         * System.out.println("Crow #" + this.hashCode() + " | State: " + this.state +
+         * " | Height: "
+         * + String.format("%.2f", this.y));
+         * System.out.println("   Crow #" + this.hashCode() + " | xd: " +
+         * String.format("%.3f", this.xd) + " | yd: "
+         * + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f",
+         * this.zd));
+         * }
+         */
 
         this.move(this.xd, this.yd, this.zd);
     }
