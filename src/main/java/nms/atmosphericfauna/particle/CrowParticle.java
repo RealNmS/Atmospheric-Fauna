@@ -655,6 +655,10 @@ public class CrowParticle extends FaunaParticle {
         // If a player gets too close, scare the crow and make it fly off
         double scareRadiusSq = scareRadius * scareRadius;
         for (Player p : this.level.players()) {
+            // Ignore spectator players
+            if (p.isSpectator())
+                continue;
+
             double dx = p.getX() - this.x;
             double dz = p.getZ() - this.z;
             double distSq = dx * dx + dz * dz;
