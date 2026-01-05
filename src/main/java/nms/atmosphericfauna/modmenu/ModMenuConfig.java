@@ -32,7 +32,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
                         AmbientSpawning.spawnTickDelay)
-                .setDefaultValue(200)
+                .setDefaultValue(100)
                 .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnTickDelay = newValue)
                 .build());
@@ -40,7 +40,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.attempts_per_tick"),
                         AmbientSpawning.attemptsPerTick)
-                .setDefaultValue(10)
+                .setDefaultValue(15)
                 .setTooltip(Component.translatable("option.atmosphericfauna.attempts_per_tick.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.attemptsPerTick = newValue)
                 .build());
@@ -48,7 +48,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.search_radius"),
                         AmbientSpawning.searchRadius)
-                .setDefaultValue(8)
+                .setDefaultValue(12)
                 .setTooltip(Component.translatable("option.atmosphericfauna.search_radius.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.searchRadius = newValue)
                 .build());

@@ -51,15 +51,10 @@ public class AmbientSpawning {
 
     public static int spawnRangeFromPlayer = 96;
     private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
-    public static int spawnTickDelay = 200; // ~10 seconds
-    public static int attemptsPerTick = 10; // number of candidate positions to try each spawn tick
-    public static int searchRadius = 8; // radius around chosen point to search for a valid spawn position
+    public static int spawnTickDelay = 100;
+    public static int attemptsPerTick = 15;
+    public static int searchRadius = 12;
 
-    /**
-     * This method is called from a server tick event to attempt ambient spawns.
-     * 
-     * @param world The server world.
-     */
     public static void tick(ServerLevel world) {
         if (world.getGameTime() % spawnTickDelay != 0) {
             return;
@@ -89,8 +84,8 @@ public class AmbientSpawning {
 
     private static void trySpawn(ServerLevel world, RandomSource random, SpawnData spawnData) {
         if (debugText)
-            System.out.println("Attempting to spawn Crow...");
-        // Only spawn if weather conditions are right
+            System.out.println("[AtmosphericFauna] Ambient spawning cycle started...");
+
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             return;
         }
@@ -108,55 +103,79 @@ public class AmbientSpawning {
 
         // Try several candidate positions to increase robustness
         for (int attempt = 0; attempt < attemptsPerTick; attempt++) {
-            // pick a random player to spawn near
             var player = players.get(random.nextInt(players.size()));
             BlockPos playerPos = player.blockPosition();
 
             int baseX = playerPos.getX() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
             int baseZ = playerPos.getZ() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
 
-            // search nearby for a valid spawn spot (helps avoid water, leaves, or other bad
-            // spots)
-            BlockPos found = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
-            if (found != null) {
-                // Spawn a small pack around that found position
-                int packSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
+            BlockPos foundCenter = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
+
+            if (foundCenter != null) {
+                // Determine pack size
+                int targetPackSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
                         + spawnData.minPackSize();
-                int spawned = 0;
-                int innerAttempts = 0;
-                while (spawned < packSize && innerAttempts < packSize * 4) {
-                    innerAttempts++;
-                    BlockPos individualSpawnPos = found.offset(random.nextInt(5) - 2, random.nextInt(2),
-                            random.nextInt(5) - 2);
-                    if (isValidSpawnLocation(world, individualSpawnPos, spawnData)) {
+
+                int spawnedCount = 0;
+                int failSafe = 0;
+
+                // Try to spawn the whole pack
+                while (spawnedCount < targetPackSize && failSafe < targetPackSize * 8) {
+                    failSafe++;
+
+                    int dx = random.nextInt(9) - 4;
+                    int dz = random.nextInt(9) - 4;
+
+                    BlockPos targetPos = foundCenter.offset(dx, 0, dz);
+                    targetPos = adjustToGround(world, targetPos);
+
+                    if (isValidSpawnLocation(world, targetPos, spawnData)) {
                         world.sendParticles(spawnData.particleType(),
-                                individualSpawnPos.getX() + 0.5,
-                                individualSpawnPos.getY() + 1.0,
-                                individualSpawnPos.getZ() + 0.5,
+                                targetPos.getX() + 0.5,
+                                targetPos.getY() + 0.5,
+                                targetPos.getZ() + 0.5,
                                 1, 0, 0, 0, 0);
-                        spawned++;
-                        if (debugText)
-                            System.out.println("Spawned Crow at "
-                                    + individualSpawnPos.getX() + ", " + individualSpawnPos.getY() + ", "
-                                    + individualSpawnPos.getZ());
+
+                        spawnedCount++;
                     }
                 }
-                // Success, don't keep trying more attempts this tick
-                return;
+
+                if (debugText) {
+                    if (spawnedCount >= spawnData.minPackSize()) {
+                        System.out.println("[AtmosphericFauna] SUCCESS: Spawned pack of " + spawnedCount + " crows at "
+                                + foundCenter.toShortString());
+                    } else {
+                        System.out.println(
+                                "[AtmosphericFauna] PARTIAL: Wanted " + targetPackSize + " but only found spots for "
+                                        + spawnedCount);
+                    }
+                }
+
+                if (spawnedCount > 0)
+                    return;
             }
         }
-        // If all attempts failed, optionally try again next tick
+    }
+
+    // Helper to snap a position to the nearest solid ground within 3 blocks
+    // vertical
+    private static BlockPos adjustToGround(ServerLevel world, BlockPos pos) {
+        if (!world.isEmptyBlock(pos.below()) && world.isEmptyBlock(pos))
+            return pos;
+
+        for (int i = 1; i <= 3; i++) {
+            if (!world.isEmptyBlock(pos.below(i).below()) && world.isEmptyBlock(pos.below(i)))
+                return pos.below(i);
+            if (!world.isEmptyBlock(pos.above(i).below()) && world.isEmptyBlock(pos.above(i)))
+                return pos.above(i);
+        }
+        return pos;
     }
 
     private static BlockPos findValidSpawnNear(ServerLevel world, RandomSource random, int centerX, int centerZ,
             SpawnData spawnData, int radius, int samples) {
-        // Try the center first
-        int yCenter = world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, centerX, centerZ);
-        BlockPos center = new BlockPos(centerX, yCenter, centerZ);
-        if (isValidSpawnLocation(world, center, spawnData))
-            return center;
 
-        // Random sampling in the radius to find nearby valid spots
+        // Sample random spots
         for (int i = 0; i < samples; i++) {
             int dx = random.nextInt(radius * 2 + 1) - radius;
             int dz = random.nextInt(radius * 2 + 1) - radius;
@@ -164,6 +183,7 @@ public class AmbientSpawning {
             int sz = centerZ + dz;
             int sy = world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, sx, sz);
             BlockPos candidate = new BlockPos(sx, sy, sz);
+
             if (isValidSpawnLocation(world, candidate, spawnData))
                 return candidate;
         }
@@ -171,21 +191,22 @@ public class AmbientSpawning {
     }
 
     private static boolean isValidSpawnLocation(ServerLevel world, BlockPos pos, SpawnData spawnData) {
-        if (pos.getY() > spawnData.maxSpawnHeight()) {
+        if (pos.getY() > spawnData.maxSpawnHeight())
             return false;
-        }
 
+        // Quick fail: Must have air above and block below
+        if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below()))
+            return false;
+
+        // Biome Check
+        if (!world.getBiome(pos).is(spawnData.validBiomeTag()))
+            return false;
+
+        // Light Check
         int sky = world.getBrightness(LightLayer.SKY, pos);
         int block = world.getBrightness(LightLayer.BLOCK, pos);
-        int lightLevel = Math.max(sky, block); // prefer the brighter of sky or block light
-        if (lightLevel < spawnData.minLightLevel() || lightLevel > spawnData.maxLightLevel()) {
-            return false;
-        }
+        int lightLevel = Math.max(sky, block);
 
-        if (!world.getBiome(pos).is(spawnData.validBiomeTag())) {
-            return false;
-        }
-
-        return (world.isEmptyBlock(pos.above()) && !world.isEmptyBlock(pos));
+        return lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
     }
 }
