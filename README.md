@@ -3,19 +3,19 @@
 Minecraft mod that adds birds and other fauna making your world feel alive. Hugely inspired by the amazing mod [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters).
 
 <a href="https://linktr.ee/onlynms">
-    <img src="https://img.shields.io/badge/linktree-39E09B?style=for-the-badge&logo=linktree&logoColor=white">
+    <img alt="Linktree" src="https://img.shields.io/badge/linktree-39E09B?style=for-the-badge&logo=linktree&logoColor=white">
 </a>
 
 <a href="https://ko-fi.com/onlynms">
-    <img src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white">
+    <img alt="Ko--fi" src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white">
 </a>
 
 <a href="https://github.com/RealNmS/Atmospheric-Fauna">
-    <img src="https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white">
+    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white">
 </a>
 
 <a href="https://modrinth.com/project/atmospheric-fauna">
-    <img src="https://img.shields.io/badge/Modrinth-1BD96A?style=for-the-badge&logo=modrinth&logoColor=white">
+    <img alt="Modrinth" src="https://img.shields.io/badge/Modrinth-1BD96A?style=for-the-badge&logo=modrinth&logoColor=white">
 </a>
 
 ---
@@ -42,9 +42,9 @@ For the best experience I recommend using this alongside with [ModMenu](https://
 
 ### Crow
 
-![Crows 1](src/main/resources/assets/docs/screenshot_crow_1.jpg)
+![Screenshot Crows 1](src/main/resources/assets/docs/screenshot_crow_1.jpg)
 
-![Crows 1](src/main/resources/assets/docs/screenshot_crow_2.jpg)
+![Screenshot Crows 2](src/main/resources/assets/docs/screenshot_crow_2.jpg)
 
 ---
 
