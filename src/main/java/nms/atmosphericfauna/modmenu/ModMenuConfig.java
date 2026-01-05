@@ -1,19 +1,22 @@
 package nms.atmosphericfauna.modmenu;
 
+import nms.atmosphericfauna.config.ConfigHandler;
+import nms.atmosphericfauna.particle.CrowParticle;
+import nms.atmosphericfauna.spawning.AmbientSpawning;
+
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import nms.atmosphericfauna.particle.CrowParticle;
-import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 public class ModMenuConfig {
     public static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Component.translatable("title.atmosphericfauna.config"));
+                .setTitle(Component.translatable("title.atmosphericfauna.config"))
+                .setSavingRunnable(ConfigHandler::save);
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
         // Spawning Category
@@ -22,10 +25,12 @@ public class ModMenuConfig {
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.spawning"));
 
         spawning.addEntry(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.spawn_range_from_player"),
+                .startIntField(Component
+                        .translatable("option.atmosphericfauna.spawn_range_from_player"),
                         AmbientSpawning.spawnRangeFromPlayer)
                 .setDefaultValue(96)
-                .setTooltip(Component.translatable("option.atmosphericfauna.spawn_range_from_player.tooltip"))
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.spawn_range_from_player.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnRangeFromPlayer = newValue)
                 .build());
 
@@ -77,10 +82,12 @@ public class ModMenuConfig {
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.debug"));
 
         debug.addEntry(entryBuilder
-                .startBooleanToggle(Component.translatable("option.atmosphericfauna.debug_text_spawning"),
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.debug_text_spawning"),
                         AmbientSpawning.debugText)
                 .setDefaultValue(false)
-                .setTooltip(Component.translatable("option.atmosphericfauna.debug_text_spawning.tooltip"))
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.debug_text_spawning.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.debugText = newValue)
                 .build());
 
