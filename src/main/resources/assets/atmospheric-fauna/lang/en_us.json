@@ -1,4 +1,5 @@
 {
+  "text.atmosphericfauna.cloth_missing": "Cloth Config is not installed. Install cloth-config to edit settings.",
   "title.atmosphericfauna.config": "Atmospheric Fauna - Configuration",
   "category.atmosphericfauna.spawning": "Spawning",
   "option.atmosphericfauna.spawn_range_from_player": "Spawn Range From Player",
