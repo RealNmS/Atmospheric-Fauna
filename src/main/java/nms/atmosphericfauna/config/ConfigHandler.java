@@ -25,6 +25,7 @@ public class ConfigHandler {
         }
 
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
+            @SuppressWarnings("null")
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
             if (data != null) {
                 AmbientSpawning.spawnRangeFromPlayer = data.spawnRangeFromPlayer;
