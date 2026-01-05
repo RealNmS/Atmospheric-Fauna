@@ -214,7 +214,7 @@ public class CrowParticle extends FaunaParticle {
                 // small random offset so flocked crows don't all land on the exact center
                 nb.landingOffsetX = (Math.random() - 0.5) * 0.8;
                 nb.landingOffsetZ = (Math.random() - 0.5) * 0.8;
-                nb.landingTargetY = target.getY() + 2.0 + nb.quadSize;
+                nb.landingTargetY = target.getY() + 1.0 + nb.quadSize;
                 nb.goalTimer = 10;
                 nb.goalX = target.getX() + 0.5 + nb.landingOffsetX;
                 nb.goalY = nb.landingTargetY + 0.5;
@@ -534,7 +534,7 @@ public class CrowParticle extends FaunaParticle {
                 this.landingBlockPos = below;
                 this.landingOffsetX = (Math.random() - 0.5) * 0.8;
                 this.landingOffsetZ = (Math.random() - 0.5) * 0.8;
-                this.landingTargetY = below.getY() + 2.0 + this.quadSize;
+                this.landingTargetY = below.getY() + 1.0 + this.quadSize;
                 break;
             }
 
