@@ -1,7 +1,6 @@
 package nms.atmosphericfauna;
 
 import org.jspecify.annotations.NonNull;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.data.AtlasIds;

@@ -1,5 +1,6 @@
 package nms.atmosphericfauna;
 
+import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 import net.fabricmc.api.ModInitializer;
@@ -21,6 +22,7 @@ public class AtmosphericFauna implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Atmospheric Fauna is taking flight!");
+		ConfigHandler.load();
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "crow"), CROW);
 		ServerTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
 	}
