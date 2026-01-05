@@ -26,6 +26,8 @@ Atmospheric Fauna is a Fabric mod which I created just to enhance the lonely atm
 
 My plan right now is to build a solid foundation for the mod, so I can easily add as many birds and other things I think of during development easily in the future. So far I've used crows as a base bird, but later on I plan on adding a vulture and maybe some smaller birds like sparrows or robins.
 
+For the best experience I recommend using this alongside with [ModMenu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
+
 ---
 
 ## Birds
