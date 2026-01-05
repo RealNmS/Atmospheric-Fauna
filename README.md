@@ -40,6 +40,8 @@ For the best experience I recommend using this alongside with [ModMenu](https://
 
 This mod is currently in **early development**. A lot of features might be missing or be buggy. Please be patient and report any issues you find!
 
+**_!! Currently works only in singleplayer, multiplayer is not tested and might not work or crash your game !!_**
+
 ---
 
 ## Contributing
