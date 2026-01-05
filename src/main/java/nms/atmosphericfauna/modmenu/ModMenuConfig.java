@@ -16,8 +16,44 @@ public class ModMenuConfig {
                 .setTitle(Component.translatable("title.atmosphericfauna.config"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
+        // Spawning Category
+
         ConfigCategory spawning = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.spawning"));
+
+        spawning.addEntry(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.spawn_range_from_player"),
+                        AmbientSpawning.spawnRangeFromPlayer)
+                .setDefaultValue(96)
+                .setTooltip(Component.translatable("option.atmosphericfauna.spawn_range_from_player.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.spawnRangeFromPlayer = newValue)
+                .build());
+
+        spawning.addEntry(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
+                        AmbientSpawning.spawnTickDelay)
+                .setDefaultValue(200)
+                .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.spawnTickDelay = newValue)
+                .build());
+
+        spawning.addEntry(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.attempts_per_tick"),
+                        AmbientSpawning.attemptsPerTick)
+                .setDefaultValue(10)
+                .setTooltip(Component.translatable("option.atmosphericfauna.attempts_per_tick.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.attemptsPerTick = newValue)
+                .build());
+
+        spawning.addEntry(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.search_radius"),
+                        AmbientSpawning.searchRadius)
+                .setDefaultValue(8)
+                .setTooltip(Component.translatable("option.atmosphericfauna.search_radius.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.searchRadius = newValue)
+                .build());
+
+        // Birds Category
 
         ConfigCategory birds = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.birds"));
@@ -34,6 +70,8 @@ public class ModMenuConfig {
                 .build());
 
         birds.addEntry(crows.build());
+
+        // Debug Category
 
         ConfigCategory debug = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.debug"));

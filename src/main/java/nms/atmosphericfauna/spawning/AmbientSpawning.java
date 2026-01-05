@@ -49,11 +49,11 @@ public class AmbientSpawning {
     // Future bird types can be added here
     );
 
-    public static final int spawnRangeFromPlayer = 96;
+    public static int spawnRangeFromPlayer = 96;
     private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
-    public static final int spawnTickDelay = 200; // ~10 seconds
-    public static final int attemptsPerTick = 10; // number of candidate positions to try each spawn tick
-    public static final int searchRadius = 8; // radius around chosen point to search for a valid spawn position
+    public static int spawnTickDelay = 200; // ~10 seconds
+    public static int attemptsPerTick = 10; // number of candidate positions to try each spawn tick
+    public static int searchRadius = 8; // radius around chosen point to search for a valid spawn position
 
     /**
      * This method is called from a server tick event to attempt ambient spawns.
