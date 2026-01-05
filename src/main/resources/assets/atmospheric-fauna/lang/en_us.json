@@ -1,6 +1,11 @@
 {
-  "title.atmosphericfauna.config": "Atmospheric Fauna Configuration",
-  "category.atmosphericfauna.general": "General Settings",
+  "title.atmosphericfauna.config": "Atmospheric Fauna - Configuration",
+  "category.atmosphericfauna.spawning": "Spawning",
+  "category.atmosphericfauna.birds": "Birds",
+  "subcategory.atmosphericfauna.crows": "Crows",
   "option.atmosphericfauna.max_active_crows": "Maximum Active Crows",
-  "option.atmosphericfauna.max_active_crows.tooltip": "Sets the maximum number of active crow particles in the world at any given time."
+  "option.atmosphericfauna.max_active_crows.tooltip": "Sets the maximum number of active crow particles in the world at any given time.",
+  "category.atmosphericfauna.debug": "Debug",
+  "option.atmosphericfauna.debug_text_spawning": "Enable Spawning Debug Text",
+  "option.atmosphericfauna.debug_text_spawning.tooltip": "Enables debug text for ambient spawning in the world."
 }

@@ -15,6 +15,8 @@ import java.util.List;
 
 public class AmbientSpawning {
 
+    public static boolean debugText = false;
+
     // --- SPAWN DATA CONSTANTS ---
 
     private record SpawnData(
@@ -47,11 +49,11 @@ public class AmbientSpawning {
     // Future bird types can be added here
     );
 
-    private static final int SPAWN_RANGE_FROM_PLAYER = 96;
+    public static final int spawnRangeFromPlayer = 96;
     private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
-    private static final int SPAWN_TICK_DELAY = 200; // ~10 seconds
-    private static final int ATTEMPTS_PER_TICK = 10; // number of candidate positions to try each spawn tick
-    private static final int SEARCH_RADIUS = 8; // radius around chosen point to search for a valid spawn position
+    public static final int spawnTickDelay = 200; // ~10 seconds
+    public static final int attemptsPerTick = 10; // number of candidate positions to try each spawn tick
+    public static final int searchRadius = 8; // radius around chosen point to search for a valid spawn position
 
     /**
      * This method is called from a server tick event to attempt ambient spawns.
@@ -59,7 +61,7 @@ public class AmbientSpawning {
      * @param world The server world.
      */
     public static void tick(ServerLevel world) {
-        if (world.getGameTime() % SPAWN_TICK_DELAY != 0) {
+        if (world.getGameTime() % spawnTickDelay != 0) {
             return;
         }
 
@@ -86,7 +88,8 @@ public class AmbientSpawning {
     }
 
     private static void trySpawn(ServerLevel world, RandomSource random, SpawnData spawnData) {
-        System.out.println("Attempting to spawn Crow");
+        if (debugText)
+            System.out.println("Attempting to spawn Crow...");
         // Only spawn if weather conditions are right
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             return;
@@ -104,17 +107,17 @@ public class AmbientSpawning {
             return;
 
         // Try several candidate positions to increase robustness
-        for (int attempt = 0; attempt < ATTEMPTS_PER_TICK; attempt++) {
+        for (int attempt = 0; attempt < attemptsPerTick; attempt++) {
             // pick a random player to spawn near
             var player = players.get(random.nextInt(players.size()));
             BlockPos playerPos = player.blockPosition();
 
-            int baseX = playerPos.getX() + random.nextInt(SPAWN_RANGE_FROM_PLAYER * 2) - SPAWN_RANGE_FROM_PLAYER;
-            int baseZ = playerPos.getZ() + random.nextInt(SPAWN_RANGE_FROM_PLAYER * 2) - SPAWN_RANGE_FROM_PLAYER;
+            int baseX = playerPos.getX() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
+            int baseZ = playerPos.getZ() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
 
             // search nearby for a valid spawn spot (helps avoid water, leaves, or other bad
             // spots)
-            BlockPos found = findValidSpawnNear(world, random, baseX, baseZ, spawnData, SEARCH_RADIUS, 12);
+            BlockPos found = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
             if (found != null) {
                 // Spawn a small pack around that found position
                 int packSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
@@ -132,9 +135,10 @@ public class AmbientSpawning {
                                 individualSpawnPos.getZ() + 0.5,
                                 1, 0, 0, 0, 0);
                         spawned++;
-                        System.out.println("Spawned Crow at "
-                                + individualSpawnPos.getX() + ", " + individualSpawnPos.getY() + ", "
-                                + individualSpawnPos.getZ());
+                        if (debugText)
+                            System.out.println("Spawned Crow at "
+                                    + individualSpawnPos.getX() + ", " + individualSpawnPos.getY() + ", "
+                                    + individualSpawnPos.getZ());
                     }
                 }
                 // Success, don't keep trying more attempts this tick
