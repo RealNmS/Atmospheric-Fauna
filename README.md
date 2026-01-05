@@ -20,6 +20,14 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 
 ---
 
+## Project Status
+
+This mod is currently in **early development**. A lot of features might be missing or be buggy. Please be patient and report any issues you find!
+
+**_!! Currently tested only in singleplayer, multiplayer is not tested and might not work or crash your game !!_**
+
+---
+
 ## Description
 
 Atmospheric Fauna is a Fabric mod which I created just to fix the lonely atmosphere of Minecraft. I decided to add (hugely inpired by [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters)) particle based birds that can fly around and interact with the world. I'm also using this as a way to learn about modding and coding in Java, because it's something I've wanted to learn for a long time (also I might learn some pixel art as well).
@@ -33,14 +41,6 @@ For the best experience I recommend using this alongside with [ModMenu](https://
 ## Birds
 
 ### Crow
-
----
-
-## Project Status
-
-This mod is currently in **early development**. A lot of features might be missing or be buggy. Please be patient and report any issues you find!
-
-**_!! Currently works only in singleplayer, multiplayer is not tested and might not work or crash your game !!_**
 
 ---
 
