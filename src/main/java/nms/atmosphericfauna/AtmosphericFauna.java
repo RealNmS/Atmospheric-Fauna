@@ -3,6 +3,7 @@ package nms.atmosphericfauna;
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
+
 import net.fabricmc.api.ClientModInitializer;
 // import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
