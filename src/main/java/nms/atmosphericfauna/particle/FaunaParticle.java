@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public abstract class FaunaParticle extends SingleQuadParticle {
 
@@ -17,9 +18,8 @@ public abstract class FaunaParticle extends SingleQuadParticle {
         this.hasPhysics = false;
     }
 
-    @SuppressWarnings("null")
     @Override
-    protected Layer getLayer() {
+    protected @NonNull Layer getLayer() {
         return Layer.OPAQUE;
     }
 
