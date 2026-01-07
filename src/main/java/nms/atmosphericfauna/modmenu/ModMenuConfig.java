@@ -94,7 +94,7 @@ public class ModMenuConfig {
         debug.addEntry(entryBuilder
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.debug_text_crows"),
-                        AmbientSpawning.debugText)
+                        CrowParticle.debugText)
                 .setDefaultValue(false)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.debug_text_crows.tooltip"))

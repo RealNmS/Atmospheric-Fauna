@@ -46,12 +46,22 @@ public class ConfigHandler {
     }
 
     public static class ConfigData {
+
+        // Spawning Category
+
         public int spawnRangeFromPlayer = 96;
         public int spawnTickDelay = 100;
         public int attemptsPerTick = 15;
         public int searchRadius = 12;
-        public boolean debugText = false;
+
+        // Birds Category
+
         public int maxActiveCrows = 120;
+
+        // Debug Category
+
+        public boolean debugText = false;
+        public boolean debugCrows = false;
     }
 
     private static ConfigData saveData() {
@@ -71,7 +81,7 @@ public class ConfigHandler {
         // Debug Category
 
         data.debugText = AmbientSpawning.debugText;
-        data.debugText = CrowParticle.debugText;
+        data.debugCrows = CrowParticle.debugText;
 
         return data;
     }
@@ -92,6 +102,6 @@ public class ConfigHandler {
         // Debug Category
 
         AmbientSpawning.debugText = data.debugText;
-        CrowParticle.debugText = data.debugText;
+        CrowParticle.debugText = data.debugCrows;
     }
 }
