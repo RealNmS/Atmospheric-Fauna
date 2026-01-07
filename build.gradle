@@ -35,6 +35,7 @@ dependencies {
 
 processResources {
 	inputs.property "version", project.version
+	exclude '**/docs/**'
 
 	filesMatching("fabric.mod.json") {
 		expand "version": inputs.properties.version
