@@ -14,8 +14,7 @@
   "icon": "assets/atmospheric-fauna/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["nms.atmosphericfauna.AtmosphericFauna"],
-    "client": ["nms.atmosphericfauna.AtmosphericFaunaClient"],
+    "client": ["nms.atmosphericfauna.AtmosphericFauna"],
     "modmenu": ["nms.atmosphericfauna.modmenu.ModMenuCompat"]
   },
   "mixins": ["atmospheric-fauna.mixins.json"],
