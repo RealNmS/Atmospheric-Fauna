@@ -2,11 +2,12 @@ package nms.atmosphericfauna;
 
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.CrowParticle;
-// import nms.atmosphericfauna.spawning.AmbientSpawning;
+import nms.atmosphericfauna.spawning.AmbientSpawning;
 import net.fabricmc.api.ClientModInitializer;
 // import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 // import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -50,5 +51,9 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		// Register particle factories
 
 		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
+
+		// Ambient spawning
+
+		ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
 	}
 }

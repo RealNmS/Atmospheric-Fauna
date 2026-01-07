@@ -1,12 +1,12 @@
 package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
-
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.server.level.ServerLevel;
+// import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.LightLayer;
@@ -55,7 +55,7 @@ public class AmbientSpawning {
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
 
-    public static void tick(ServerLevel world) {
+    public static void tick(ClientLevel world) {
         if (world.getGameTime() % spawnTickDelay != 0) {
             return;
         }
@@ -82,7 +82,7 @@ public class AmbientSpawning {
         }
     }
 
-    private static void trySpawn(ServerLevel world, RandomSource random, SpawnData spawnData) {
+    private static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
         if (debugText)
             System.out.println("[AtmosphericFauna] Ambient spawning cycle started...");
 
@@ -130,11 +130,11 @@ public class AmbientSpawning {
                     targetPos = adjustToGround(world, targetPos);
 
                     if (isValidSpawnLocation(world, targetPos, spawnData)) {
-                        world.sendParticles(spawnData.particleType(),
+                        world.addParticle(spawnData.particleType(),
                                 targetPos.getX() + 0.5,
                                 targetPos.getY() + 0.5,
                                 targetPos.getZ() + 0.5,
-                                1, 0, 0, 0, 0);
+                                0, 0, 0); // velocity x, y, z
 
                         spawnedCount++;
                     }
@@ -159,7 +159,7 @@ public class AmbientSpawning {
 
     // Helper to snap a position to the nearest solid ground within 3 blocks
     // vertical
-    private static BlockPos adjustToGround(ServerLevel world, BlockPos pos) {
+    private static BlockPos adjustToGround(ClientLevel world, BlockPos pos) {
         if (!world.isEmptyBlock(pos.below()) && world.isEmptyBlock(pos))
             return pos;
 
@@ -172,7 +172,7 @@ public class AmbientSpawning {
         return pos;
     }
 
-    private static BlockPos findValidSpawnNear(ServerLevel world, RandomSource random, int centerX, int centerZ,
+    private static BlockPos findValidSpawnNear(ClientLevel world, RandomSource random, int centerX, int centerZ,
             SpawnData spawnData, int radius, int samples) {
 
         // Sample random spots
@@ -190,7 +190,7 @@ public class AmbientSpawning {
         return null;
     }
 
-    private static boolean isValidSpawnLocation(ServerLevel world, BlockPos pos, SpawnData spawnData) {
+    private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
         if (pos.getY() > spawnData.maxSpawnHeight())
             return false;
 
