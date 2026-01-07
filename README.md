@@ -24,8 +24,6 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 
 This mod is currently in **early development**. A lot of features might be missing or be buggy. Please be patient and report any issues you find!
 
-**_!! Currently tested only in singleplayer, multiplayer is not tested and might not work or crash your game !!_**
-
 ---
 
 ## Description
