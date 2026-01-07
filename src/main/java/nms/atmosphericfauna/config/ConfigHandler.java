@@ -71,6 +71,7 @@ public class ConfigHandler {
         // Debug Category
 
         data.debugText = AmbientSpawning.debugText;
+        data.debugText = CrowParticle.debugText;
 
         return data;
     }
@@ -91,5 +92,6 @@ public class ConfigHandler {
         // Debug Category
 
         AmbientSpawning.debugText = data.debugText;
+        CrowParticle.debugText = data.debugText;
     }
 }

@@ -91,6 +91,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> AmbientSpawning.debugText = newValue)
                 .build());
 
+        debug.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.debug_text_crows"),
+                        AmbientSpawning.debugText)
+                .setDefaultValue(false)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.debug_text_crows.tooltip"))
+                .setSaveConsumer(newValue -> CrowParticle.debugText = newValue)
+                .build());
+
         return builder.build();
     }
 }

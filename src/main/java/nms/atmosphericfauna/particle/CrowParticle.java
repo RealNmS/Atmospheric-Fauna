@@ -54,6 +54,8 @@ public class CrowParticle extends FaunaParticle {
 
     // --- CONSTANTS ---
 
+    public static boolean debugText = false;
+
     private final float flySpeed = 0.20f;
     private final double steerStrength = 0.0075;
     private final double minFlightHeight = 2.5; // how many blocks above ground
@@ -162,17 +164,17 @@ public class CrowParticle extends FaunaParticle {
         }
 
         // ONLY FOR TESTING
-        /*
-         * if (this.age % 10 == 0) {
-         * System.out.println("Crow #" + this.hashCode() + " | State: " + this.state +
-         * " | Height: "
-         * + String.format("%.2f", this.y));
-         * System.out.println("   Crow #" + this.hashCode() + " | xd: " +
-         * String.format("%.3f", this.xd) + " | yd: "
-         * + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f",
-         * this.zd));
-         * }
-         */
+        if (debugText) {
+            if (this.age % 10 == 0) {
+                System.out.println("Crow #" + this.hashCode() + " | State: " + this.state +
+                        " | Height: "
+                        + String.format("%.2f", this.y));
+                System.out.println("   Crow #" + this.hashCode() + " | xd: " +
+                        String.format("%.3f", this.xd) + " | yd: "
+                        + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f",
+                                this.zd));
+            }
+        }
 
         if (this.age % 3 == 0 && state != State.DYING && state != State.PERCHED) {
             updateSpriteFacing();
@@ -239,36 +241,28 @@ public class CrowParticle extends FaunaParticle {
         }
     }
 
-    // Scare nearby perched crows into a quick, directional takeoff away from the
-    // source player
-    private void scareTakeoff(Player source) {
-        double dx = this.x - source.getX();
-        double dz = this.z - source.getZ();
-        double mag = Math.sqrt(dx * dx + dz * dz);
-        if (mag < 0.001) {
-            dx = (Math.random() - 0.5);
-            dz = (Math.random() - 0.5);
-            mag = Math.sqrt(dx * dx + dz * dz);
+    // takeoff logic
+    private void performTakeoff(Player source) {
+        if (source != null) {
+            double dx = this.x - source.getX();
+            double dz = this.z - source.getZ();
+            double mag = Math.sqrt(dx * dx + dz * dz);
+            if (mag < 0.001) {
+                dx = (Math.random() - 0.5);
+                dz = (Math.random() - 0.5);
+                mag = Math.sqrt(dx * dx + dz * dz);
+            }
+            this.xd = (dx / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
+            this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
+        } else {
+            this.xd = (Math.random() - 0.5) * 0.08;
+            this.zd = (Math.random() - 0.5) * 0.08;
         }
-        this.xd = (dx / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
-        this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
-        this.yd = 0.12 + Math.random() * 0.08;
-        this.state = State.TAKING_OFF;
-        this.setBaseSprite("crow_fly_1");
-        this.perchTimer = 12;
-        this.landingCooldown = 100;
-        this.perchBlockPos = null;
-        groupTakeoff();
-    }
-
-    // Generic takeoff when the perch block disappears
-    private void perchBlockRemovedTakeoff() {
-        this.xd += (Math.random() - 0.5) * 0.08;
-        this.zd += (Math.random() - 0.5) * 0.08;
         this.yd = 0.12 + Math.random() * 0.05;
+        this.perchTimer = 12;
+
         this.state = State.TAKING_OFF;
         this.setBaseSprite("crow_fly_1");
-        this.perchTimer = 10;
         this.landingCooldown = 100;
         this.perchBlockPos = null;
         groupTakeoff();
@@ -649,7 +643,7 @@ public class CrowParticle extends FaunaParticle {
         }
 
         if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
-            perchBlockRemovedTakeoff();
+            performTakeoff(null);
             return;
         }
 
@@ -665,7 +659,7 @@ public class CrowParticle extends FaunaParticle {
             double distSq = dx * dx + dz * dz;
             double dy = Math.abs(p.getY() - this.y);
             if (distSq <= scareRadiusSq && dy < 3.0) {
-                scareTakeoff(p);
+                performTakeoff(p);
                 return;
             }
         }
@@ -704,15 +698,17 @@ public class CrowParticle extends FaunaParticle {
 
         // Remove if we hit the void or have fallen far enough
         if (this.y < -64) {
-            System.out
-                    .println("Crow #" + this.hashCode() + " has died at age " + this.age + " ticks.");
+            if (debugText) {
+                System.out.println("Crow #" + this.hashCode() + " has died at age " + this.age + " ticks.");
+            }
             this.remove();
         }
 
         // Hard limit to prevent memory leaks if it falls forever
         if (this.age > this.lifetime + 200) {
-            System.out
-                    .println("Crow #" + this.hashCode() + " forcibly removed after exceeding death time limit.");
+            if (debugText) {
+                System.out.println("Crow #" + this.hashCode() + " forcibly removed after exceeding death time limit.");
+            }
             this.remove();
         }
     }
