@@ -28,12 +28,7 @@ public class ConfigHandler {
             @SuppressWarnings("null")
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
             if (data != null) {
-                AmbientSpawning.spawnRangeFromPlayer = data.spawnRangeFromPlayer;
-                AmbientSpawning.spawnTickDelay = data.spawnTickDelay;
-                AmbientSpawning.attemptsPerTick = data.attemptsPerTick;
-                AmbientSpawning.searchRadius = data.searchRadius;
-                AmbientSpawning.debugText = data.debugText;
-                CrowParticle.maxActiveCrows = data.maxActiveCrows;
+                loadData(data);
             }
         } catch (IOException e) {
             AtmosphericFauna.LOGGER.error("Failed to load config", e);
@@ -41,13 +36,7 @@ public class ConfigHandler {
     }
 
     public static void save() {
-        ConfigData data = new ConfigData();
-        data.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
-        data.spawnTickDelay = AmbientSpawning.spawnTickDelay;
-        data.attemptsPerTick = AmbientSpawning.attemptsPerTick;
-        data.searchRadius = AmbientSpawning.searchRadius;
-        data.debugText = AmbientSpawning.debugText;
-        data.maxActiveCrows = CrowParticle.maxActiveCrows;
+        ConfigData data = saveData();
 
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(data, writer);
@@ -63,5 +52,44 @@ public class ConfigHandler {
         public int searchRadius = 12;
         public boolean debugText = false;
         public int maxActiveCrows = 120;
+    }
+
+    private static ConfigData saveData() {
+        ConfigData data = new ConfigData();
+
+        // Spawning Category
+
+        data.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
+        data.spawnTickDelay = AmbientSpawning.spawnTickDelay;
+        data.attemptsPerTick = AmbientSpawning.attemptsPerTick;
+        data.searchRadius = AmbientSpawning.searchRadius;
+
+        // Birds Category
+
+        data.maxActiveCrows = CrowParticle.maxActiveCrows;
+
+        // Debug Category
+
+        data.debugText = AmbientSpawning.debugText;
+
+        return data;
+    }
+
+    private static void loadData(ConfigData data) {
+
+        // Spawning Category
+
+        AmbientSpawning.spawnRangeFromPlayer = data.spawnRangeFromPlayer;
+        AmbientSpawning.spawnTickDelay = data.spawnTickDelay;
+        AmbientSpawning.attemptsPerTick = data.attemptsPerTick;
+        AmbientSpawning.searchRadius = data.searchRadius;
+
+        // Birds Category
+
+        CrowParticle.maxActiveCrows = data.maxActiveCrows;
+
+        // Debug Category
+
+        AmbientSpawning.debugText = data.debugText;
     }
 }
