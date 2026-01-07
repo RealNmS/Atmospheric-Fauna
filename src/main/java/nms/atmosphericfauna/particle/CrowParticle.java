@@ -150,7 +150,8 @@ public class CrowParticle extends FaunaParticle {
 
         // Update flapping animation
         if (state != State.DYING && state != State.PERCHED) {
-            if (this.age % 5 == 0) {
+            if (this.age % (4 - ((int) (this.yd * 10))) == 0) {
+                System.out.println("Crow flapping speed: " + this.yd * 10);
                 if (this.baseSpriteName != null && this.baseSpriteName.startsWith("crow_fly_")) {
                     int frame = Integer
                             .parseInt(this.baseSpriteName.substring("crow_fly_".length()));
