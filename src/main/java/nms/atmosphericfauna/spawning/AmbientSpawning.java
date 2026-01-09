@@ -107,8 +107,12 @@ public class AmbientSpawning {
             var player = players.get(random.nextInt(players.size()));
             BlockPos playerPos = player.blockPosition();
 
-            int baseX = playerPos.getX() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
-            int baseZ = playerPos.getZ() + random.nextInt(spawnRangeFromPlayer * 2) - spawnRangeFromPlayer;
+            double angle = random.nextFloat() * Math.PI * 2;
+            double minDist = spawnRangeFromPlayer / 2.0;
+            double distance = minDist + random.nextFloat() * (spawnRangeFromPlayer - minDist);
+
+            int baseX = playerPos.getX() + (int) (Math.cos(angle) * distance);
+            int baseZ = playerPos.getZ() + (int) (Math.sin(angle) * distance);
 
             BlockPos foundCenter = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
 
