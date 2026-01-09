@@ -213,16 +213,30 @@ public class CrowParticle extends FaunaParticle {
             if (nb == this)
                 continue;
             if (nb.state == State.FLYING && nb.landingCooldown == 0) {
+                BlockPos actualTarget = target;
+
+                // Try to find a slightly different spot nearby
+                if (random.nextFloat() < 0.9) {
+                    int dx = random.nextInt(7) - 3;
+                    int dz = random.nextInt(7) - 3;
+
+                    // Scan vertical range to find ground at this offset
+                    for (int dy = 3; dy >= -3; dy--) {
+                        BlockPos p = target.offset(dx, dy, dz);
+                        if (!level.getBlockState(p).isAir() &&
+                                level.getBlockState(p.above()).isAir() &&
+                                level.getBlockState(p).isFaceSturdy(level, p, Direction.UP)) {
+                            actualTarget = p;
+                            break;
+                        }
+                    }
+                }
+
                 nb.state = State.LANDING;
-                nb.landingBlockPos = target;
-                // small random offset so flocked crows don't all land on the exact center
+                nb.landingBlockPos = actualTarget;
+                nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
                 nb.landingOffsetX = (Math.random() - 0.5) * 0.8;
                 nb.landingOffsetZ = (Math.random() - 0.5) * 0.8;
-                nb.landingTargetY = target.getY() + 1.0 + nb.quadSize;
-                nb.goalTimer = 10;
-                nb.goalX = target.getX() + 0.5 + nb.landingOffsetX;
-                nb.goalY = nb.landingTargetY + 0.5;
-                nb.goalZ = target.getZ() + 0.5 + nb.landingOffsetZ;
             }
         }
     }
@@ -242,7 +256,7 @@ public class CrowParticle extends FaunaParticle {
         }
     }
 
-    // takeoff logic
+    // Takeoff logic
     private void performTakeoff(Player source) {
         if (source != null) {
             double dx = this.x - source.getX();
@@ -281,7 +295,7 @@ public class CrowParticle extends FaunaParticle {
         double nx = Math.cos(angle) * randRadius + forwardBiasX * 5.0 * (Math.random() - 0.5);
         double nz = Math.sin(angle) * randRadius + forwardBiasZ * 5.0 * (Math.random() - 0.5);
 
-        // ensure we pick a goal above ground and bias upwards when low or just took off
+        // Ensure we pick a goal above ground and bias upwards when low or just took off
         double ground = sampleGroundHeight(this.x, this.z);
         double ny;
         if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
