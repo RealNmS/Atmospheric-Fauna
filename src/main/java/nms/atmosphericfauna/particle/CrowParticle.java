@@ -100,7 +100,6 @@ public class CrowParticle extends FaunaParticle {
         this.yd = 0.05;
         ALL_CROWS.add(this);
 
-        this.wingFlapOffset = random.nextInt(baseWingFlappingSpeed);
         this.baseSpriteName = "crow_fly_1";
         updateSpriteFacing();
 
