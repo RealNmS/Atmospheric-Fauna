@@ -27,7 +27,6 @@ public class AmbientSpawning {
             int maxPackSize,
             int minLightLevel,
             int maxLightLevel,
-            int maxSpawnHeight,
             boolean spawnInBadWeather,
             boolean spawnDuringDay,
             boolean spawnDuringNight,
@@ -39,7 +38,6 @@ public class AmbientSpawning {
             30, // weight
             3, 8, // pack size
             8, 15, // light level
-            140, // max height
             true, // spawn in bad weather
             true, // spawn during day
             true, // spawn during night
@@ -192,9 +190,6 @@ public class AmbientSpawning {
     }
 
     private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
-        if (pos.getY() > spawnData.maxSpawnHeight())
-            return false;
-
         // Quick fail: Must have air above and block below
         if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below()))
             return false;
