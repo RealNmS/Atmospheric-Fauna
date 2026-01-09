@@ -35,6 +35,7 @@ public class CrowParticle extends FaunaParticle {
     private int goalTimer = 0;
 
     private int perchTimer = 0;
+    private int perchedTimer = 0;
     private int landingCooldown = 0;
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
@@ -250,7 +251,7 @@ public class CrowParticle extends FaunaParticle {
                 nb.state = State.TAKING_OFF;
                 nb.setBaseSprite("crow_fly_1");
                 nb.perchTimer = 5;
-                nb.landingCooldown = 100;
+                nb.landingCooldown = 100 + nb.perchedTimer;
                 nb.perchBlockPos = null;
             }
         }
@@ -275,11 +276,11 @@ public class CrowParticle extends FaunaParticle {
         }
         this.yd = 0.12 + Math.random() * 0.05;
         this.perchTimer = 12;
+        this.landingCooldown = 100 + this.perchedTimer;
+        this.perchBlockPos = null;
 
         this.state = State.TAKING_OFF;
         this.setBaseSprite("crow_fly_1");
-        this.landingCooldown = 100;
-        this.perchBlockPos = null;
         groupTakeoff();
     }
 
@@ -555,6 +556,8 @@ public class CrowParticle extends FaunaParticle {
     }
 
     private void tickLanding() {
+        this.perchedTimer = 0;
+
         // If target missing, abort to flying
         if (this.landingBlockPos == null || Double.isNaN(this.landingTargetY)) {
             this.state = State.FLYING;
@@ -648,6 +651,8 @@ public class CrowParticle extends FaunaParticle {
     }
 
     private void tickPerched() {
+        this.perchedTimer++;
+
         this.xd = 0;
         this.zd = 0;
         this.yd = 0;
