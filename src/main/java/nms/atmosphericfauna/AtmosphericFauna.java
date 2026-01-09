@@ -21,7 +21,7 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 	public static final String MOD_ID = "atmospheric-fauna";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final SimpleParticleType CROW = FabricParticleTypes.simple();
+	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
 
 	/*
 	 * only for now because idk how to set up client and server initializers
