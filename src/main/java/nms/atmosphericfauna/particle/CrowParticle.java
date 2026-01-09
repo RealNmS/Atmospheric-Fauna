@@ -42,14 +42,16 @@ public class CrowParticle extends FaunaParticle {
     private double landingOffsetZ = 0.0;
     private BlockPos perchBlockPos = null; // stores actual perch while perched
 
-    private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
+    private final int baseWingFlappingSpeed = 4;
+    private int wingFlapOffset = random.nextInt(baseWingFlappingSpeed);
 
     private String baseSpriteName = "crow_fly_1";
     private static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
     private boolean facingRight = false;
 
-    public static int maxActiveCrows = 120; // configurable max active crows
+    private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
     private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
+    public static int maxActiveCrows = 120; // configurable max active crows
     private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
     // --- CONSTANTS ---
@@ -98,6 +100,7 @@ public class CrowParticle extends FaunaParticle {
         this.yd = 0.05;
         ALL_CROWS.add(this);
 
+        this.wingFlapOffset = random.nextInt(baseWingFlappingSpeed);
         this.baseSpriteName = "crow_fly_1";
         updateSpriteFacing();
 
@@ -152,7 +155,7 @@ public class CrowParticle extends FaunaParticle {
 
         // Update flapping animation
         if (state != State.DYING && state != State.PERCHED) {
-            if (this.age % (4 - ((int) (this.yd * 10))) == 0) {
+            if (this.age % (this.baseWingFlappingSpeed - ((int) (this.yd * 10))) == this.wingFlapOffset) {
                 if (this.baseSpriteName != null && this.baseSpriteName.startsWith("crow_fly_")) {
                     int frame = Integer
                             .parseInt(this.baseSpriteName.substring("crow_fly_".length()));
