@@ -36,7 +36,7 @@ public class CrowParticle extends FaunaParticle {
 
     private int perchTimer = 0;
     private int perchedTimer = 0;
-    private int landingCooldown = 0;
+    private int landingCooldown = random.nextInt(600);
     private Double landingTargetY = Double.NaN;
     private BlockPos landingBlockPos = null;
     private double landingOffsetX = 0.0;
@@ -217,7 +217,7 @@ public class CrowParticle extends FaunaParticle {
         for (CrowParticle nb : getNeighbors(flockRadius)) {
             if (nb == this)
                 continue;
-            if (nb.state == State.FLYING && nb.landingCooldown == 0) {
+            if (nb.state == State.FLYING) {
                 BlockPos actualTarget = target;
 
                 // Try to find a slightly different spot nearby
@@ -386,6 +386,8 @@ public class CrowParticle extends FaunaParticle {
             double avx = 0, avy = 0, avz = 0;
             int count = 0;
             for (CrowParticle nb : neighbors) {
+                if (nb.state == State.PERCHED || nb.state == State.DYING)
+                    continue;
                 cx += nb.x;
                 cy += nb.y;
                 cz += nb.z;
@@ -394,42 +396,47 @@ public class CrowParticle extends FaunaParticle {
                 avz += nb.zd;
                 count++;
             }
-            cx /= count;
-            cy /= count;
-            cz /= count;
-            avx /= count;
-            avy /= count;
-            avz /= count;
 
-            double cohX = (cx - this.x) * cohesionStrength;
-            double cohY = (cy - this.y) * cohesionStrength;
-            double cohZ = (cz - this.z) * cohesionStrength;
+            if (count > 0) {
+                cx /= count;
+                cy /= count;
+                cz /= count;
+                avx /= count;
+                avy /= count;
+                avz /= count;
 
-            double aliX = (avx - this.xd) * alignmentStrength;
-            double aliY = (avy - this.yd) * alignmentStrength;
-            double aliZ = (avz - this.zd) * alignmentStrength;
+                double cohX = (cx - this.x) * cohesionStrength;
+                double cohY = (cy - this.y) * cohesionStrength;
+                double cohZ = (cz - this.z) * cohesionStrength;
 
-            double sepX = 0, sepY = 0, sepZ = 0;
-            for (CrowParticle nb : neighbors) {
-                double dx = this.x - nb.x;
-                double dy = this.y - nb.y;
-                double dz = this.z - nb.z;
-                double d2 = dx * dx + dy * dy + dz * dz;
-                if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
-                    double d = Math.sqrt(d2);
-                    double factor = (separationDistance - d) / separationDistance;
-                    sepX += (dx / d) * factor;
-                    sepY += (dy / d) * factor;
-                    sepZ += (dz / d) * factor;
+                double aliX = (avx - this.xd) * alignmentStrength;
+                double aliY = (avy - this.yd) * alignmentStrength;
+                double aliZ = (avz - this.zd) * alignmentStrength;
+
+                double sepX = 0, sepY = 0, sepZ = 0;
+                for (CrowParticle nb : neighbors) {
+                    if (nb.state == State.PERCHED || nb.state == State.DYING)
+                        continue;
+                    double dx = this.x - nb.x;
+                    double dy = this.y - nb.y;
+                    double dz = this.z - nb.z;
+                    double d2 = dx * dx + dy * dy + dz * dz;
+                    if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
+                        double d = Math.sqrt(d2);
+                        double factor = (separationDistance - d) / separationDistance;
+                        sepX += (dx / d) * factor;
+                        sepY += (dy / d) * factor;
+                        sepZ += (dz / d) * factor;
+                    }
                 }
-            }
-            sepX *= separationStrength;
-            sepY *= separationStrength;
-            sepZ *= separationStrength;
+                sepX *= separationStrength;
+                sepY *= separationStrength;
+                sepZ *= separationStrength;
 
-            this.xd += cohX + aliX + sepX;
-            this.yd += cohY + aliY + sepY;
-            this.zd += cohZ + aliZ + sepZ;
+                this.xd += cohX + aliX + sepX;
+                this.yd += cohY + aliY + sepY;
+                this.zd += cohZ + aliZ + sepZ;
+            }
         }
 
         if (this.y <= groundY + minFlightHeight + 0.3) {
