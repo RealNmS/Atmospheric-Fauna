@@ -112,6 +112,10 @@ public class CrowParticle extends FaunaParticle {
         this.counted = true;
     }
 
+    public static int getCount() {
+        return ACTIVE_COUNT.get();
+    }
+
     @Override
     public void remove() {
         ALL_CROWS.remove(this);

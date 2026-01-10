@@ -1,6 +1,7 @@
 package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
+import nms.atmosphericfauna.particle.CrowParticle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class AmbientSpawning {
 
@@ -31,7 +33,8 @@ public class AmbientSpawning {
             boolean spawnInBadWeather,
             boolean spawnDuringDay,
             boolean spawnDuringNight,
-            TagKey<Biome> validBiomeTag) {
+            TagKey<Biome> validBiomeTag,
+            BooleanSupplier canSpawn) {
     }
 
     private static final SpawnData CROW_SPAWN_DATA = new SpawnData(
@@ -43,7 +46,8 @@ public class AmbientSpawning {
             true, // spawn in bad weather
             true, // spawn during day
             true, // spawn during night
-            BiomeTags.IS_OVERWORLD);
+            BiomeTags.IS_OVERWORLD,
+            () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows);
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
             CROW_SPAWN_DATA
@@ -87,6 +91,10 @@ public class AmbientSpawning {
         if (debugText)
             System.out.println("[AtmosphericFauna] Ambient spawning cycle started...");
 
+        if (!spawnData.canSpawn().getAsBoolean()) {
+            return;
+        }
+
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             return;
         }
@@ -126,6 +134,10 @@ public class AmbientSpawning {
 
                 // Try to spawn the whole pack
                 while (spawnedCount < targetPackSize && failSafe < targetPackSize * 8) {
+                    if (!spawnData.canSpawn().getAsBoolean()) {
+                        break;
+                    }
+
                     failSafe++;
 
                     int dx = random.nextInt(9) - 4;
