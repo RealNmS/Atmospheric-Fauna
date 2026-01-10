@@ -48,20 +48,30 @@ public class ConfigHandler {
     public static class ConfigData {
 
         // Spawning Category
+        public Spawning spawning = new Spawning();
 
-        public int spawnRangeFromPlayer;
-        public int spawnTickDelay;
-        public int attemptsPerTick;
-        public int searchRadius;
+        public static class Spawning {
+            public int spawnRangeFromPlayer;
+            public int spawnTickDelay;
+            public int attemptsPerTick;
+            public int searchRadius;
+        }
 
         // Birds Category
+        public Birds birds = new Birds();
 
-        public int maxActiveCrows;
+        public static class Birds {
+            public int maxActiveCrows;
+        }
 
         // Debug Category
+        public Debug debug = new Debug();
 
-        public boolean debugText;
-        public boolean debugCrows;
+        public static class Debug {
+            public boolean debugText;
+            public boolean debugCrows;
+        }
+
     }
 
     private static ConfigData saveData() {
@@ -69,19 +79,19 @@ public class ConfigHandler {
 
         // Spawning Category
 
-        data.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
-        data.spawnTickDelay = AmbientSpawning.spawnTickDelay;
-        data.attemptsPerTick = AmbientSpawning.attemptsPerTick;
-        data.searchRadius = AmbientSpawning.searchRadius;
+        data.spawning.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
+        data.spawning.spawnTickDelay = AmbientSpawning.spawnTickDelay;
+        data.spawning.attemptsPerTick = AmbientSpawning.attemptsPerTick;
+        data.spawning.searchRadius = AmbientSpawning.searchRadius;
 
         // Birds Category
 
-        data.maxActiveCrows = CrowParticle.maxActiveCrows;
+        data.birds.maxActiveCrows = CrowParticle.maxActiveCrows;
 
         // Debug Category
 
-        data.debugText = AmbientSpawning.debugText;
-        data.debugCrows = CrowParticle.debugText;
+        data.debug.debugText = AmbientSpawning.debugText;
+        data.debug.debugCrows = CrowParticle.debugText;
 
         return data;
     }
@@ -90,18 +100,18 @@ public class ConfigHandler {
 
         // Spawning Category
 
-        AmbientSpawning.spawnRangeFromPlayer = data.spawnRangeFromPlayer;
-        AmbientSpawning.spawnTickDelay = data.spawnTickDelay;
-        AmbientSpawning.attemptsPerTick = data.attemptsPerTick;
-        AmbientSpawning.searchRadius = data.searchRadius;
+        AmbientSpawning.spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
+        AmbientSpawning.spawnTickDelay = data.spawning.spawnTickDelay;
+        AmbientSpawning.attemptsPerTick = data.spawning.attemptsPerTick;
+        AmbientSpawning.searchRadius = data.spawning.searchRadius;
 
         // Birds Category
 
-        CrowParticle.maxActiveCrows = data.maxActiveCrows;
+        CrowParticle.maxActiveCrows = data.birds.maxActiveCrows;
 
         // Debug Category
 
-        AmbientSpawning.debugText = data.debugText;
-        CrowParticle.debugText = data.debugCrows;
+        AmbientSpawning.debugText = data.debug.debugText;
+        CrowParticle.debugText = data.debug.debugCrows;
     }
 }
