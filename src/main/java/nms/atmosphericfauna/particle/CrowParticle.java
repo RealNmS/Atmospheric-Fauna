@@ -52,7 +52,7 @@ public class CrowParticle extends FaunaParticle {
 
     private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
     private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
-    public static int maxActiveCrows = 120; // configurable max active crows
+    public static int maxActiveCrows = 50; // configurable max active crows
     private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
     // --- CONSTANTS ---

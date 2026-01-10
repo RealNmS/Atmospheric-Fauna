@@ -37,7 +37,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
                         AmbientSpawning.spawnTickDelay)
-                .setDefaultValue(100)
+                .setDefaultValue(200)
                 .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnTickDelay = newValue)
                 .build());
@@ -69,7 +69,7 @@ public class ModMenuConfig {
         crows.add(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
                         CrowParticle.maxActiveCrows)
-                .setDefaultValue(120)
+                .setDefaultValue(50)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
                 .setSaveConsumer(newValue -> CrowParticle.maxActiveCrows = newValue)
                 .build());

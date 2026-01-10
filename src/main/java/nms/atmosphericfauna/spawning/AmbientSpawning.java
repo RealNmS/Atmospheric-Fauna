@@ -52,7 +52,7 @@ public class AmbientSpawning {
 
     public static int spawnRangeFromPlayer = 96;
     private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
-    public static int spawnTickDelay = 100;
+    public static int spawnTickDelay = 200;
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
 
