@@ -9,6 +9,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 // import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -22,6 +23,8 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
+
+	private static int chunkLoadCount = 0;
 
 	/*
 	 * only for now because idk how to set up client and server initializers
@@ -56,5 +59,12 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		// Ambient spawning
 
 		ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
+
+		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
+			chunkLoadCount++;
+			if (chunkLoadCount % 4 == 0) {
+				AmbientSpawning.runSpawnAttempt(world);
+			}
+		});
 	}
 }

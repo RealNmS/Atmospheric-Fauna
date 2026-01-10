@@ -64,7 +64,10 @@ public class AmbientSpawning {
         if (world.getGameTime() % spawnTickDelay != 0) {
             return;
         }
+        runSpawnAttempt(world);
+    }
 
+    public static void runSpawnAttempt(ClientLevel world) {
         if (TOTAL_SPAWN_WEIGHT <= 0) {
             return;
         }
