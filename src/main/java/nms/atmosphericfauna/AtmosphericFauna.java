@@ -9,6 +9,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 // import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
@@ -65,6 +66,10 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 			if (chunkLoadCount % 4 == 0) {
 				AmbientSpawning.runSpawnAttempt(world);
 			}
+		});
+
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			CrowParticle.reset();
 		});
 	}
 }
