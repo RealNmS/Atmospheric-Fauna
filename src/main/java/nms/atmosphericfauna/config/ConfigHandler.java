@@ -49,19 +49,19 @@ public class ConfigHandler {
 
         // Spawning Category
 
-        public int spawnRangeFromPlayer = 96;
-        public int spawnTickDelay = 100;
-        public int attemptsPerTick = 15;
-        public int searchRadius = 12;
+        public int spawnRangeFromPlayer;
+        public int spawnTickDelay;
+        public int attemptsPerTick;
+        public int searchRadius;
 
         // Birds Category
 
-        public int maxActiveCrows = 120;
+        public int maxActiveCrows;
 
         // Debug Category
 
-        public boolean debugText = false;
-        public boolean debugCrows = false;
+        public boolean debugText;
+        public boolean debugCrows;
     }
 
     private static ConfigData saveData() {
