@@ -24,13 +24,6 @@ public class ModMenuCompat implements ModMenuApi {
             @Override
             protected void init() {
                 super.init();
-                Button info = Button.builder(Component.translatable("text.atmosphericfauna.cloth_missing"), b -> {
-                })
-                        .bounds(this.width / 2 - 170, this.height / 2 - 30, 340, 20)
-                        .build();
-                info.active = false;
-                this.addRenderableWidget(info);
-
                 this.addRenderableWidget(
                         Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(parent))
                                 .bounds(this.width / 2 - 100, this.height / 2 + 20, 200, 20)
@@ -39,10 +32,10 @@ public class ModMenuCompat implements ModMenuApi {
 
             @Override
             public void render(@NonNull GuiGraphics gui, int mouseX, int mouseY, float delta) {
-                gui.drawCenteredString(this.font,
-                        Component.translatable("text.atmosphericfauna.cloth_missing").getString(), this.width / 2,
-                        this.height / 2 - 6, 0xFF5555);
                 super.render(gui, mouseX, mouseY, delta);
+                gui.drawCenteredString(this.font,
+                        Component.translatable("text.atmosphericfauna.cloth_missing"), this.width / 2,
+                        this.height / 2 - 15, 0xFFFFFFFF);
             }
         };
     }
