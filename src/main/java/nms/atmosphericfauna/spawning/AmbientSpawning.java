@@ -7,12 +7,14 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 // import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
@@ -34,6 +36,7 @@ public class AmbientSpawning {
             boolean spawnDuringDay,
             boolean spawnDuringNight,
             TagKey<Biome> validBiomeTag,
+            List<TagKey<Block>> validSpawnBlocks,
             BooleanSupplier canSpawn) {
     }
 
@@ -47,6 +50,13 @@ public class AmbientSpawning {
             true, // spawn during day
             true, // spawn during night
             BiomeTags.IS_OVERWORLD,
+            List.of(
+                    BlockTags.DIRT,
+                    BlockTags.LEAVES,
+                    BlockTags.LOGS,
+                    BlockTags.SAND,
+                    BlockTags.SNOW,
+                    BlockTags.BASE_STONE_OVERWORLD),
             () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows);
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
@@ -212,6 +222,18 @@ public class AmbientSpawning {
     private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
         // Must have air above and block below
         if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below()))
+            return false;
+
+        // Check for valid spawn blocks
+        var stateBelow = world.getBlockState(pos.below());
+        boolean isValidBlock = false;
+        for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
+            if (stateBelow.is(tag)) {
+                isValidBlock = true;
+                break;
+            }
+        }
+        if (!isValidBlock)
             return false;
 
         // Biome Check
