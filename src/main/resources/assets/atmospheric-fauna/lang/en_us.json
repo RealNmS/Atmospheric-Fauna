@@ -3,7 +3,7 @@
   "title.atmosphericfauna.config": "Atmospheric Fauna - Configuration",
   "category.atmosphericfauna.spawning": "Spawning",
   "option.atmosphericfauna.spawn_range_from_player": "Spawn Range From Player",
-  "option.atmosphericfauna.spawn_range_from_player.tooltip": "Sets the radius around the player within which ambient fauna can spawn.",
+  "option.atmosphericfauna.spawn_range_from_player.tooltip": "Sets the maximum distance from the player within which ambient fauna can spawn.",
   "option.atmosphericfauna.spawn_tick_delay": "Spawn Tick Delay",
   "option.atmosphericfauna.spawn_tick_delay.tooltip": "Sets the delay (in ticks) between ambient spawn attempts.",
   "option.atmosphericfauna.attempts_per_tick": "Attempts Per Tick",
@@ -16,7 +16,7 @@
   "option.atmosphericfauna.max_active_crows.tooltip": "Sets the maximum number of active crow particles in the world at any given time.",
   "category.atmosphericfauna.debug": "Debug",
   "option.atmosphericfauna.debug_text_spawning": "Enable Spawning Debug Text",
-  "option.atmosphericfauna.debug_text_spawning.tooltip": "Enables debug text for ambient spawning in the world.",
+  "option.atmosphericfauna.debug_text_spawning.tooltip": "Enables console debug text for ambient spawning in the world.",
   "option.atmosphericfauna.debug_text_crows": "Enable Crow Debug Text",
-  "option.atmosphericfauna.debug_text_crows.tooltip": "Enables debug text for crow particles in the world."
+  "option.atmosphericfauna.debug_text_crows.tooltip": "Enables console debug text for crow particles in the world."
 }
