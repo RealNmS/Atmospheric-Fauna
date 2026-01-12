@@ -31,7 +31,6 @@ public class AmbientSpawning {
             int maxPackSize,
             int minLightLevel,
             int maxLightLevel,
-            Integer maxSpawnHeight,
             boolean spawnInBadWeather,
             boolean spawnDuringDay,
             boolean spawnDuringNight,
@@ -45,7 +44,6 @@ public class AmbientSpawning {
             30, // weight
             3, 8, // pack size
             8, 15, // light level
-            null, // max spawn height
             true, // spawn in bad weather
             true, // spawn during day
             true, // spawn during night
@@ -241,7 +239,7 @@ public class AmbientSpawning {
             return false;
 
         // Height Check
-        if (spawnData.maxSpawnHeight() != null && pos.getY() > spawnData.maxSpawnHeight())
+        if (pos.getY() > world.getSeaLevel())
             return false;
 
         // Light Check
