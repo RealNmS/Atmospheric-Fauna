@@ -11,9 +11,9 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-public abstract class FaunaParticle extends SingleQuadParticle {
+public abstract class BaseParticle extends SingleQuadParticle {
 
-    protected FaunaParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+    protected BaseParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
         super(level, x, y, z, sprite);
         this.hasPhysics = false;
     }

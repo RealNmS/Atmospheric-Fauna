@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CrowParticle extends FaunaParticle {
+public class CrowParticle extends BaseParticle {
 
     private enum State {
         FLYING,
