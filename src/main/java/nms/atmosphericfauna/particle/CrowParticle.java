@@ -139,6 +139,17 @@ public class CrowParticle extends FaunaParticle {
         this.yo = this.y;
         this.zo = this.z;
 
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
+            int renderDist = mc.options.renderDistance().get();
+            double maxDist = (renderDist + 1) * 16.0;
+            if (distSq > maxDist * maxDist) {
+                this.remove();
+                return;
+            }
+        }
+
         if (landingCooldown > 0)
             landingCooldown--;
 
