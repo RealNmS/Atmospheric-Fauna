@@ -47,14 +47,14 @@ public class AmbientSpawning {
             true, // spawn in bad weather
             true, // spawn during day
             true, // spawn during night
-            BiomeTags.IS_OVERWORLD,
+            BiomeTags.IS_OVERWORLD, // valid biome
             List.of(
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
                     BlockTags.LOGS,
                     BlockTags.SAND,
                     BlockTags.SNOW,
-                    BlockTags.BASE_STONE_OVERWORLD),
+                    BlockTags.BASE_STONE_OVERWORLD), // valid spawn blocks
             () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows);
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
@@ -67,6 +67,8 @@ public class AmbientSpawning {
     public static int spawnTickDelay = 200;
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
+
+    // --- SPAWN LOGIC ---
 
     public static void tick(ClientLevel world) {
         if (world.getGameTime() % spawnTickDelay != 0) {
