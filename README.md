@@ -11,15 +11,15 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 </a>
 
 <a href="https://github.com/RealNmS/Atmospheric-Fauna">
-    <img alt="GitHub" src="https://img.shields.io/github/downloads/RealNmS/Atmospheric-Fauna/total?style=for-the-badge&color=010409&labelColor=0D1117&label=GitHub&logo=github">
+    <img alt="GitHub" src="https://img.shields.io/github/downloads/RealNmS/Atmospheric-Fauna/total?style=for-the-badge&color=010409&label=GitHub&logo=github">
 </a>
 
 <a href="https://modrinth.com/project/atmospheric-fauna">
-    <img alt="Modrinth Downloads" src="https://img.shields.io/modrinth/dt/atmospheric-fauna?style=for-the-badge&color=1FA458&labelColor=16181C&label=Modrinth&logo=modrinth">
+    <img alt="Modrinth Downloads" src="https://img.shields.io/modrinth/dt/atmospheric-fauna?style=for-the-badge&color=1FA458&label=Modrinth&logo=modrinth">
 </a>
 
 <a href="https://www.curseforge.com/minecraft/mc-mods/atmospheric-fauna">
-    <img alt="CurseForge Downloads" src="https://img.shields.io/curseforge/dt/1427513?style=for-the-badge&color=F16436&labelColor=0D0D0D&label=CurseForge&logo=curseforge">
+    <img alt="CurseForge Downloads" src="https://img.shields.io/curseforge/dt/1427513?style=for-the-badge&color=F16436&label=CurseForge&logo=curseforge">
 </a>
 
 ---
