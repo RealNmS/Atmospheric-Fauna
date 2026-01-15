@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -50,9 +49,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected boolean facingRight = false;
 
     private static final List<BaseBirdParticle> ALL_BIRDS = new CopyOnWriteArrayList<>();
-    private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
     public static int maxActiveBirds = 100; // configurable max active birds
-    private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
     // --- CONFIG STUFF ---
 
@@ -92,12 +89,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         super(level, x, y, z, sprite);
 
         ALL_BIRDS.add(this);
-        if (ACTIVE_COUNT.get() >= maxActiveBirds) {
+        if (ALL_BIRDS.size() >= maxActiveBirds) {
             this.remove();
             return;
         }
-        ACTIVE_COUNT.incrementAndGet();
-        this.counted = true;
     }
 
     // --- TICK ---
@@ -171,12 +166,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     @Override
     public void remove() {
         ALL_BIRDS.remove(this);
-        if (this.counted) {
-            int val = ACTIVE_COUNT.decrementAndGet();
-            if (val < 0)
-                ACTIVE_COUNT.set(0);
-            this.counted = false;
-        }
         super.remove();
     }
 

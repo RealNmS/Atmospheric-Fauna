@@ -2,7 +2,6 @@ package nms.atmosphericfauna.particle;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
@@ -11,8 +10,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 public class CrowParticle extends BaseBirdParticle {
 
     private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
-    private static final AtomicInteger ACTIVE_COUNT = new AtomicInteger(0);
-    private boolean counted = false; // whether this instance is counted toward ACTIVE_COUNT
 
     // --- CONFIG STUFF ---
 
@@ -59,34 +56,25 @@ public class CrowParticle extends BaseBirdParticle {
         this.yd = 0.05;
 
         ALL_CROWS.add(this);
-        if (ACTIVE_COUNT.get() >= maxActiveCrows) {
+        if (ALL_CROWS.size() >= maxActiveCrows) {
             this.remove();
             return;
         }
-        ACTIVE_COUNT.incrementAndGet();
-        this.counted = true;
     }
 
     // --- HELPER METHODS ---
 
     public static int getCount() {
-        return ACTIVE_COUNT.get();
+        return ALL_CROWS.size();
     }
 
     public static void reset() {
         ALL_CROWS.clear();
-        ACTIVE_COUNT.set(0);
     }
 
     @Override
     public void remove() {
         ALL_CROWS.remove(this);
-        if (this.counted) {
-            int val = ACTIVE_COUNT.decrementAndGet();
-            if (val < 0)
-                ACTIVE_COUNT.set(0);
-            this.counted = false;
-        }
         super.remove();
     }
 
@@ -99,8 +87,6 @@ public class CrowParticle extends BaseBirdParticle {
 
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
                 double velocityX, double velocityY, double velocityZ) {
-            if (ACTIVE_COUNT.get() >= maxActiveCrows)
-                return null;
             return new CrowParticle(level, x, y, z, this.sprite);
         }
     }
