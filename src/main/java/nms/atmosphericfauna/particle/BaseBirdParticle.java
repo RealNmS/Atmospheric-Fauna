@@ -15,6 +15,8 @@ import net.minecraft.world.entity.player.Player;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 
+    private final StringBuilder sb = new StringBuilder();
+
     private enum State {
         FLYING,
         LANDING,
@@ -735,16 +737,22 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // --- SPRITE HANDLING ---
 
     protected void setSpriteName(Integer frame) {
-        this.spriteName = this.baseSpriteName;
+        sb.setLength(0);
+        sb.append(this.baseSpriteName);
+
         if (this.state != State.PERCHED) {
-            this.spriteName += "_flying";
+            sb.append("_flying");
         } else {
-            this.spriteName += "_" + this.state.toString().toLowerCase();
+            sb.append("_").append(this.state.toString().toLowerCase());
         }
+
         if (this.facingRight) {
-            this.spriteName += "_r";
+            sb.append("_r");
         }
-        this.spriteName += "_" + (frame == null ? "1" : frame.toString());
+
+        sb.append("_").append(frame == null ? "1" : frame);
+
+        this.spriteName = sb.toString();
         this.setSprite(getSprite(this.spriteName));
     }
 
