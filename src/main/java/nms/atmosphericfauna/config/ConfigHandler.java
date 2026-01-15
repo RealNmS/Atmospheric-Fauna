@@ -1,17 +1,18 @@
 package nms.atmosphericfauna.config;
 
 import nms.atmosphericfauna.AtmosphericFauna;
+import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ConfigHandler {
 
@@ -98,7 +99,7 @@ public class ConfigHandler {
 
         public static class Debug {
             public Boolean debugText;
-            public Boolean debugCrows;
+            public Boolean debugBirds;
         }
 
     }
@@ -120,7 +121,7 @@ public class ConfigHandler {
         // Debug Category
 
         data.debug.debugText = AmbientSpawning.debugText;
-        data.debug.debugCrows = CrowParticle.debugText;
+        data.debug.debugBirds = BaseBirdParticle.debugText;
 
         return data;
     }
@@ -141,6 +142,6 @@ public class ConfigHandler {
         // Debug Category
 
         AmbientSpawning.debugText = data.debug.debugText;
-        CrowParticle.debugText = data.debug.debugCrows;
+        BaseBirdParticle.debugText = data.debug.debugBirds;
     }
 }

@@ -1,5 +1,10 @@
 package nms.atmosphericfauna.particle;
 
+import nms.atmosphericfauna.AtmosphericFauna;
+
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -7,20 +12,29 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.data.AtlasIds;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 public abstract class BaseParticle extends SingleQuadParticle {
 
     protected BaseParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
         super(level, x, y, z, sprite);
         this.hasPhysics = false;
+        this.gravity = 0;
     }
 
     @Override
     protected @NonNull Layer getLayer() {
         return Layer.OPAQUE;
+    }
+
+    public static Identifier getId(@NonNull String path) {
+        return Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
+    }
+
+    public static TextureAtlasSprite getSprite(@NonNull String path) {
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(getId(path));
     }
 
     public abstract static class FaunaFactory implements ParticleProvider<SimpleParticleType> {

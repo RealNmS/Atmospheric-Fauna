@@ -1,6 +1,7 @@
 package nms.atmosphericfauna.modmenu;
 
 import nms.atmosphericfauna.config.ConfigHandler;
+import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
@@ -93,12 +94,12 @@ public class ModMenuConfig {
 
         debug.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Component.translatable("option.atmosphericfauna.debug_text_crows"),
-                        CrowParticle.debugText)
+                        Component.translatable("option.atmosphericfauna.debug_text_birds"),
+                        BaseBirdParticle.debugText)
                 .setDefaultValue(false)
                 .setTooltip(Component
-                        .translatable("option.atmosphericfauna.debug_text_crows.tooltip"))
-                .setSaveConsumer(newValue -> CrowParticle.debugText = newValue)
+                        .translatable("option.atmosphericfauna.debug_text_birds.tooltip"))
+                .setSaveConsumer(newValue -> BaseBirdParticle.debugText = newValue)
                 .build());
 
         return builder.build();

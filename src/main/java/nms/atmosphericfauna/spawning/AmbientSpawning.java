@@ -3,6 +3,8 @@ package nms.atmosphericfauna.spawning;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.CrowParticle;
 
+import java.util.List;
+import java.util.function.BooleanSupplier;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -15,8 +17,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import java.util.List;
-import java.util.function.BooleanSupplier;
 
 public class AmbientSpawning {
 
@@ -55,7 +55,7 @@ public class AmbientSpawning {
                     BlockTags.SAND,
                     BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD), // valid spawn blocks
-            () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows);
+            () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows); // max bird count
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
             CROW_SPAWN_DATA

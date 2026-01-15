@@ -4,6 +4,8 @@ import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 // import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -16,8 +18,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";
@@ -60,14 +60,12 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		// Ambient spawning
 
 		ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
-
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0) {
 				AmbientSpawning.runSpawnAttempt(world);
 			}
 		});
-
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			CrowParticle.reset();
 		});

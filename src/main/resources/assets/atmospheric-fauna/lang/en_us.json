@@ -17,6 +17,6 @@
   "category.atmosphericfauna.debug": "Debug",
   "option.atmosphericfauna.debug_text_spawning": "Enable Spawning Debug Text",
   "option.atmosphericfauna.debug_text_spawning.tooltip": "Enables console debug text for ambient spawning in the world.",
-  "option.atmosphericfauna.debug_text_crows": "Enable Crow Debug Text",
-  "option.atmosphericfauna.debug_text_crows.tooltip": "Enables console debug text for crow particles in the world."
+  "option.atmosphericfauna.debug_text_birds": "Enable Bird Debug Text",
+  "option.atmosphericfauna.debug_text_birds.tooltip": "Enables console debug text for bird particles in the world."
 }
