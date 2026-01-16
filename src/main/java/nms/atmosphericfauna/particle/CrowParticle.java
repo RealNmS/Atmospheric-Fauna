@@ -1,7 +1,7 @@
 package nms.atmosphericfauna.particle;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
@@ -9,7 +9,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 public class CrowParticle extends BaseBirdParticle {
 
-    private static final List<CrowParticle> ALL_CROWS = new CopyOnWriteArrayList<>();
+    private static final Set<CrowParticle> ALL_CROWS = ConcurrentHashMap.newKeySet();
 
     // --- CONFIG STUFF ---
 

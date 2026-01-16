@@ -3,8 +3,8 @@ package nms.atmosphericfauna.particle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -48,7 +48,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
     protected boolean facingRight = false;
 
-    private static final List<BaseBirdParticle> ALL_BIRDS = new CopyOnWriteArrayList<>();
+    private static final Set<BaseBirdParticle> ALL_BIRDS = ConcurrentHashMap.newKeySet();
     public static int maxActiveBirds = 100; // configurable max active birds
 
     // --- CONFIG STUFF ---
