@@ -1,5 +1,7 @@
 package nms.atmosphericfauna.particle;
 
+import nms.atmosphericfauna.AtmosphericFauna;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,10 +150,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // ONLY FOR TESTING
         if (debugText) {
             if (this.age % 10 == 0) {
-                System.out.println(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
+                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
                         " | Height: "
                         + String.format("%.2f", this.y));
-                System.out.println(this.baseSpriteName + " #" + this.hashCode() + " | xd: " +
+                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | xd: " +
                         String.format("%.3f", this.xd) + " | yd: "
                         + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f",
                                 this.zd));
@@ -707,7 +709,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // Remove if we hit the void or have fallen far enough
         if (this.y < -64) {
             if (debugText) {
-                System.out.println(
+                AtmosphericFauna.LOGGER.info(
                         this.baseSpriteName + " #" + this.hashCode() + " has died at age " + this.age + " ticks.");
             }
             this.remove();
@@ -716,7 +718,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // Hard limit to prevent memory leaks if it falls forever
         if (this.age > this.lifetime + 200) {
             if (debugText) {
-                System.out.println(this.baseSpriteName + " #" + this.hashCode()
+                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode()
                         + " forcibly removed after exceeding death time limit.");
             }
             this.remove();

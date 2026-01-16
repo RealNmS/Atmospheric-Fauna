@@ -102,7 +102,7 @@ public class AmbientSpawning {
 
     private static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
         if (debugText)
-            System.out.println("[AtmosphericFauna] Ambient spawning cycle started...");
+            AtmosphericFauna.LOGGER.info("Ambient spawning cycle started...");
 
         if (!spawnData.canSpawn().getAsBoolean()) {
             return;
@@ -171,10 +171,11 @@ public class AmbientSpawning {
 
                 if (debugText) {
                     if (spawnedCount >= spawnData.minPackSize()) {
-                        System.out.println("[AtmosphericFauna] SUCCESS: Spawned pack of " + spawnedCount + " crows at "
-                                + foundCenter.toShortString());
+                        AtmosphericFauna.LOGGER
+                                .info("[AtmosphericFauna] SUCCESS: Spawned pack of " + spawnedCount + " crows at "
+                                        + foundCenter.toShortString());
                     } else {
-                        System.out.println(
+                        AtmosphericFauna.LOGGER.info(
                                 "[AtmosphericFauna] PARTIAL: Wanted " + targetPackSize + " but only found spots for "
                                         + spawnedCount);
                     }
