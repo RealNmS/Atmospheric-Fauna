@@ -40,11 +40,14 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 
 ## Birds
 
-### Crows
+<details>
+<summary>Crows</summary>
+Can spawn in any Overworld biome. Can only spawn on dirt, leaves, logs, sand, snow, and stone blocks. They spawn in flocks of 3-9 birds. Will fly away if the player gets too close. Their behaviour is still work in progress.
+</details>
 
-![Screenshot Crows 1](src/main/resources/assets/docs/screenshot_crow_1.jpg)
+![Selection of photos: Crows](src/main/resources/assets/docs/selection_crow.jpg)
 
-![Screenshot Crows 2](src/main/resources/assets/docs/screenshot_crow_2.jpg)
+_More birds will be added in the future!_
 
 ---
 
