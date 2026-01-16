@@ -11,6 +11,8 @@
   "option.atmosphericfauna.search_radius": "Search Radius",
   "option.atmosphericfauna.search_radius.tooltip": "Sets the radius around the chosen spawn point to search for a valid spawn position.",
   "category.atmosphericfauna.birds": "Birds",
+  "option.atmosphericfauna.max_active_birds": "Maximum Active Birds",
+  "option.atmosphericfauna.max_active_birds.tooltip": "Sets the maximum number of active bird particles in the world at any given time.",
   "subcategory.atmosphericfauna.crows": "Crows",
   "option.atmosphericfauna.max_active_crows": "Maximum Active Crows",
   "option.atmosphericfauna.max_active_crows.tooltip": "Sets the maximum number of active crow particles in the world at any given time.",

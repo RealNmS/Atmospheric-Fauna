@@ -91,6 +91,7 @@ public class ConfigHandler {
         public Birds birds = new Birds();
 
         public static class Birds {
+            public Integer maxActiveBirds;
             public Integer maxActiveCrows;
         }
 
@@ -116,6 +117,7 @@ public class ConfigHandler {
 
         // Birds Category
 
+        data.birds.maxActiveBirds = BaseBirdParticle.maxActiveBirds;
         data.birds.maxActiveCrows = CrowParticle.maxActiveCrows;
 
         // Debug Category
@@ -137,6 +139,7 @@ public class ConfigHandler {
 
         // Birds Category
 
+        BaseBirdParticle.maxActiveBirds = data.birds.maxActiveBirds;
         CrowParticle.maxActiveCrows = data.birds.maxActiveCrows;
 
         // Debug Category

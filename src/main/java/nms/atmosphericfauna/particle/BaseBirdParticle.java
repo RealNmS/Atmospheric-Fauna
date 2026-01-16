@@ -51,10 +51,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected boolean facingRight = false;
 
     private static final Set<BaseBirdParticle> ALL_BIRDS = ConcurrentHashMap.newKeySet();
-    public static int maxActiveBirds = 100; // configurable max active birds
 
     // --- CONFIG STUFF ---
 
+    public static int maxActiveBirds = 100;
     public static boolean debugText = false;
 
     // --- VARIABLES ---

@@ -64,6 +64,14 @@ public class ModMenuConfig {
         ConfigCategory birds = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.birds"));
 
+        birds.addEntry(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.max_active_birds"),
+                        BaseBirdParticle.maxActiveBirds)
+                .setDefaultValue(100)
+                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_birds.tooltip"))
+                .setSaveConsumer(newValue -> BaseBirdParticle.maxActiveBirds = newValue)
+                .build());
+
         SubCategoryBuilder crows = entryBuilder
                 .startSubCategory(Component.translatable("subcategory.atmosphericfauna.crows"));
 
