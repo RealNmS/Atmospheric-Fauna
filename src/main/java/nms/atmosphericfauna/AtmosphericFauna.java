@@ -1,6 +1,7 @@
 package nms.atmosphericfauna;
 
 import nms.atmosphericfauna.config.ConfigHandler;
+import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
@@ -67,6 +68,7 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 			}
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			BaseBirdParticle.reset();
 			CrowParticle.reset();
 		});
 	}

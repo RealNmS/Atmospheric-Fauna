@@ -165,6 +165,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // --- HELPER METHODS ---
 
+    public static void reset() {
+        ALL_BIRDS.clear();
+    }
+
     @Override
     public void remove() {
         ALL_BIRDS.remove(this);
