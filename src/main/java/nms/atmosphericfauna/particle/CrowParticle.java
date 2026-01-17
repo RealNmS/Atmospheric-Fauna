@@ -1,7 +1,8 @@
 package nms.atmosphericfauna.particle;
 
+import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
@@ -9,7 +10,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 public class CrowParticle extends BaseBirdParticle {
 
-    private static final Set<CrowParticle> ALL_CROWS = ConcurrentHashMap.newKeySet();
+    private static final Set<BaseBirdParticle> ALL_CROWS = Collections
+            .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     // --- CONFIG STUFF ---
 
