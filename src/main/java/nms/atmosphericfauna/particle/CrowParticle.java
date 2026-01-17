@@ -19,6 +19,8 @@ public class CrowParticle extends BaseBirdParticle {
 
     protected CrowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
         super(level, x, y, z, getSprite("crow_flying_1"));
+        if (this.removed)
+            return;
         this.baseSpriteName = "crow";
         this.spriteName = "crow_flying_1";
 
