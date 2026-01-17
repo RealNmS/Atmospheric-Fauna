@@ -117,7 +117,7 @@ public class AmbientSpawning {
         }
 
         // Only spawn if time of day is right
-        boolean isDay = world.getDayTime() < 12000;
+        boolean isDay = world.getDayTime() % 24000 < 12000;
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
             return;
         }
