@@ -55,6 +55,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
     public static final Set<BaseBirdParticle> ALL_BIRDS = Collections
             .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
+    // --- REUSABLE NEIGHBOR LIST FOR GC OPTIMIZATION ---
+    private final List<BaseBirdParticle> reusableNeighborList = new ArrayList<>();
+
     // --- CONFIG STUFF ---
 
     public static int maxActiveBirds = 100;
@@ -181,7 +184,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // Returns other bird particles within radius (in the same level)
     private List<BaseBirdParticle> getNeighbors(double radius) {
         double rsq = radius * radius;
-        List<BaseBirdParticle> out = new ArrayList<>();
+        reusableNeighborList.clear();
         for (BaseBirdParticle other : ALL_BIRDS) {
             if (other == this)
                 continue;
@@ -191,10 +194,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double dy = other.y - this.y;
             double dz = other.z - this.z;
             if (dx * dx + dy * dy + dz * dz <= rsq) {
-                out.add(other);
+                reusableNeighborList.add(other);
             }
         }
-        return out;
+        return reusableNeighborList;
     }
 
     // Ask nearby flockmates to go land on the given perch (same BlockPos)
