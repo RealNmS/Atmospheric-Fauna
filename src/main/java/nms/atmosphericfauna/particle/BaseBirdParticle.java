@@ -50,7 +50,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
     protected boolean facingRight = false;
 
-    private static final Set<BaseBirdParticle> ALL_BIRDS = ConcurrentHashMap.newKeySet();
+    public static final Set<BaseBirdParticle> ALL_BIRDS = ConcurrentHashMap.newKeySet();
 
     // --- CONFIG STUFF ---
 

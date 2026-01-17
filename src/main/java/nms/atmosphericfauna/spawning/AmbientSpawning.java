@@ -1,6 +1,7 @@
 package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
+import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class AmbientSpawning {
     }
 
     public static void runSpawnAttempt(ClientLevel world) {
-        if (TOTAL_SPAWN_WEIGHT <= 0) {
+        if (TOTAL_SPAWN_WEIGHT <= 0 || BaseBirdParticle.maxActiveBirds <= BaseBirdParticle.ALL_BIRDS.size()) {
             return;
         }
 
