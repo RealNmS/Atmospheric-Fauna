@@ -15,7 +15,6 @@ import net.minecraft.tags.TagKey;
 // import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
@@ -250,9 +249,7 @@ public class AmbientSpawning {
             return false;
 
         // Light Check
-        int sky = world.getBrightness(LightLayer.SKY, pos);
-        int block = world.getBrightness(LightLayer.BLOCK, pos);
-        int lightLevel = Math.max(sky, block);
+        int lightLevel = world.getMaxLocalRawBrightness(pos);
 
         return lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
     }
