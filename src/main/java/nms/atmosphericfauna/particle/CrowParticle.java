@@ -23,6 +23,7 @@ public class CrowParticle extends BaseBirdParticle {
         super(level, x, y, z, getSprite("crow_flying_1"));
         if (this.removed)
             return;
+        ALL_CROWS.add(this);
         this.baseSpriteName = "crow";
         this.spriteName = "crow_flying_1";
 
@@ -58,12 +59,6 @@ public class CrowParticle extends BaseBirdParticle {
         this.xd = (Math.random() - 0.5) * flySpeed;
         this.zd = (Math.random() - 0.5) * flySpeed;
         this.yd = 0.05;
-
-        ALL_CROWS.add(this);
-        if (ALL_CROWS.size() >= maxActiveCrows) {
-            this.remove();
-            return;
-        }
     }
 
     // --- HELPER METHODS ---

@@ -95,12 +95,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected BaseBirdParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
         super(level, x, y, z, sprite);
-
-        ALL_BIRDS.add(this);
-        if (ALL_BIRDS.size() >= maxActiveBirds) {
-            this.remove();
+        if (this.removed)
             return;
-        }
+        ALL_BIRDS.add(this);
     }
 
     // --- TICK ---

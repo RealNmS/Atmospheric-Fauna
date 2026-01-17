@@ -81,7 +81,7 @@ public class AmbientSpawning {
     }
 
     public static void runSpawnAttempt(ClientLevel world) {
-        if (TOTAL_SPAWN_WEIGHT <= 0 || BaseBirdParticle.maxActiveBirds <= BaseBirdParticle.ALL_BIRDS.size()) {
+        if (TOTAL_SPAWN_WEIGHT <= 0) {
             return;
         }
 
@@ -103,9 +103,14 @@ public class AmbientSpawning {
         }
     }
 
-    private static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
+    private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
         if (debugText)
             AtmosphericFauna.LOGGER.info("Ambient spawning cycle started...");
+
+        int availableSpots = BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size();
+        if (availableSpots <= 0 || spawnData.minPackSize() > availableSpots) {
+            return;
+        }
 
         if (!spawnData.canSpawn().getAsBoolean()) {
             return;
@@ -142,8 +147,14 @@ public class AmbientSpawning {
 
             if (foundCenter != null) {
                 // Determine pack size
-                int targetPackSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
-                        + spawnData.minPackSize();
+                int targetPackSize;
+                if (spawnData.maxPackSize >= availableSpots &&
+                        spawnData.minPackSize <= availableSpots) {
+                    targetPackSize = availableSpots;
+                } else {
+                    targetPackSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
+                            + spawnData.minPackSize();
+                }
 
                 int spawnedCount = 0;
                 int failSafe = 0;
@@ -173,9 +184,9 @@ public class AmbientSpawning {
                 }
 
                 if (debugText) {
-                    if (spawnedCount >= spawnData.minPackSize()) {
+                    if (spawnedCount >= targetPackSize) {
                         AtmosphericFauna.LOGGER
-                                .info("SUCCESS: Spawning pack of " + spawnedCount + " crows at "
+                                .info("SUCCESS: Spawned pack of " + spawnedCount + " crows at "
                                         + foundCenter.toShortString());
                     } else {
                         AtmosphericFauna.LOGGER.info(
