@@ -5,7 +5,7 @@ import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.List;
-import java.util.function.BooleanSupplier;
+import java.util.function.IntSupplier;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -39,7 +39,7 @@ public class AmbientSpawning {
             boolean spawnDuringNight,
             TagKey<Biome> validBiomeTag,
             List<TagKey<Block>> validSpawnBlocks,
-            BooleanSupplier canSpawn) {
+            IntSupplier availableSpots) {
     }
 
     private static final SpawnData CROW_SPAWN_DATA = new SpawnData(
@@ -58,7 +58,7 @@ public class AmbientSpawning {
                     BlockTags.SAND,
                     BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD), // valid spawn blocks
-            () -> CrowParticle.getCount() < CrowParticle.maxActiveCrows); // max bird count
+            () -> CrowParticle.maxActiveCrows - CrowParticle.getCount()); // max bird count
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
             CROW_SPAWN_DATA
@@ -111,8 +111,7 @@ public class AmbientSpawning {
         if (availableSpots <= 0 || spawnData.minPackSize() > availableSpots) {
             return;
         }
-
-        if (!spawnData.canSpawn().getAsBoolean()) {
+        if (spawnData.availableSpots().getAsInt() <= spawnData.minPackSize()) {
             return;
         }
 
@@ -161,10 +160,6 @@ public class AmbientSpawning {
 
                 // Try to spawn the whole pack
                 while (spawnedCount < targetPackSize && failSafe < targetPackSize * 8) {
-                    if (!spawnData.canSpawn().getAsBoolean()) {
-                        break;
-                    }
-
                     failSafe++;
 
                     int dx = random.nextInt(9) - 4;
