@@ -175,11 +175,11 @@ public class AmbientSpawning {
                 if (debugText) {
                     if (spawnedCount >= spawnData.minPackSize()) {
                         AtmosphericFauna.LOGGER
-                                .info("[AtmosphericFauna] SUCCESS: Spawned pack of " + spawnedCount + " crows at "
+                                .info("SUCCESS: Spawning pack of " + spawnedCount + " crows at "
                                         + foundCenter.toShortString());
                     } else {
                         AtmosphericFauna.LOGGER.info(
-                                "[AtmosphericFauna] PARTIAL: Wanted " + targetPackSize + " but only found spots for "
+                                "PARTIAL: Wanted " + targetPackSize + " but only found spots for "
                                         + spawnedCount);
                     }
                 }

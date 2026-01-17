@@ -44,7 +44,7 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 
 	@Override
 	public void onInitializeClient() {
-		LOGGER.info("[Atmospheric Fauna] Client is initializing...");
+		LOGGER.info("Client is initializing...");
 
 		// Load configuration
 
