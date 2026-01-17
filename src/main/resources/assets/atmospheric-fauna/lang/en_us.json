@@ -10,6 +10,8 @@
   "option.atmosphericfauna.attempts_per_tick.tooltip": "Sets the number of spawn attempts per tick.",
   "option.atmosphericfauna.search_radius": "Search Radius",
   "option.atmosphericfauna.search_radius.tooltip": "Sets the radius around the chosen spawn point to search for a valid spawn position.",
+  "option.atmosphericfauna.spawn_below_sea_level": "Spawn Below Sea Level",
+  "option.atmosphericfauna.spawn_below_sea_level.tooltip": "Sets if bird particles can spawn below the Sea Level (fixes spawning on flat worlds).",
   "category.atmosphericfauna.birds": "Birds",
   "option.atmosphericfauna.max_active_birds": "Maximum Active Birds",
   "option.atmosphericfauna.max_active_birds.tooltip": "Sets the maximum number of active bird particles in the world at any given time.",

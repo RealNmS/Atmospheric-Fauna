@@ -20,7 +20,10 @@ import net.minecraft.world.level.block.Block;
 
 public class AmbientSpawning {
 
+    // --- CONFIG STUFF ---
+
     public static boolean debugText = false;
+    public static boolean spawnBelowSeaLevel = false;
 
     // --- SPAWN DATA CONSTANTS ---
 
@@ -242,7 +245,7 @@ public class AmbientSpawning {
             return false;
 
         // Height Check
-        if (pos.getY() > world.getSeaLevel())
+        if (!spawnBelowSeaLevel && (pos.getY() > world.getSeaLevel()))
             return false;
 
         // Light Check

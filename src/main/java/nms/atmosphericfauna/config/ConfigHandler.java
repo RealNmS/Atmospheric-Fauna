@@ -85,6 +85,7 @@ public class ConfigHandler {
             public Integer spawnTickDelay;
             public Integer attemptsPerTick;
             public Integer searchRadius;
+            public Boolean spawnBelowSeaLevel;
         }
 
         // Birds Category
@@ -114,6 +115,7 @@ public class ConfigHandler {
         data.spawning.spawnTickDelay = AmbientSpawning.spawnTickDelay;
         data.spawning.attemptsPerTick = AmbientSpawning.attemptsPerTick;
         data.spawning.searchRadius = AmbientSpawning.searchRadius;
+        data.spawning.spawnBelowSeaLevel = AmbientSpawning.spawnBelowSeaLevel;
 
         // Birds Category
 
@@ -136,6 +138,7 @@ public class ConfigHandler {
         AmbientSpawning.spawnTickDelay = data.spawning.spawnTickDelay;
         AmbientSpawning.attemptsPerTick = data.spawning.attemptsPerTick;
         AmbientSpawning.searchRadius = data.spawning.searchRadius;
+        AmbientSpawning.spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
 
         // Birds Category
 

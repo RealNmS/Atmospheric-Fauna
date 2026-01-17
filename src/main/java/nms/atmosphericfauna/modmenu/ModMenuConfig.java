@@ -59,6 +59,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> AmbientSpawning.searchRadius = newValue)
                 .build());
 
+        spawning.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.spawn_below_sea_level"),
+                        AmbientSpawning.spawnBelowSeaLevel)
+                .setDefaultValue(false)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.spawn_below_sea_level.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.spawnBelowSeaLevel = newValue)
+                .build());
+
         // Birds Category
 
         ConfigCategory birds = builder
