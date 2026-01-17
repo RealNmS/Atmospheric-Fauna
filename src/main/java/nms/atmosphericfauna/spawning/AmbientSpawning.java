@@ -246,7 +246,7 @@ public class AmbientSpawning {
             return false;
 
         // Height Check
-        if (!spawnBelowSeaLevel && (pos.getY() > world.getSeaLevel()))
+        if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel()))
             return false;
 
         // Light Check
