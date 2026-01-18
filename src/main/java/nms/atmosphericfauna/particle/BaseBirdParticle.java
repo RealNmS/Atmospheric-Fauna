@@ -123,7 +123,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             landingCooldown--;
 
         if (this.age++ >= this.lifetime && state != State.DYING) {
-            this.state = State.DYING;
+            setState(this, State.DYING);
         }
 
         switch (state) {
@@ -134,7 +134,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             case DYING -> tickDying();
         }
 
-        // Update flapping animation
+        // Update sprite animation
         if (state != State.DYING && state != State.PERCHED && this.baseSpriteName != null) {
             if (this.age % ((this.wingFlapSpeed - ((int) (this.yd * 20))) != 0
                     ? (this.wingFlapSpeed - ((int) (this.yd * 20)))
@@ -150,7 +150,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 updateSpriteFacing();
         }
 
-        // ONLY FOR TESTING
+        // debug stuff
         if (debugText) {
             if (this.age % 10 == 0) {
                 AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
@@ -176,6 +176,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
     public void remove() {
         ALL_BIRDS.remove(this);
         super.remove();
+    }
+
+    private static void setState(BaseBirdParticle bird, State newState) {
+        bird.state = newState;
+        bird.setSpriteName(1);
     }
 
     // Returns other bird particles within radius (in the same level)
@@ -224,7 +229,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     }
                 }
 
-                nb.state = State.LANDING;
+                setState(nb, State.LANDING);
                 nb.landingBlockPos = actualTarget;
                 nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
                 nb.landingOffsetX = (Math.random() - 0.5) * 0.8;
@@ -239,8 +244,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             if (nb == this)
                 continue;
             if (nb.state == State.PERCHED) {
-                nb.state = State.TAKING_OFF;
-                nb.setSpriteName(1);
+                setState(nb, State.TAKING_OFF);
                 nb.perchTimer = 5;
                 nb.landingCooldown = 100 + nb.perchedTimer;
                 nb.perchBlockPos = null;
@@ -270,8 +274,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.landingCooldown = 100 + this.perchedTimer;
         this.perchBlockPos = null;
 
-        this.state = State.TAKING_OFF;
-        this.setSpriteName(1);
+        setState(this, State.TAKING_OFF);
         groupTakeoff();
     }
 
@@ -502,7 +505,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
                     if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
-                        this.state = State.LANDING;
+                        setState(nb, State.LANDING);
                         this.landingBlockPos = target;
                         this.landingTargetY = target.getY() + 2.0 + this.quadSize;
                         groupPerch(target);
@@ -539,7 +542,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 // Success: choose this block as perch. Use a corrected landing Y so the bird
                 // sits at
                 // block top (subtract quadSize rather than add to avoid floating too high)
-                this.state = State.LANDING;
+                setState(this, State.LANDING);
                 this.landingBlockPos = below;
                 this.landingOffsetX = (Math.random() - 0.5) * 0.8;
                 this.landingOffsetZ = (Math.random() - 0.5) * 0.8;
@@ -558,7 +561,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // If target missing, abort to flying
         if (this.landingBlockPos == null || Double.isNaN(this.landingTargetY)) {
-            this.state = State.FLYING;
+            setState(this, State.FLYING);
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;
             this.landingOffsetX = 0.0;
@@ -615,12 +618,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.xd = 0;
                 this.zd = 0;
                 this.yd = 0;
-                this.state = State.PERCHED;
-                this.setSpriteName(1);
+                setState(this, State.PERCHED);
                 this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
             } else {
-                this.state = State.FLYING;
+                setState(this, State.FLYING);
             }
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;
@@ -634,12 +636,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.xd = 0;
                 this.zd = 0;
                 this.yd = 0;
-                this.state = State.PERCHED;
-                this.setSpriteName(1);
+                setState(this, State.PERCHED);
                 this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
             } else {
-                this.state = State.FLYING;
+                setState(this, State.FLYING);
             }
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;
@@ -682,8 +683,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         if (perchTimer-- <= 0) {
-            this.state = State.TAKING_OFF;
-            this.setSpriteName(1);
+            setState(this, State.TAKING_OFF);
             this.perchTimer = 20;
             groupTakeoff();
         }
@@ -703,7 +703,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.zd += (Math.random() - 0.5) * 0.05;
 
         if (perchTimer-- <= 0) {
-            this.state = State.FLYING;
+            setState(this, State.FLYING);
             this.landingCooldown = 100;
             chooseNewGoal();
             this.goalTimer = 30 + (int) (Math.random() * 40);
