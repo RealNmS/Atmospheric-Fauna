@@ -3,7 +3,6 @@ package nms.atmosphericfauna.particle;
 import nms.atmosphericfauna.AtmosphericFauna;
 
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -25,15 +24,15 @@ public abstract class BaseParticle extends SingleQuadParticle {
     }
 
     @Override
-    protected @NonNull Layer getLayer() {
+    protected Layer getLayer() {
         return Layer.OPAQUE;
     }
 
-    public static Identifier getId(@NonNull String path) {
+    public static Identifier getId(String path) {
         return Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
     }
 
-    public static TextureAtlasSprite getSprite(@NonNull String path) {
+    public static TextureAtlasSprite getSprite(String path) {
         return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(getId(path));
     }
 

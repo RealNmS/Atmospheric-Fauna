@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "atmospheric-fauna",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Atmospheric Fauna",
+  "name": "${name}",
   "description": "Minecraft mod that adds birds and other fauna making your world feel alive.",
   "authors": ["NmS"],
   "contact": {
@@ -20,9 +20,8 @@
   "mixins": ["atmospheric-fauna.mixins.json"],
   "depends": {
     "fabricloader": ">=0.18.2",
-    "minecraft": "~1.21.11",
-    "java": ">=21",
-    "fabric-api": "*"
+    "minecraft": "${minecraft}",
+    "fabric-api": ">=0.140.2"
   },
   "recommends": {
     "modmenu": "*",
