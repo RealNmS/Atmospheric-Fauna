@@ -19,9 +19,8 @@
   },
   "mixins": ["atmospheric-fauna.mixins.json"],
   "depends": {
-    "fabricloader": ">=0.18.2",
-    "minecraft": "${minecraft}",
-    "fabric-api": ">=0.140.2"
+    "fabricloader": ">=0.17.3",
+    "minecraft": "${minecraft}"
   },
   "recommends": {
     "modmenu": "*",
