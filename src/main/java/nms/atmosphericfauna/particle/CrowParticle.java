@@ -49,8 +49,8 @@ public class CrowParticle extends BaseBirdParticle {
         this.goalDurationMax = 160;
         this.lookAheadMultiplier = 5.0;
 
-        this.xd = (Math.random() - 0.5) * flySpeed;
-        this.zd = (Math.random() - 0.5) * flySpeed;
+        this.xd = (this.random.nextFloat() - 0.5f) * flySpeed;
+        this.zd = (this.random.nextFloat() - 0.5f) * flySpeed;
         this.yd = 0.05;
     }
 

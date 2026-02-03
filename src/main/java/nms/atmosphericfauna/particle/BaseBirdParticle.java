@@ -250,8 +250,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 setState(nb, State.LANDING);
                 nb.landingBlockPos = actualTarget;
                 nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
-                nb.landingOffsetX = (Math.random() - 0.5) * 0.8;
-                nb.landingOffsetZ = (Math.random() - 0.5) * 0.8;
+                nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+                nb.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
             }
         }
     }
@@ -277,17 +277,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double dz = this.z - source.getZ();
             double mag = Math.sqrt(dx * dx + dz * dz);
             if (mag < 0.001) {
-                dx = (Math.random() - 0.5);
-                dz = (Math.random() - 0.5);
+                dx = (this.random.nextFloat() - 0.5f);
+                dz = (this.random.nextFloat() - 0.5f);
                 mag = Math.sqrt(dx * dx + dz * dz);
             }
-            this.xd = (dx / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
-            this.zd = (dz / mag) * scareTakeoffSpeed + (Math.random() - 0.5) * 0.05;
+            this.xd = (dx / mag) * scareTakeoffSpeed + (this.random.nextFloat() - 0.5f) * 0.05;
+            this.zd = (dz / mag) * scareTakeoffSpeed + (this.random.nextFloat() - 0.5f) * 0.05;
         } else {
-            this.xd = (Math.random() - 0.5) * 0.08;
-            this.zd = (Math.random() - 0.5) * 0.08;
+            this.xd = (this.random.nextFloat() - 0.5f) * 0.08;
+            this.zd = (this.random.nextFloat() - 0.5f) * 0.08;
         }
-        this.yd = 0.12 + Math.random() * 0.05;
+        this.yd = 0.12 + this.random.nextFloat() * 0.05;
         this.perchTimer = 12;
         this.landingCooldown = 100 + this.perchedTimer;
         this.perchBlockPos = null;
@@ -303,20 +303,20 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double forwardBiasY = this.yd;
         double forwardBiasZ = this.zd;
 
-        double randRadius = 2.5 + Math.random() * (goalRadius - 2.5);
-        double angle = Math.random() * Math.PI * 2;
-        double nx = Math.cos(angle) * randRadius + forwardBiasX * 5.0 * (Math.random() - 0.5);
-        double nz = Math.sin(angle) * randRadius + forwardBiasZ * 5.0 * (Math.random() - 0.5);
+        double randRadius = 2.5 + this.random.nextFloat() * (goalRadius - 2.5);
+        double angle = this.random.nextFloat() * Math.PI * 2;
+        double nx = Math.cos(angle) * randRadius + forwardBiasX * 5.0 * (this.random.nextFloat() - 0.5f);
+        double nz = Math.sin(angle) * randRadius + forwardBiasZ * 5.0 * (this.random.nextFloat() - 0.5f);
 
         // Ensure we pick a goal above ground and bias upwards when low or just took off
         double ground = sampleGroundHeight(this.x, this.z);
         double ny;
         if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
-            ny = this.y + 2.5 + Math.random() * 2.5;
+            ny = this.y + 2.5 + this.random.nextFloat() * 2.5;
         } else if (this.y >= ground + maxFlightHeight - 1.0) {
-            ny = Math.max(ground + minFlightHeight, ground + maxFlightHeight - 2.0 - Math.random() * 3.0);
+            ny = Math.max(ground + minFlightHeight, ground + maxFlightHeight - 2.0 - this.random.nextFloat() * 3.0);
         } else {
-            ny = this.y + (Math.random() - 0.5) * 2.0 + forwardBiasY * 1.5;
+            ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + forwardBiasY * 1.5;
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
@@ -349,7 +349,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.goalY = Math.max(1.0, Math.min(255.0, ny));
         this.goalZ = this.z + nz;
 
-        this.goalTimer = goalDurationMin + (int) (Math.random() * (goalDurationMax - goalDurationMin));
+        this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
     }
 
     // Checks if there's a solid/occupied collision at the given point (coarse
@@ -448,13 +448,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         if (this.y <= groundY + minFlightHeight + 0.3) {
-            this.goalY = Math.max(this.goalY, this.y + takeoffClimb + Math.random() * 1.5);
+            this.goalY = Math.max(this.goalY, this.y + takeoffClimb + this.random.nextFloat() * 1.5);
             this.goalTimer = Math.max(this.goalTimer, 20);
         }
 
         double ceiling = groundY + maxFlightHeight;
         if (this.y >= ceiling - 0.5) {
-            this.goalY = Math.min(this.goalY, ceiling - 2.0 - Math.random() * 2.0);
+            this.goalY = Math.min(this.goalY, ceiling - 2.0 - this.random.nextFloat() * 2.0);
             this.goalTimer = Math.min(this.goalTimer, 40);
         }
 
@@ -509,16 +509,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
             if (!isBlocked(this.x, this.y + 2.0, this.z)) {
                 this.yd = Math.max(this.yd, 0.12);
             } else {
-                double angle = Math.atan2(this.zd, this.xd) + (Math.random() < 0.5 ? Math.PI / 2 : -Math.PI / 2);
-                this.goalX = this.x + Math.cos(angle) * (2 + Math.random() * 3);
-                this.goalY = Math.max(this.y + 0.5, this.y + Math.random() * 2);
-                this.goalZ = this.z + Math.sin(angle) * (2 + Math.random() * 3);
-                this.goalTimer = 20 + (int) (Math.random() * 40);
+                double angle = Math.atan2(this.zd, this.xd)
+                        + (this.random.nextFloat() < 0.5f ? Math.PI / 2 : -Math.PI / 2);
+                this.goalX = this.x + Math.cos(angle) * (2 + this.random.nextFloat() * 3);
+                this.goalY = Math.max(this.y + 0.5, this.y + this.random.nextFloat() * 2);
+                this.goalZ = this.z + Math.sin(angle) * (2 + this.random.nextFloat() * 3);
+                this.goalTimer = 20 + (int) (this.random.nextFloat() * 40);
             }
         }
 
         // Check for landing-scan behavior (rarer and only if cooldown expired)
-        if (landingCooldown == 0 && Math.random() < this.perchingChance) {
+        if (landingCooldown == 0 && this.random.nextFloat() < this.perchingChance) {
             for (BaseBirdParticle nb : getNeighbors(12.0)) {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
@@ -562,8 +563,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 // block top (subtract quadSize rather than add to avoid floating too high)
                 setState(this, State.LANDING);
                 this.landingBlockPos = below;
-                this.landingOffsetX = (Math.random() - 0.5) * 0.8;
-                this.landingOffsetZ = (Math.random() - 0.5) * 0.8;
+                this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+                this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
                 this.landingTargetY = below.getY() + 1.0 + this.quadSize;
                 break;
             }
@@ -637,7 +638,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.zd = 0;
                 this.yd = 0;
                 setState(this, State.PERCHED);
-                this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
+                this.perchTimer = this.perchingTime + (int) (this.random.nextFloat() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
             } else {
                 setState(this, State.FLYING);
@@ -655,7 +656,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.zd = 0;
                 this.yd = 0;
                 setState(this, State.PERCHED);
-                this.perchTimer = this.perchingTime + (int) (Math.random() * this.perchingTime);
+                this.perchTimer = this.perchingTime + (int) (this.random.nextFloat() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
             } else {
                 setState(this, State.FLYING);
@@ -674,8 +675,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.zd = 0;
         this.yd = 0;
 
-        if (Math.random() < 0.05) {
-            this.setSpriteName((1 + (int) (Math.random() * 2)));
+        if (this.random.nextFloat() < 0.05f) {
+            this.setSpriteName((1 + (int) (this.random.nextFloat() * 2)));
         }
 
         if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
@@ -716,15 +717,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         this.setPos(this.x, this.y + 0.05, this.z);
 
-        this.yd = 0.12 + Math.random() * 0.06;
-        this.xd += (Math.random() - 0.5) * 0.05;
-        this.zd += (Math.random() - 0.5) * 0.05;
+        this.yd = 0.12 + this.random.nextFloat() * 0.06;
+        this.xd += (this.random.nextFloat() - 0.5f) * 0.05;
+        this.zd += (this.random.nextFloat() - 0.5f) * 0.05;
 
         if (perchTimer-- <= 0) {
             setState(this, State.FLYING);
             this.landingCooldown = 100;
             chooseNewGoal();
-            this.goalTimer = 30 + (int) (Math.random() * 40);
+            this.goalTimer = 30 + (int) (this.random.nextFloat() * 40);
         }
     }
 
