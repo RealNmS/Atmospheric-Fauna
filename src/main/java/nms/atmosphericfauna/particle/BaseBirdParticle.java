@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 
@@ -239,9 +240,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     // Scan vertical range to find ground at this offset
                     for (int dy = 3; dy >= -3; dy--) {
                         BlockPos p = target.offset(dx, dy, dz);
-                        if (!level.getBlockState(p).isAir() &&
+                        BlockState state = level.getBlockState(p);
+                        if (!state.isAir() &&
                                 level.getBlockState(p.above()).isAir() &&
-                                level.getBlockState(p).isFaceSturdy(level, p, Direction.UP)) {
+                                state.isFaceSturdy(level, p, Direction.UP)) {
                             actualTarget = p;
                             break;
                         }
@@ -537,19 +539,21 @@ public abstract class BaseBirdParticle extends BaseParticle {
             for (int i = 1; i <= this.perchingDistance; i++) {
                 BlockPos below = BlockPos.containing(this.x, this.y - i, this.z);
                 BlockPos above = below.above();
+                BlockState belowState = level.getBlockState(below);
+                BlockState aboveState = level.getBlockState(above);
 
                 // Basic checks: below must be solid, above must be air
-                if (level.getBlockState(below).isAir())
+                if (belowState.isAir())
                     continue;
-                if (!level.getBlockState(above).isAir())
+                if (!aboveState.isAir())
                     continue;
 
                 // Ensure the top face is sturdy enough to land on (avoid tiny/wire blocks)
-                if (!level.getBlockState(below).isFaceSturdy(level, below, Direction.UP))
+                if (!belowState.isFaceSturdy(level, below, Direction.UP))
                     continue;
 
                 // Ensure there's some collision shape to stand on
-                if (level.getBlockState(below).getCollisionShape(level, below).isEmpty())
+                if (belowState.getCollisionShape(level, below).isEmpty())
                     continue;
 
                 // Require a neighboring block (branch/cover) to avoid landing on open tree tops
