@@ -55,8 +55,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     public static final Set<BaseBirdParticle> ALL_BIRDS = Collections
             .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
-    // --- REUSABLE NEIGHBOR LIST FOR GC OPTIMIZATION ---
     private final List<BaseBirdParticle> reusableNeighborList = new ArrayList<>();
+    protected static Minecraft mc = Minecraft.getInstance();
 
     // --- CONFIG STUFF ---
 
@@ -108,7 +108,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.yo = this.y;
         this.zo = this.z;
 
-        Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
@@ -773,7 +772,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double motionThreshold = 0.01;
 
         if (horizSpeed > motionThreshold) {
-            Player player = Minecraft.getInstance().player;
+            Player player = mc.player;
             if (player != null) {
                 float yaw = player.getYRot();
 
