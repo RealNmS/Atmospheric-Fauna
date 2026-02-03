@@ -68,7 +68,7 @@ public class CrowParticle extends BaseBirdParticle {
 
     // --- FACTORY ---
 
-    public static class Factory extends FaunaFactory {
+    public static final class Factory extends FaunaFactory {
         public Factory(SpriteSet spriteSet) {
             super(spriteSet);
         }
