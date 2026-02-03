@@ -107,11 +107,11 @@ public class AmbientSpawning {
         if (debugText)
             AtmosphericFauna.LOGGER.info("Ambient spawning cycle started...");
 
-        int availableSpots = BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size();
-        if (availableSpots <= 0 || spawnData.minPackSize() > availableSpots) {
-            return;
-        }
-        if (spawnData.availableSpots().getAsInt() <= spawnData.minPackSize()) {
+        int availableGlobalSpots = BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size();
+        int availableTypedSpots = spawnData.availableSpots().getAsInt();
+        int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
+
+        if (availableSpots < spawnData.minPackSize()) {
             return;
         }
 
@@ -146,14 +146,9 @@ public class AmbientSpawning {
 
             if (foundCenter != null) {
                 // Determine pack size
-                int targetPackSize;
-                if (spawnData.maxPackSize >= availableSpots &&
-                        spawnData.minPackSize <= availableSpots) {
-                    targetPackSize = availableSpots;
-                } else {
-                    targetPackSize = random.nextInt(spawnData.maxPackSize() - spawnData.minPackSize() + 1)
-                            + spawnData.minPackSize();
-                }
+                int maxPackSize = Math.min(spawnData.maxPackSize(), availableSpots);
+                int targetPackSize = random.nextInt(maxPackSize - spawnData.minPackSize() + 1)
+                        + spawnData.minPackSize();
 
                 int spawnedCount = 0;
                 int failSafe = 0;
