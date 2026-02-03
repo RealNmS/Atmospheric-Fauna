@@ -349,7 +349,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         this.goalX = this.x + nx;
-        this.goalY = Math.max(1.0, Math.min(255.0, ny));
+        this.goalY = Math.max(level.getMinY() + 1.0, Math.min((level.getHeight() - 1.0), ny));
         this.goalZ = this.z + nz;
 
         this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
