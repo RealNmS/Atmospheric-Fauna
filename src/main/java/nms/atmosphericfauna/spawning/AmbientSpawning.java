@@ -58,7 +58,7 @@ public class AmbientSpawning {
                     BlockTags.SAND,
                     BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD), // valid spawn blocks
-            () -> CrowParticle.maxActiveCrows - CrowParticle.getCount()); // max bird count
+            () -> Math.max(0, CrowParticle.maxActiveCrows - CrowParticle.getCount())); // max bird count
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
             CROW_SPAWN_DATA
