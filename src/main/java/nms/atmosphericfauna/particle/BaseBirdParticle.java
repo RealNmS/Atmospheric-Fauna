@@ -197,16 +197,24 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private List<BaseBirdParticle> getNeighbors(double radius) {
         double rsq = radius * radius;
         reusableNeighborList.clear();
-        for (BaseBirdParticle other : ALL_BIRDS) {
-            if (other == this)
-                continue;
-            if (other.level != this.level)
-                continue;
-            double dx = other.x - this.x;
-            double dy = other.y - this.y;
-            double dz = other.z - this.z;
-            if (dx * dx + dy * dy + dz * dz <= rsq) {
-                reusableNeighborList.add(other);
+
+        synchronized (ALL_BIRDS) {
+            for (BaseBirdParticle other : ALL_BIRDS) {
+                if (other == this || other.level != this.level)
+                    continue;
+
+                if (Math.abs(other.x - this.x) > radius ||
+                        Math.abs(other.y - this.y) > radius ||
+                        Math.abs(other.z - this.z) > radius)
+                    continue;
+
+                double dx = other.x - this.x;
+                double dy = other.y - this.y;
+                double dz = other.z - this.z;
+
+                if (dx * dx + dy * dy + dz * dz <= rsq) {
+                    reusableNeighborList.add(other);
+                }
             }
         }
         return reusableNeighborList;
