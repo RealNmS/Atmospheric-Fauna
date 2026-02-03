@@ -107,7 +107,7 @@ public class AmbientSpawning {
         if (debugText)
             AtmosphericFauna.LOGGER.info("Ambient spawning cycle started...");
 
-        int availableGlobalSpots = BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size();
+        int availableGlobalSpots = Math.max(0, BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size());
         int availableTypedSpots = spawnData.availableSpots().getAsInt();
         int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
 
