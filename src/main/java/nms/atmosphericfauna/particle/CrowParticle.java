@@ -1,17 +1,11 @@
 package nms.atmosphericfauna.particle;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class CrowParticle extends BaseBirdParticle {
-
-    private static final Set<BaseBirdParticle> ALL_CROWS = Collections
-            .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     // --- CONFIG STUFF ---
 
@@ -23,7 +17,6 @@ public class CrowParticle extends BaseBirdParticle {
         super(level, x, y, z, getSprite("crow_flying_1"));
         if (this.removed)
             return;
-        ALL_CROWS.add(this);
         this.baseSpriteName = "crow";
         this.spriteName = "crow_flying_1";
 
@@ -64,17 +57,13 @@ public class CrowParticle extends BaseBirdParticle {
     // --- HELPER METHODS ---
 
     public static int getCount() {
-        return ALL_CROWS.size();
-    }
-
-    public static void reset() {
-        ALL_CROWS.clear();
-    }
-
-    @Override
-    public void remove() {
-        ALL_CROWS.remove(this);
-        super.remove();
+        int count = 0;
+        for (BaseBirdParticle bird : getAllBirds()) {
+            if (bird instanceof CrowParticle) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // --- FACTORY ---

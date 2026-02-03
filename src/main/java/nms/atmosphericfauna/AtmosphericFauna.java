@@ -69,7 +69,6 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			BaseBirdParticle.reset();
-			CrowParticle.reset();
 		});
 	}
 }

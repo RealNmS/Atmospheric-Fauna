@@ -185,6 +185,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         super.remove();
     }
 
+    public static Set<BaseBirdParticle> getAllBirds() {
+        return ALL_BIRDS;
+    }
+
     private static void setState(BaseBirdParticle bird, State newState) {
         bird.state = newState;
         bird.setSpriteName(1);
