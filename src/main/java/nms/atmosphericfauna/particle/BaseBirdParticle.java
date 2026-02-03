@@ -176,6 +176,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     public static void reset() {
         ALL_BIRDS.clear();
+        MIRROR_SPRITE_CACHE.clear();
     }
 
     @Override
