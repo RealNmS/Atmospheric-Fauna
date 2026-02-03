@@ -43,6 +43,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double landingOffsetX = 0.0;
     protected double landingOffsetZ = 0.0;
     protected BlockPos perchBlockPos = null; // stores actual perch while perched
+    private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
     protected int wingFlapSpeed = 4;
     protected int wingFlapOffset = random.nextInt(wingFlapSpeed);
@@ -355,10 +356,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // Checks if there's a solid/occupied collision at the given point (coarse
     // check)
     private boolean isBlocked(double px, double py, double pz) {
-        BlockPos pos = BlockPos.containing(px, py, pz);
-        if (level.isEmptyBlock(pos))
+        mutablePos.set(px, py, pz);
+        if (level.isEmptyBlock(mutablePos))
             return false;
-        return !level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
+        return !level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty();
     }
 
     // Find top-most solid block near the given x,z by scanning downward
