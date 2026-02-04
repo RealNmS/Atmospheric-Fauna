@@ -45,6 +45,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double landingOffsetZ = 0.0;
     protected BlockPos perchBlockPos = null; // stores actual perch while perched
     private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+    protected Double takeoffGoalY = Double.NaN;
+    protected int takeoffTime = 0;
 
     protected int wingFlapSpeed = 4;
     protected int wingFlapOffset = random.nextInt(wingFlapSpeed);
@@ -290,10 +292,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.xd = (this.random.nextFloat() - 0.5f) * 0.08;
             this.zd = (this.random.nextFloat() - 0.5f) * 0.08;
         }
-        this.yd = 0.12 + this.random.nextFloat() * 0.05;
-        this.perchTimer = 12;
+
+        this.yd += 0.06 + this.random.nextFloat() * 0.06;
+        this.perchTimer = 8 + this.random.nextInt(8);
         this.landingCooldown = 100 + this.perchedTimer;
+
+        double base = this.perchBlockPos != null ? this.perchBlockPos.getY() + 1.0 : this.y;
         this.perchBlockPos = null;
+        this.takeoffGoalY = base + Math.max(0.8, takeoffClimb * (0.5 + this.random.nextDouble() * 0.8))
+                + this.random.nextDouble() * 1.2;
+        this.takeoffTime = 0;
 
         setState(this, State.TAKING_OFF);
         groupTakeoff();
@@ -720,17 +728,29 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.landingOffsetZ = 0.0;
         this.perchBlockPos = null;
 
-        this.setPos(this.x, this.y + 0.05, this.z);
+        if (this.takeoffTime == 0) {
+            this.xd += (this.random.nextFloat() - 0.5f) * 0.08;
+            this.zd += (this.random.nextFloat() - 0.5f) * 0.08;
+        }
+        this.takeoffTime++;
 
-        this.yd = 0.12 + this.random.nextFloat() * 0.06;
-        this.xd += (this.random.nextFloat() - 0.5f) * 0.05;
-        this.zd += (this.random.nextFloat() - 0.5f) * 0.05;
+        if (Double.isNaN(this.takeoffGoalY)) {
+            this.takeoffGoalY = this.y + 1.0 + this.random.nextDouble() * 0.8;
+        }
 
-        if (perchTimer-- <= 0) {
+        double remaining = this.takeoffGoalY - this.y;
+        double desiredUp = 0.02 + Math.min(maxVerticalSpeed, Math.max(0.06, remaining * 0.12));
+        this.yd += (desiredUp - this.yd) * 0.18;
+        this.xd *= 0.995;
+        this.zd *= 0.995;
+
+        if (perchTimer-- <= 0 && (this.y >= this.takeoffGoalY - 0.15 || this.takeoffTime > 50)) {
             setState(this, State.FLYING);
             this.landingCooldown = 100;
             chooseNewGoal();
             this.goalTimer = 30 + (int) (this.random.nextFloat() * 40);
+            this.takeoffGoalY = Double.NaN;
+            this.takeoffTime = 0;
         }
     }
 
