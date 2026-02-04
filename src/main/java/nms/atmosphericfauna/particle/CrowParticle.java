@@ -13,7 +13,8 @@ public class CrowParticle extends BaseBirdParticle {
 
     // --- CONSTRUCTOR ---
 
-    protected CrowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
+    protected CrowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet,
+            double velocityX, double velocityY, double velocityZ) {
         super(level, x, y, z, getSprite("crow_flying_1"));
         if (this.removed)
             return;
@@ -49,9 +50,9 @@ public class CrowParticle extends BaseBirdParticle {
         this.goalDurationMax = 160;
         this.lookAheadMultiplier = 5.0;
 
-        this.xd = (this.random.nextFloat() - 0.5f) * flySpeed;
-        this.zd = (this.random.nextFloat() - 0.5f) * flySpeed;
-        this.yd = 0.05;
+        this.xd = velocityX + (this.random.nextFloat() - 0.5f) * 0.1;
+        this.zd = velocityZ + (this.random.nextFloat() - 0.5f) * 0.1;
+        this.yd = velocityY + 0.05;
     }
 
     // --- HELPER METHODS ---
@@ -75,7 +76,7 @@ public class CrowParticle extends BaseBirdParticle {
 
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
                 double velocityX, double velocityY, double velocityZ) {
-            return new CrowParticle(level, x, y, z, this.sprite);
+            return new CrowParticle(level, x, y, z, this.sprite, velocityX, velocityY, velocityZ);
         }
     }
 }
