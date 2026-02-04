@@ -424,13 +424,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 avy /= count;
                 avz /= count;
 
-                double cohX = (cx - this.x) * cohesionStrength;
-                double cohY = (cy - this.y) * cohesionStrength;
-                double cohZ = (cz - this.z) * cohesionStrength;
+                // Reduce cohesion (avoids ball shape), strengthen alignment and
+                // separation so flock spreads and points in the same direction
+                double cohX = (cx - this.x) * (cohesionStrength * 0.45);
+                double cohY = (cy - this.y) * (cohesionStrength * 0.45);
+                double cohZ = (cz - this.z) * (cohesionStrength * 0.45);
 
-                double aliX = (avx - this.xd) * alignmentStrength;
-                double aliY = (avy - this.yd) * alignmentStrength;
-                double aliZ = (avz - this.zd) * alignmentStrength;
+                double aliX = (avx - this.xd) * (alignmentStrength * 1.6);
+                double aliY = (avy - this.yd) * (alignmentStrength * 1.2);
+                double aliZ = (avz - this.zd) * (alignmentStrength * 1.6);
 
                 double sepX = 0, sepY = 0, sepZ = 0;
                 for (BaseBirdParticle nb : neighbors) {
@@ -448,13 +450,25 @@ public abstract class BaseBirdParticle extends BaseParticle {
                         sepZ += (dz / d) * factor;
                     }
                 }
-                sepX *= separationStrength;
-                sepY *= separationStrength;
-                sepZ *= separationStrength;
+                // amplify separation to keep birds more apart
+                sepX *= separationStrength * 1.6;
+                sepY *= separationStrength * 0.9; // less vertical separation
+                sepZ *= separationStrength * 1.6;
 
+                // apply steering contributions
                 this.xd += cohX + aliX + sepX;
                 this.yd += cohY + aliY + sepY;
                 this.zd += cohZ + aliZ + sepZ;
+
+                // Quick group synchronization: adopt a short-lived goal toward
+                // the flock's averaged heading/center so joined flocks pick a
+                // direction together faster instead of stalling.
+                double aheadFactor = 4.0; // how far ahead of current position to aim
+                this.goalX = this.x + (avx * aheadFactor) + (cx - this.x) * 0.18;
+                this.goalY = this.y + (avy * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
+                this.goalZ = this.z + (avz * aheadFactor) + (cz - this.z) * 0.18;
+                // shorten the goal timer so birds commit quickly
+                this.goalTimer = Math.min(this.goalTimer, Math.max(8, (goalDurationMin + goalDurationMax) / 6));
             }
         }
 
