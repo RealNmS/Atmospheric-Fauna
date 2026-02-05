@@ -32,11 +32,11 @@ public class CrowParticle extends BaseBirdParticle {
         this.verticalSteerFactor = 1.25;
         this.takeoffClimb = 2.5;
         this.flockRadius = 12.0;
-        this.cohesionStrength = 0.02;
-        this.alignmentStrength = 0.015;
+        this.cohesionStrength = 0.002;
+        this.alignmentStrength = 0.01;
         this.separationDistance = 2.5;
-        this.separationStrength = 0.1;
-        this.flockGoalBias = 0.40;
+        this.separationStrength = 0.05;
+        this.flockGoalBias = 0.25;
 
         this.scareRadius = 10.0; // horizontal distance that startles perched crows
         this.scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
