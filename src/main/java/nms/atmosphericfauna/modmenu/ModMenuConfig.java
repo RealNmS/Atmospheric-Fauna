@@ -37,6 +37,16 @@ public class ModMenuConfig {
                 .build());
 
         spawning.addEntry(entryBuilder
+                .startBooleanToggle(Component
+                        .translatable("option.atmosphericfauna.ambient_spawning"),
+                        AmbientSpawning.enableAmbientSpawning)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.ambient_spawning.tooltip"))
+                .setSaveConsumer(newValue -> AmbientSpawning.enableAmbientSpawning = newValue)
+                .build());
+
+        spawning.addEntry(entryBuilder
                 .startIntField(Component
                         .translatable("option.atmosphericfauna.spawn_range_from_player"),
                         AmbientSpawning.spawnRangeFromPlayer)

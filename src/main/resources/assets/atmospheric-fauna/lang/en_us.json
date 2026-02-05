@@ -4,6 +4,8 @@
   "category.atmosphericfauna.spawning": "Spawning",
   "option.atmosphericfauna.chunk_load_spawning": "Enable Spawning on Chunk Load",
   "option.atmosphericfauna.chunk_load_spawning.tooltip": "Enables ambient fauna spawning when new chunks are loaded.",
+  "option.atmosphericfauna.ambient_spawning": "Enable Ambient Spawning",
+  "option.atmosphericfauna.ambient_spawning.tooltip": "Enables ambient fauna spawning.",
   "option.atmosphericfauna.spawn_range_from_player": "Spawn Range From Player",
   "option.atmosphericfauna.spawn_range_from_player.tooltip": "Sets the maximum distance from the player within which ambient fauna can spawn.",
   "option.atmosphericfauna.spawn_tick_delay": "Spawn Tick Delay",

@@ -24,6 +24,7 @@ public class AmbientSpawning {
 
     public static boolean debugText = false;
     public static boolean spawnBelowSeaLevel = false;
+    public static boolean enableAmbientSpawning = true;
 
     // --- SPAWN DATA CONSTANTS ---
 
@@ -74,7 +75,7 @@ public class AmbientSpawning {
     // --- SPAWN LOGIC ---
 
     public static void tick(ClientLevel world) {
-        if (world.getGameTime() % spawnTickDelay != 0) {
+        if ((world.getGameTime() % spawnTickDelay != 0) || !enableAmbientSpawning) {
             return;
         }
         runSpawnAttempt(world);
