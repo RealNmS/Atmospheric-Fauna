@@ -139,7 +139,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // Update sprite animation
         if (state != State.DYING && state != State.PERCHED && this.baseSpriteName != null) {
-            int flapAdjustment = (int) (this.yd * 20);
+            int flapAdjustment = (int) (this.yd * 10);
             int effectiveFlapSpeed = Math.max(1, this.wingFlapSpeed - flapAdjustment);
             if ((this.age - this.wingFlapOffset) % effectiveFlapSpeed == 0) {
                 int frame = 1;
