@@ -46,7 +46,7 @@ public class AmbientSpawning {
     private static final SpawnData CROW_SPAWN_DATA = new SpawnData(
             AtmosphericFauna.CROW,
             30, // weight
-            3, 8, // pack size
+            3, 9, // pack size
             8, 15, // light level
             true, // spawn in bad weather
             true, // spawn during day
