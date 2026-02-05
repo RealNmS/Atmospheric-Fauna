@@ -405,7 +405,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double avx = 0, avy = 0, avz = 0;
             int count = 0;
             for (BaseBirdParticle nb : neighbors) {
-                if (nb.state == State.PERCHED || nb.state == State.DYING)
+                if (nb.state != State.FLYING)
                     continue;
                 cx += nb.x;
                 cy += nb.y;
@@ -436,7 +436,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                 double sepX = 0, sepY = 0, sepZ = 0;
                 for (BaseBirdParticle nb : neighbors) {
-                    if (nb.state == State.PERCHED || nb.state == State.DYING)
+                    if (nb.state != State.FLYING)
                         continue;
                     double dx = this.x - nb.x;
                     double dy = this.y - nb.y;
