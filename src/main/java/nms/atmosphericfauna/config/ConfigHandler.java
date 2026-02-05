@@ -81,6 +81,7 @@ public class ConfigHandler {
         public Spawning spawning = new Spawning();
 
         public static class Spawning {
+            public Boolean enableChunkLoadSpawning;
             public Integer spawnRangeFromPlayer;
             public Integer spawnTickDelay;
             public Integer attemptsPerTick;
@@ -111,6 +112,7 @@ public class ConfigHandler {
 
         // Spawning Category
 
+        data.spawning.enableChunkLoadSpawning = AtmosphericFauna.enableChunkLoadSpawning;
         data.spawning.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
         data.spawning.spawnTickDelay = AmbientSpawning.spawnTickDelay;
         data.spawning.attemptsPerTick = AmbientSpawning.attemptsPerTick;
@@ -134,6 +136,7 @@ public class ConfigHandler {
 
         // Spawning Category
 
+        AtmosphericFauna.enableChunkLoadSpawning = data.spawning.enableChunkLoadSpawning;
         AmbientSpawning.spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
         AmbientSpawning.spawnTickDelay = data.spawning.spawnTickDelay;
         AmbientSpawning.attemptsPerTick = data.spawning.attemptsPerTick;

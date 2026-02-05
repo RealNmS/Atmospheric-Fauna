@@ -27,6 +27,7 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
 
 	private static int chunkLoadCount = 0;
+	public static boolean enableChunkLoadSpawning = true;
 
 	/*
 	 * only for now because idk how to set up client and server initializers
@@ -63,7 +64,7 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
-			if (chunkLoadCount % 4 == 0) {
+			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
 				AmbientSpawning.runSpawnAttempt(world);
 			}
 		});

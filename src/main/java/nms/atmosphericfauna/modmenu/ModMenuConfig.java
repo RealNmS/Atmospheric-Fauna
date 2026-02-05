@@ -1,5 +1,6 @@
 package nms.atmosphericfauna.modmenu;
 
+import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
@@ -24,6 +25,16 @@ public class ModMenuConfig {
 
         ConfigCategory spawning = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.spawning"));
+
+        spawning.addEntry(entryBuilder
+                .startBooleanToggle(Component
+                        .translatable("option.atmosphericfauna.chunk_load_spawning"),
+                        AtmosphericFauna.enableChunkLoadSpawning)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.chunk_load_spawning.tooltip"))
+                .setSaveConsumer(newValue -> AtmosphericFauna.enableChunkLoadSpawning = newValue)
+                .build());
 
         spawning.addEntry(entryBuilder
                 .startIntField(Component
