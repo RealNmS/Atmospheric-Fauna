@@ -30,6 +30,7 @@ public class ModMenuConfig {
                         .translatable("option.atmosphericfauna.spawn_range_from_player"),
                         AmbientSpawning.spawnRangeFromPlayer)
                 .setDefaultValue(96)
+                .setMin(32)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.spawn_range_from_player.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnRangeFromPlayer = newValue)
@@ -39,6 +40,7 @@ public class ModMenuConfig {
                 .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
                         AmbientSpawning.spawnTickDelay)
                 .setDefaultValue(200)
+                .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnTickDelay = newValue)
                 .build());
@@ -47,6 +49,7 @@ public class ModMenuConfig {
                 .startIntField(Component.translatable("option.atmosphericfauna.attempts_per_tick"),
                         AmbientSpawning.attemptsPerTick)
                 .setDefaultValue(15)
+                .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.attempts_per_tick.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.attemptsPerTick = newValue)
                 .build());
@@ -55,6 +58,7 @@ public class ModMenuConfig {
                 .startIntField(Component.translatable("option.atmosphericfauna.search_radius"),
                         AmbientSpawning.searchRadius)
                 .setDefaultValue(12)
+                .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.search_radius.tooltip"))
                 .setSaveConsumer(newValue -> AmbientSpawning.searchRadius = newValue)
                 .build());
@@ -78,6 +82,7 @@ public class ModMenuConfig {
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_birds"),
                         BaseBirdParticle.maxActiveBirds)
                 .setDefaultValue(100)
+                .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_birds.tooltip"))
                 .setSaveConsumer(newValue -> BaseBirdParticle.maxActiveBirds = newValue)
                 .build());
@@ -89,6 +94,7 @@ public class ModMenuConfig {
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
                         CrowParticle.maxActiveCrows)
                 .setDefaultValue(50)
+                .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
                 .setSaveConsumer(newValue -> CrowParticle.maxActiveCrows = newValue)
                 .build());
