@@ -812,40 +812,61 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.setSprite(getSprite(this.spriteName));
     }
 
-    // compute desired facing: prefer motion if strong, otherwise face camera/player
-    // Improved facing logic: calculates movement relative to the camera's view
-    // plane
+    // compute desired facing: prefer motion if strong, otherwise keep current
+    // orientation; use camera-relative right vector and avoid jitter near zero.
     private void updateSpriteFacing() {
         double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
         double motionThreshold = 0.01;
 
         if (horizSpeed > motionThreshold) {
+            double rightX;
+            double rightZ;
             Player player = mc.player;
+
             if (player != null) {
                 float yaw = player.getYRot();
-
                 double yawRad = Math.toRadians(yaw);
-                double lookX = -Math.sin(yawRad);
-                double lookZ = Math.cos(yawRad);
 
-                double rightX = -lookZ;
-                double rightZ = lookX;
+                // Forward vector for player yaw in the horizontal plane
+                double forwardX = -Math.sin(yawRad);
+                double forwardZ = Math.cos(yawRad);
 
-                double dot = (this.xd * rightX) + (this.zd * rightZ);
-
-                this.facingRight = dot > 0;
+                // TRUE Right-hand vector (90 degrees clockwise in Minecraft's coordinate
+                // system)
+                rightX = -forwardZ;
+                rightZ = forwardX;
             } else {
-                this.facingRight = this.xd > 0;
+                // Default to world X-axis when camera not available
+                rightX = 1.0;
+                rightZ = 0.0;
+            }
+
+            double dot = (this.xd * rightX) + (this.zd * rightZ);
+
+            // Avoid flicker when motion is almost perpendicular to camera plane.
+            if (Math.abs(dot) > 0.02) {
+                this.facingRight = dot > 0;
             }
         }
 
+        // Frame extraction logic
         int frame = 1;
         if (this.spriteName != null && !this.spriteName.isEmpty()) {
-            char c = this.spriteName.charAt(this.spriteName.length() - 1);
-            if (Character.isDigit(c)) {
-                frame = Character.getNumericValue(c);
+            int idx = this.spriteName.length() - 1;
+            while (idx >= 0 && Character.isDigit(this.spriteName.charAt(idx))) {
+                idx--;
+            }
+
+            String num = this.spriteName.substring(idx + 1);
+            if (!num.isEmpty()) {
+                try {
+                    frame = Integer.parseInt(num);
+                } catch (NumberFormatException ignored) {
+                    frame = 1;
+                }
             }
         }
+
         setSpriteName(frame);
     }
 }
