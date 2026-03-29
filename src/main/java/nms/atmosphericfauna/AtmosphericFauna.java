@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 // import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 // import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -57,11 +57,11 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 
 		// Register particle factories
 
-		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
 
 		// Ambient spawning
 
-		ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
+		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {

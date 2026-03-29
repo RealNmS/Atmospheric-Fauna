@@ -47,7 +47,6 @@ public abstract class BaseParticle extends SingleQuadParticle {
         public abstract Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y,
                 double z, double velocityX, double velocityY, double velocityZ);
 
-        @SuppressWarnings("null")
         public @Nullable Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y,
                 double z, double velocityX, double velocityY, double velocityZ, RandomSource randomSource) {
             return createParticle(type, level, x, y, z, velocityX, velocityY, velocityZ);

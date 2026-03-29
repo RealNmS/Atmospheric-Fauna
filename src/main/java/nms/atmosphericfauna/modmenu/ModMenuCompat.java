@@ -1,9 +1,8 @@
 package nms.atmosphericfauna.modmenu;
 
-import org.jspecify.annotations.NonNull;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -31,9 +30,9 @@ public class ModMenuCompat implements ModMenuApi {
             }
 
             @Override
-            public void render(@NonNull GuiGraphics gui, int mouseX, int mouseY, float delta) {
-                super.render(gui, mouseX, mouseY, delta);
-                gui.drawCenteredString(this.font,
+            public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+                super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+                guiGraphics.centeredText(this.font,
                         Component.translatable("text.atmosphericfauna.cloth_missing"), this.width / 2,
                         this.height / 2 - 15, 0xFFFFFFFF);
             }
