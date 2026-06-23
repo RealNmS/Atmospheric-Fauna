@@ -21,28 +21,28 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.baseSpriteName = "blue_jay";
         this.spriteName = "blue_jay_flying_1";
 
-        this.lifetime = 2400;
+        this.lifetime = 3200;
         this.quadSize = 0.5f;
 
-        this.flySpeed = 0.20f;
-        this.steerStrength = 0.0075;
-        this.minFlightHeight = 2.5; // how many blocks above ground
+        this.flySpeed = 0.25f;
+        this.steerStrength = 0.01;
+        this.minFlightHeight = 2; // how many blocks above ground
         this.maxFlightHeight = 85.0; // how many blocks from void
         this.maxVerticalSpeed = 0.30;
-        this.verticalSteerFactor = 1.25;
+        this.verticalSteerFactor = 1.30;
         this.takeoffClimb = 2.5;
-        this.flockRadius = 12.0;
-        this.cohesionStrength = 0.002;
-        this.alignmentStrength = 0.01;
-        this.separationDistance = 2.5;
+        this.flockRadius = 10.0;
+        this.cohesionStrength = 0.001;
+        this.alignmentStrength = 0.005;
+        this.separationDistance = 3.0;
         this.separationStrength = 0.05;
         this.flockGoalBias = 0.25;
 
-        this.scareRadius = 10.0; // horizontal distance that startles perched crows
-        this.scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
+        this.scareRadius = 12.5; // horizontal distance that startles perched crows
+        this.scareTakeoffSpeed = 0.40; // horizontal speed applied when scared
 
-        this.perchingChance = 0.005;
-        this.perchingTime = 600; // base time spent perched
+        this.perchingChance = 0.0025;
+        this.perchingTime = 800; // base time spent perched
         this.perchingDistance = 10; // how many blocks down to scan for landing spots
 
         this.goalRadius = 50.0;

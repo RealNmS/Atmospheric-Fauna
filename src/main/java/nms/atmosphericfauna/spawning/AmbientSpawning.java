@@ -65,11 +65,11 @@ public class AmbientSpawning {
     private static final SpawnData BLUE_JAY_SPAWN_DATA = new SpawnData(
             AtmosphericFauna.BLUE_JAY,
             25,
-            2, 6,
+            1, 3,
             8, 15,
+            false,
             true,
-            true,
-            true,
+            false,
             BiomeTags.IS_OVERWORLD,
             List.of(
                     BlockTags.DIRT,
