@@ -25,6 +25,8 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.quadSize = 0.4f;
 
         this.flySpeed = 0.15f;
+        this.wingFlapSpeed = 3;
+        this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2; // how many blocks above ground
         this.maxFlightHeight = 85.0; // how many blocks from void

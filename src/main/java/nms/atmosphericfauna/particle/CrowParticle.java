@@ -25,6 +25,8 @@ public class CrowParticle extends BaseBirdParticle {
         this.quadSize = 0.5f;
 
         this.flySpeed = 0.20f;
+        this.wingFlapSpeed = 4;
+        this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2.5; // how many blocks above ground
         this.maxFlightHeight = 85.0; // how many blocks from void

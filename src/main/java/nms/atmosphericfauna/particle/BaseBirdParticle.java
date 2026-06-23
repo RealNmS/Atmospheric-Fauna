@@ -48,9 +48,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected Double takeoffGoalY = Double.NaN;
     protected int takeoffTime = 0;
 
-    protected int wingFlapSpeed = 4;
-    protected int wingFlapOffset = random.nextInt(wingFlapSpeed);
-
     protected String baseSpriteName = null;
     protected String spriteName = null;
     protected static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
@@ -70,6 +67,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // --- VARIABLES ---
 
     protected float flySpeed;
+    protected int wingFlapSpeed;
+    protected int wingFlapOffset;
     protected double steerStrength;
     protected double minFlightHeight; // how many blocks above ground
     protected double maxFlightHeight; // how many blocks from void
