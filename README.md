@@ -58,6 +58,12 @@ For the best experience I recommend using this alongside with [ModMenu](https://
 
 ---
 
+## Honorary Mentions
+
+- [Atmospheric Fauna: Unofficial Fabric Port](https://modrinth.com/mod/atmospheric-fauna-unofficial-fabric-port) by **Aarow**
+
+---
+
 ## Contributing
 
 I welcome all contributions!
