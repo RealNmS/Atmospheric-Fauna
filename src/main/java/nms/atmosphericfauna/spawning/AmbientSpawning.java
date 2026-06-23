@@ -64,7 +64,7 @@ public class AmbientSpawning {
 
     private static final SpawnData BLUE_JAY_SPAWN_DATA = new SpawnData(
             AtmosphericFauna.BLUE_JAY,
-            25,
+            30,
             1, 3,
             8, 15,
             false,
