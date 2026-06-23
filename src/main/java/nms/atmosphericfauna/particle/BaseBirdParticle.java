@@ -197,8 +197,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         bird.setSpriteName(1);
     }
 
-    // Returns other bird particles within radius (in the same level and same
-    // species)
+    // Returns other bird particles within radius
     private List<BaseBirdParticle> getNeighbors(double radius) {
         double rsq = radius * radius;
         reusableNeighborList.clear();
@@ -208,7 +207,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (other == this || other.level != this.level)
                     continue;
 
-                // Only flock with birds of the same species
                 if (other.getClass() != this.getClass())
                     continue;
 
