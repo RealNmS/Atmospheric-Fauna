@@ -1,6 +1,7 @@
 package nms.atmosphericfauna;
 
 import nms.atmosphericfauna.config.ConfigHandler;
+import nms.atmosphericfauna.gui.DebugHudOverlay;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
@@ -75,5 +76,6 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 
 		// Register all client commands
 		ModCommands.registerClientCommands();
+		DebugHudOverlay.register();
 	}
 }
