@@ -103,7 +103,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         ALL_BIRDS.add(this);
     }
 
-    // --- TICK ---
+    // MARK: --- TICK ---
 
     @Override
     public void tick() {
@@ -174,7 +174,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.move(this.xd, this.yd, this.zd);
     }
 
-    // --- HELPER METHODS ---
+    // MARK: --- HELPER METHODS ---
 
     public static void reset() {
         ALL_BIRDS.clear();
@@ -390,7 +390,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return 0.0;
     }
 
-    // --- BEHAVIORS ---
+    // MARK: --- BEHAVIORS ---
 
     private void tickFlying() {
         double groundY = sampleGroundHeight(this.x, this.z);
@@ -796,7 +796,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
-    // --- SPRITE HANDLING ---
+    // MARK: --- SPRITE HANDLING ---
 
     protected void setSpriteName(Integer frame) {
         sb.setLength(0);

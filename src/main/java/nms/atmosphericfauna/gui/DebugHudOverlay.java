@@ -52,7 +52,6 @@ public class DebugHudOverlay {
                         String text = entry.getKey() + ": " + entry.getValue();
                         int width = mc.font.width(text);
                         guiGraphics.fill(screenWidth - width - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
-                        // Added FF to the hex color
                         guiGraphics.text(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
                         y += 12;
                         total += entry.getValue();

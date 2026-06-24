@@ -21,7 +21,7 @@ public class ModMenuConfig {
                 .setSavingRunnable(ConfigHandler::save);
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        // Spawning Category
+        // MARK: --- SPAWNING ---
 
         ConfigCategory spawning = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.spawning"));
@@ -94,7 +94,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnBelowSeaLevel = newValue)
                 .build());
 
-        // Birds Category
+        // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.birds"));
@@ -122,7 +122,7 @@ public class ModMenuConfig {
 
         birds.addEntry(crows.build());
 
-        // Debug Category
+        // MARK: --- DEBUG ---
 
         ConfigCategory debug = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.debug"));

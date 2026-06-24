@@ -27,7 +27,7 @@ public class AmbientSpawning {
     public static boolean spawnBelowSeaLevel = false;
     public static boolean enableAmbientSpawning = true;
 
-    // --- SPAWN DATA CONSTANTS ---
+    // MARK: --- SPAWN DATA CONSTANTS ---
 
     private record SpawnData(
             SimpleParticleType particleType,
@@ -92,7 +92,7 @@ public class AmbientSpawning {
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
 
-    // --- SPAWN LOGIC ---
+    // MARK: --- SPAWN LOGIC ---
 
     public static void tick(ClientLevel world) {
         if ((world.getGameTime() % spawnTickDelay != 0) || !enableAmbientSpawning) {
@@ -211,6 +211,8 @@ public class AmbientSpawning {
             }
         }
     }
+
+    // MARK: --- SPAWN LOCATION HELPERS ---
 
     // Helper to snap a position to the nearest solid ground within 3 blocks
     // vertical

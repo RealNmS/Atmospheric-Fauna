@@ -31,19 +31,15 @@ public class ConfigHandler {
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
 
             if (data != null) {
-                // Verify that all variables are there
-                ConfigData defaults = saveData(); // Generates a ConfigData with current default values
+                ConfigData defaults = saveData();
                 boolean missing = false;
 
                 try {
-                    // Loop through categories (spawning, birds, debug)
                     for (Field categoryField : ConfigData.class.getFields()) {
                         Object loadedCategory = categoryField.get(data);
                         Object defaultCategory = categoryField.get(defaults);
 
-                        // Loop through variables in each category
                         for (Field field : loadedCategory.getClass().getFields()) {
-                            // If variable is missing (null), fill it from defaults
                             if (field.get(loadedCategory) == null) {
                                 field.set(loadedCategory, field.get(defaultCategory));
                                 missing = true;
