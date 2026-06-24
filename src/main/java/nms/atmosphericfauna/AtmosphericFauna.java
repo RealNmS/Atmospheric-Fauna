@@ -5,6 +5,7 @@ import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
+import nms.atmosphericfauna.command.ModCommands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,22 +50,18 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		LOGGER.info("Client is initializing...");
 
 		// Load configuration
-
 		ConfigHandler.load();
 
 		// Register particle types
-
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "crow"), CROW);
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "blue_jay"),
 				BLUE_JAY);
 
 		// Register particle factories
-
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
 
 		// Ambient spawning
-
 		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
@@ -75,5 +72,8 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			BaseBirdParticle.reset();
 		});
+
+		// Register all client commands
+		ModCommands.registerClientCommands();
 	}
 }
