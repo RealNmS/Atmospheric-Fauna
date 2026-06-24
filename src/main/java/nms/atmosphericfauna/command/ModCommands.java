@@ -11,7 +11,7 @@ public class ModCommands {
             dispatcher.register(ClientCommands.literal("atmosphericfauna")
                     .executes(context -> {
                         context.getSource()
-                                .sendFeedback(Component.literal("Atmospheric Fauna debug command executed!"));
+                                .sendFeedback(Component.literal("Welcome to Atmospheric Fauna!"));
                         return 1;
                     }));
         });
