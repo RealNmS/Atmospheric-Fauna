@@ -872,9 +872,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double speed = motion.length();
         double dot = motion.scale(1.0 / speed).dot(viewRight);
 
-        // Preserve the current orientation when the bird is mostly moving toward or
-        // away
-        // from the camera. That avoids unstable flips near the screen edge.
         if (Math.abs(dot) < 0.18) {
             return this.facingRight;
         }
