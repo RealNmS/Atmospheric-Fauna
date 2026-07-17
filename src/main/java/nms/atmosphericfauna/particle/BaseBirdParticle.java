@@ -81,6 +81,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double separationDistance;
     protected double separationStrength;
     protected double flockGoalBias;
+    protected int maxFlockSize = Integer.MAX_VALUE;
 
     protected double scareRadius; // horizontal distance that startles perched birds
     protected double scareTakeoffSpeed; // horizontal speed applied when scared
@@ -200,7 +201,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
         bird.setSpriteName(1);
     }
 
-    // Returns other bird particles within radius
+    private double distanceSqTo(BaseBirdParticle other) {
+        double dx = other.x - this.x;
+        double dy = other.y - this.y;
+        double dz = other.z - this.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    // Returns other bird particles within radius, capped by the species flock size
     private List<BaseBirdParticle> getNeighbors(double radius) {
         double rsq = radius * radius;
         reusableNeighborList.clear();
@@ -227,6 +235,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
             }
         }
+
+        if (this.maxFlockSize > 0 && reusableNeighborList.size() > this.maxFlockSize) {
+            reusableNeighborList.sort((a, b) -> Double.compare(distanceSqTo(a), distanceSqTo(b)));
+            return new ArrayList<>(reusableNeighborList.subList(0, this.maxFlockSize));
+        }
+
         return reusableNeighborList;
     }
 

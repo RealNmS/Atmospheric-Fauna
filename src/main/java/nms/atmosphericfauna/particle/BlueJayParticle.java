@@ -39,6 +39,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.separationDistance = 3.0;
         this.separationStrength = 0.05;
         this.flockGoalBias = 0.25;
+        this.maxFlockSize = 3;
 
         this.scareRadius = 12.5; // horizontal distance that startles perched crows
         this.scareTakeoffSpeed = 0.40; // horizontal speed applied when scared
