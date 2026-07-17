@@ -5,10 +5,8 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,10 +14,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class BaseBirdParticle extends BaseParticle {
-
-    private final StringBuilder sb = new StringBuilder();
 
     private enum State {
         FLYING,
@@ -50,7 +47,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected String baseSpriteName = null;
     protected String spriteName = null;
-    protected static final Map<String, Boolean> MIRROR_SPRITE_CACHE = new ConcurrentHashMap<>();
     protected boolean facingRight = false;
 
     public static final Set<BaseBirdParticle> ALL_BIRDS = Collections
@@ -179,7 +175,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     public static void reset() {
         ALL_BIRDS.clear();
-        MIRROR_SPRITE_CACHE.clear();
     }
 
     @Override
@@ -813,80 +808,82 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // MARK: --- SPRITE HANDLING ---
 
     protected void setSpriteName(Integer frame) {
-        sb.setLength(0);
-        sb.append(this.baseSpriteName);
+        if (this.baseSpriteName == null) {
+            return;
+        }
 
-        if (this.state != State.PERCHED) {
-            sb.append("_flying");
+        StringBuilder builder = new StringBuilder(this.baseSpriteName);
+        if (this.state == State.PERCHED) {
+            builder.append("_perched");
         } else {
-            sb.append("_").append(this.state.toString().toLowerCase());
+            builder.append("_flying");
         }
 
         if (this.facingRight) {
-            sb.append("_r");
+            builder.append("_r");
         }
 
-        sb.append("_").append(frame == null ? "1" : frame);
+        builder.append("_").append(frame == null ? "1" : frame);
 
-        this.spriteName = sb.toString();
+        this.spriteName = builder.toString();
         this.setSprite(getSprite(this.spriteName));
     }
 
-    // compute desired facing: prefer motion if strong, otherwise keep current
-    // orientation; use camera-relative right vector and avoid jitter near zero.
-    private void updateSpriteFacing() {
+    private int getFrameFromSpriteName(String spriteName) {
+        if (spriteName == null || spriteName.isEmpty()) {
+            return 1;
+        }
+
+        int idx = spriteName.length() - 1;
+        while (idx >= 0 && Character.isDigit(spriteName.charAt(idx))) {
+            idx--;
+        }
+
+        String num = spriteName.substring(idx + 1);
+        if (!num.isEmpty()) {
+            try {
+                return Integer.parseInt(num);
+            } catch (NumberFormatException ignored) {
+                // fall back to frame 1
+            }
+        }
+
+        return 1;
+    }
+
+    private boolean shouldFaceRightRelativeToCamera() {
         double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
-        double motionThreshold = 0.01;
-
-        if (horizSpeed > motionThreshold) {
-            double rightX;
-            double rightZ;
-            Player player = mc.player;
-
-            if (player != null) {
-                float yaw = player.getYRot();
-                double yawRad = Math.toRadians(yaw);
-
-                // Forward vector for player yaw in the horizontal plane
-                double forwardX = -Math.sin(yawRad);
-                double forwardZ = Math.cos(yawRad);
-
-                // TRUE Right-hand vector (90 degrees clockwise in Minecraft's coordinate
-                // system)
-                rightX = -forwardZ;
-                rightZ = forwardX;
-            } else {
-                // Default to world X-axis when camera not available
-                rightX = 1.0;
-                rightZ = 0.0;
-            }
-
-            double dot = (this.xd * rightX) + (this.zd * rightZ);
-
-            // Avoid flicker when motion is almost perpendicular to camera plane.
-            if (Math.abs(dot) > 0.02) {
-                this.facingRight = dot > 0;
-            }
+        if (horizSpeed <= 0.01) {
+            return this.facingRight;
         }
 
-        // Frame extraction logic
-        int frame = 1;
-        if (this.spriteName != null && !this.spriteName.isEmpty()) {
-            int idx = this.spriteName.length() - 1;
-            while (idx >= 0 && Character.isDigit(this.spriteName.charAt(idx))) {
-                idx--;
-            }
-
-            String num = this.spriteName.substring(idx + 1);
-            if (!num.isEmpty()) {
-                try {
-                    frame = Integer.parseInt(num);
-                } catch (NumberFormatException ignored) {
-                    frame = 1;
-                }
-            }
+        Vec3 viewForward = mc.player != null ? mc.player.getViewVector(1.0F) : new Vec3(-1.0, 0.0, 0.0);
+        Vec3 viewRight = viewForward.cross(new Vec3(0.0, 1.0, 0.0));
+        if (viewRight.lengthSqr() < 1.0e-8) {
+            return this.facingRight;
         }
 
-        setSpriteName(frame);
+        viewRight = viewRight.normalize();
+        Vec3 motion = new Vec3(this.xd, 0.0, this.zd);
+        if (motion.lengthSqr() < 1.0e-8) {
+            return this.facingRight;
+        }
+
+        double speed = motion.length();
+        double dot = motion.scale(1.0 / speed).dot(viewRight);
+
+        // Preserve the current orientation when the bird is mostly moving toward or
+        // away
+        // from the camera. That avoids unstable flips near the screen edge.
+        if (Math.abs(dot) < 0.18) {
+            return this.facingRight;
+        }
+
+        return dot > 0.0;
+    }
+
+    private void updateSpriteFacing() {
+        this.facingRight = shouldFaceRightRelativeToCamera();
+        setSpriteName(getFrameFromSpriteName(this.spriteName));
     }
 }
