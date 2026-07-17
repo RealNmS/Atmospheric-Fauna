@@ -23,6 +23,11 @@ public class DebugHudOverlay {
                         return;
 
                     Minecraft mc = Minecraft.getInstance();
+                    /*
+                     * >= 26.2
+                     * if (mc.gui.hud.isHidden())
+                     * return;
+                     */
                     if (mc.options.hideGui)
                         return;
 
