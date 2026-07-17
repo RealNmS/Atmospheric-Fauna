@@ -156,13 +156,20 @@ public class AmbientSpawning {
             return;
         }
 
-        // Only spawn if time of day is right
-        boolean isDay = world.getGameTime() % 24000 < 12000;
+        // Only spawn if time of day is right (PS: Thank you pigcart T_T)
+        // >=26.1 {
+        // return level.isBrightOutside();
+        // } >=1.21.11 {
+        // return level.getDayTime() % 24000 < 13000;
+        // } else {
+        // level.isDay always returns true in 1.21.0
+        // return level.dayTime() % 24000 < 13000;
+        // }
+        boolean isDay = world.isBrightOutside();
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
             if (debugText)
                 AtmosphericFauna.LOGGER
-                        .info("[AS] Not spawning due to time of day" + " (isDay: " + isDay + ", gameTime: "
-                                + world.getGameTime() + ")");
+                        .info("[AS] Not spawning due to time of day" + " (isDay: " + isDay + ")");
             return;
         }
 
