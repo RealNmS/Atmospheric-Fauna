@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
+import nms.atmosphericfauna.particle.BlueJayParticle;
+import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +43,7 @@ public class DebugHudOverlay {
                     int y = 50;
                     int screenWidth = mc.getWindow().getGuiScaledWidth();
 
-                    String title = "Fauna Debug";
+                    String title = "[AF] Debug";
                     int titleWidth = mc.font.width(title);
                     guiGraphics.fill(screenWidth - titleWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                     guiGraphics.text(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
@@ -49,7 +51,13 @@ public class DebugHudOverlay {
 
                     int total = 0;
                     for (Map.Entry<String, Integer> entry : sorted) {
-                        String text = entry.getKey() + ": " + entry.getValue();
+                        int maxCount = switch (entry.getKey()) {
+                            case "blue_jay" -> BlueJayParticle.getMaxActiveBirds();
+                            case "crow" -> CrowParticle.getMaxActiveBirds();
+                            default -> BaseBirdParticle.getMaxActiveBirds();
+                        };
+
+                        String text = entry.getKey() + ": " + entry.getValue() + " / " + maxCount;
                         int width = mc.font.width(text);
                         guiGraphics.fill(screenWidth - width - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                         guiGraphics.text(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
@@ -57,7 +65,7 @@ public class DebugHudOverlay {
                         total += entry.getValue();
                     }
 
-                    String totalText = "Total: " + total;
+                    String totalText = "Total: " + total + " / " + BaseBirdParticle.getMaxActiveBirds();
                     int totalWidth = mc.font.width(totalText);
                     guiGraphics.fill(screenWidth - totalWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                     guiGraphics.text(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);

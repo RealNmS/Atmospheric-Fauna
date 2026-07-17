@@ -70,6 +70,10 @@ public class CrowParticle extends BaseBirdParticle {
         return count;
     }
 
+    public static int getMaxActiveBirds() {
+        return maxActiveCrows;
+    }
+
     // --- FACTORY ---
 
     public static final class Factory extends FaunaFactory {

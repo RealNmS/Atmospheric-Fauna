@@ -70,6 +70,10 @@ public class BlueJayParticle extends BaseBirdParticle {
         return count;
     }
 
+    public static int getMaxActiveBirds() {
+        return maxActiveBlueJays;
+    }
+
     // --- FACTORY ---
 
     public static final class Factory extends FaunaFactory {

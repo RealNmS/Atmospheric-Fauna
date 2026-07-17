@@ -187,6 +187,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return ALL_BIRDS;
     }
 
+    public static int getMaxActiveBirds() {
+        return maxActiveBirds;
+    }
+
     public String getBaseSpriteName() {
         return this.baseSpriteName;
     }
