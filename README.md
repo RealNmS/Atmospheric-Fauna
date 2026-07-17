@@ -31,20 +31,20 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 
 ## Description
 
-**Atmospheric Fauna** is a **Fabric** mod which I created just to fix the lonely atmosphere of Minecraft. I decided to add _(inspired by [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters))_ particle based birds that can fly around and interact with the world. The birds will all spawn in different biomes and have different behaviors. Some will like to be alone and some will like to be in flocks. Some will be scared of players and some will be curious. I want the mod to feel alive and dynamic, so the birds will react to the environment and the player in different ways.
+**Atmospheric Fauna** is a **Fabric** mod which I created just to fix the lonely atmosphere of Minecraft. I decided to add _(inspired by [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters))_ particle based birds that can fly around and interact with the world. The birds will all spawn in different biomes and have different behaviors. Some will like to be alone and some will like to be in flocks. Some will be scared of players and some will be curious. I want the mod to feel alive and dynamic, so the birds will react to the environment and the player in different ways while trying my best to maintain reasonable performance.
 
-My plan right now is to build a solid foundation for the mod, so I can easily add as many birds in the future as I want. So far I've used crows as a base bird, but later on I plan on adding a vultures and maybe some smaller birds like sparrows or robins. I'm also using this as a way to learn about modding and coding in Java, because it's something I've wanted to learn for a long time (also I might learn some pixel art as well).
+My plan right now is to build a solid foundation for the mod, so I can easily add as many birds in the future as I want. So far I've used crows as a base bird for testing, but later on I plan on adding lots of different birds with unique characteristics. I'm also using this as a way to learn about modding and coding in Java, because it's something I've wanted to learn for a long time (also I might learn some pixel art as well).
 
 ---
 
 ## Birds
 
-<details>
-<summary>Crows</summary>
-Can spawn in any Overworld biome. Can only spawn on dirt, leaves, logs, sand, snow, and stone blocks. They spawn in flocks of 3-9 birds. Will fly away if the player gets too close. Their behaviour is still work in progress.
-</details>
-
+### Crows
 ![Selection of photos: Crows](src/main/resources/assets/docs/selection_crow.jpg)
+
+
+### Blue Jays
+![Selection of photos: Blue Jays](src/main/resources/assets/docs/selection_blue_jay.jpg)
 
 _More birds will be added in the future!_
 
@@ -60,7 +60,7 @@ For the best experience I recommend using this alongside with [ModMenu](https://
 
 ## Honorary Mentions
 
-- [Atmospheric Fauna: Unofficial Fabric Port](https://modrinth.com/mod/atmospheric-fauna-unofficial-fabric-port) by **Aarow**
+- [Atmospheric Fauna: Unofficial Fabric Port](https://modrinth.com/mod/atmospheric-fauna-unofficial-fabric-port) by **Aarow** *(1.20.1 port of this mod)*
 
 ---
 
