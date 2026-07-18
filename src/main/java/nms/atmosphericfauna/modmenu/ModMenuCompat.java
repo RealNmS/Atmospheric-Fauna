@@ -24,15 +24,11 @@ public class ModMenuCompat implements ModMenuApi {
             protected void init() {
                 super.init();
                 this.addRenderableWidget(
-                        /*
-                         * >=26.2
-                         * Button.builder(Component.translatable("gui.done"), b ->
-                         * this.minecraft.setScreenAndShow(parent))
-                         * .bounds(this.width / 2 - 100, this.height / 2 + 20, 200, 20)
-                         * .build());
-                         */
-                        // <26.2
+                        //? if >=26.2 {
+                        /*Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreenAndShow(parent))
+                        *//*?} else {*/
                         Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(parent))
+                        //?}
                                 .bounds(this.width / 2 - 100, this.height / 2 + 20, 200, 20)
                                 .build());
             }

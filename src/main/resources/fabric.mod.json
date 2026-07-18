@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "atmospheric-fauna",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Atmospheric Fauna",
+  "name": "${name}",
   "description": "Minecraft mod that adds birds and other fauna making your world feel alive.",
   "authors": ["NmS"],
   "contact": {

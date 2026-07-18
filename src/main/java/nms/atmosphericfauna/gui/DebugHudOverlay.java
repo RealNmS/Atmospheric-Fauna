@@ -23,13 +23,13 @@ public class DebugHudOverlay {
                         return;
 
                     Minecraft mc = Minecraft.getInstance();
-                    /*
-                     * >= 26.2
-                     * if (mc.gui.hud.isHidden())
-                     * return;
-                     */
+                    //? if >=26.2 {
+                    /*if (mc.gui.hud.isHidden())
+                        return;
+                    *//*?} else {*/
                     if (mc.options.hideGui)
                         return;
+                    //?}
 
                     Map<String, Integer> birdCounts = new HashMap<>();
                     synchronized (BaseBirdParticle.ALL_BIRDS) {

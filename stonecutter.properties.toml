@@ -1,0 +1,24 @@
+# See https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
+mod.id = "atmospheric-fauna"
+mod.name = "Atmospheric Fauna"
+mod.group = "nms.atmosphericfauna"
+mod.version = "0.3.0"
+
+deps.fabric_loader = "0.19.3"
+loomx.loom_version = "1.17-SNAPSHOT"
+
+["26.1.x"]
+mod.mc_compat = "26.1"
+mod.mc_releases = ["26.1", "26.1.1", "26.1.2"]
+
+deps.fabric_api = "0.144.0+26.1"
+deps.modmenu = "18.0.0-alpha.8"
+deps.cloth_config = "26.1.154"
+
+["26.2.x"]
+mod.mc_compat = "~26.2"
+mod.mc_releases = ["26.2"]
+
+deps.fabric_api = "0.152.2+26.2"
+deps.modmenu = "20.0.1"
+deps.cloth_config = "26.2.155"
