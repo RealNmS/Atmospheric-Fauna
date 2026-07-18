@@ -3,6 +3,7 @@ package nms.atmosphericfauna.config;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
+import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 import java.io.File;
@@ -27,23 +28,18 @@ public class ConfigHandler {
         }
 
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
-            @SuppressWarnings("null")
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
 
             if (data != null) {
-                // Verify that all variables are there
-                ConfigData defaults = saveData(); // Generates a ConfigData with current default values
+                ConfigData defaults = saveData();
                 boolean missing = false;
 
                 try {
-                    // Loop through categories (spawning, birds, debug)
                     for (Field categoryField : ConfigData.class.getFields()) {
                         Object loadedCategory = categoryField.get(data);
                         Object defaultCategory = categoryField.get(defaults);
 
-                        // Loop through variables in each category
                         for (Field field : loadedCategory.getClass().getFields()) {
-                            // If variable is missing (null), fill it from defaults
                             if (field.get(loadedCategory) == null) {
                                 field.set(loadedCategory, field.get(defaultCategory));
                                 missing = true;
@@ -96,6 +92,7 @@ public class ConfigHandler {
         public static class Birds {
             public Integer maxActiveBirds;
             public Integer maxActiveCrows;
+            public Integer maxActiveBlueJays;
         }
 
         // Debug Category
@@ -112,7 +109,6 @@ public class ConfigHandler {
         ConfigData data = new ConfigData();
 
         // Spawning Category
-
         data.spawning.enableChunkLoadSpawning = AtmosphericFauna.enableChunkLoadSpawning;
         data.spawning.enableAmbientSpawning = AmbientSpawning.enableAmbientSpawning;
         data.spawning.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
@@ -122,12 +118,11 @@ public class ConfigHandler {
         data.spawning.spawnBelowSeaLevel = AmbientSpawning.spawnBelowSeaLevel;
 
         // Birds Category
-
         data.birds.maxActiveBirds = BaseBirdParticle.maxActiveBirds;
         data.birds.maxActiveCrows = CrowParticle.maxActiveCrows;
+        data.birds.maxActiveBlueJays = BlueJayParticle.maxActiveBlueJays;
 
         // Debug Category
-
         data.debug.debugText = AmbientSpawning.debugText;
         data.debug.debugBirds = BaseBirdParticle.debugText;
 
@@ -137,7 +132,6 @@ public class ConfigHandler {
     private static void loadData(ConfigData data) {
 
         // Spawning Category
-
         AtmosphericFauna.enableChunkLoadSpawning = data.spawning.enableChunkLoadSpawning;
         AmbientSpawning.enableAmbientSpawning = data.spawning.enableAmbientSpawning;
         AmbientSpawning.spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
@@ -147,12 +141,11 @@ public class ConfigHandler {
         AmbientSpawning.spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
 
         // Birds Category
-
         BaseBirdParticle.maxActiveBirds = data.birds.maxActiveBirds;
         CrowParticle.maxActiveCrows = data.birds.maxActiveCrows;
+        BlueJayParticle.maxActiveBlueJays = data.birds.maxActiveBlueJays;
 
         // Debug Category
-
         AmbientSpawning.debugText = data.debug.debugText;
         BaseBirdParticle.debugText = data.debug.debugBirds;
     }

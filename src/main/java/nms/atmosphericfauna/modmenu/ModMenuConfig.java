@@ -4,6 +4,7 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
+import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -21,7 +22,7 @@ public class ModMenuConfig {
                 .setSavingRunnable(ConfigHandler::save);
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        // Spawning Category
+        // MARK: --- SPAWNING ---
 
         ConfigCategory spawning = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.spawning"));
@@ -94,7 +95,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> AmbientSpawning.spawnBelowSeaLevel = newValue)
                 .build());
 
-        // Birds Category
+        // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.birds"));
@@ -122,7 +123,21 @@ public class ModMenuConfig {
 
         birds.addEntry(crows.build());
 
-        // Debug Category
+        SubCategoryBuilder blueJays = entryBuilder
+                .startSubCategory(Component.translatable("subcategory.atmosphericfauna.blue_jays"));
+
+        blueJays.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.max_active_blue_jays"),
+                        BlueJayParticle.maxActiveBlueJays)
+                .setDefaultValue(10)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_blue_jays.tooltip"))
+                .setSaveConsumer(newValue -> BlueJayParticle.maxActiveBlueJays = newValue)
+                .build());
+
+        birds.addEntry(blueJays.build());
+
+        // MARK: --- DEBUG ---
 
         ConfigCategory debug = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.debug"));

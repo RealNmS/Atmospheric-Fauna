@@ -81,10 +81,10 @@ publishing {
 }
 
 tasks.matching { it.name == "remapJar" }.configureEach {
-    archiveFileName.set("${project.archives_base_name}-${version}+${minecraft_version}.jar")
+    archiveFileName.set("${project.archives_base_name}-${version}+${supported_mc_versions}.jar")
 }
 
 // Fallback: if Fabric Loom names remap jar task differently, try to set jar archive name too
 tasks.named("jar") {
-    archiveFileName.set("${project.archives_base_name}-${version}+${minecraft_version}.jar")
+    archiveFileName.set("${project.archives_base_name}-${version}+${supported_mc_versions}.jar")
 }

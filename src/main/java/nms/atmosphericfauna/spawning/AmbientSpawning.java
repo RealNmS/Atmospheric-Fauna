@@ -2,6 +2,7 @@ package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
+import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.List;
@@ -26,43 +27,62 @@ public class AmbientSpawning {
     public static boolean spawnBelowSeaLevel = false;
     public static boolean enableAmbientSpawning = true;
 
-    // --- SPAWN DATA CONSTANTS ---
+    // MARK: --- SPAWN DATA CONSTANTS ---
 
     private record SpawnData(
             SimpleParticleType particleType,
-            int weight,
-            int minPackSize,
+            int weight, // weight
+            int minPackSize, // pack size
             int maxPackSize,
-            int minLightLevel,
+            int minLightLevel, // light level
             int maxLightLevel,
-            boolean spawnInBadWeather,
-            boolean spawnDuringDay,
-            boolean spawnDuringNight,
-            TagKey<Biome> validBiomeTag,
-            List<TagKey<Block>> validSpawnBlocks,
-            IntSupplier availableSpots) {
+            boolean spawnInBadWeather, // spawn in bad weather
+            boolean spawnDuringDay, // spawn during day
+            boolean spawnDuringNight, // spawn during night
+            TagKey<Biome> validBiomeTag, // valid biome list
+            List<TagKey<Block>> validSpawnBlocks, // valid spawn blocks list
+            IntSupplier availableSpots) { // max bird count
     }
 
     private static final SpawnData CROW_SPAWN_DATA = new SpawnData(
             AtmosphericFauna.CROW,
-            30, // weight
-            3, 9, // pack size
-            8, 15, // light level
-            true, // spawn in bad weather
-            true, // spawn during day
-            true, // spawn during night
-            BiomeTags.IS_OVERWORLD, // valid biome
+            30,
+            3, 9,
+            8, 15,
+            true,
+            true,
+            true,
+            BiomeTags.IS_OVERWORLD,
             List.of(
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
                     BlockTags.LOGS,
                     BlockTags.SAND,
                     BlockTags.SNOW,
-                    BlockTags.BASE_STONE_OVERWORLD), // valid spawn blocks
-            () -> Math.max(0, CrowParticle.maxActiveCrows - CrowParticle.getCount())); // max bird count
+                    BlockTags.BASE_STONE_OVERWORLD),
+            () -> Math.max(0, CrowParticle.maxActiveCrows - CrowParticle.getCount()));
+
+    private static final SpawnData BLUE_JAY_SPAWN_DATA = new SpawnData(
+            AtmosphericFauna.BLUE_JAY,
+            25,
+            1, 2,
+            8, 15,
+            false,
+            true,
+            false,
+            BiomeTags.IS_OVERWORLD,
+            List.of(
+                    BlockTags.DIRT,
+                    BlockTags.LEAVES,
+                    BlockTags.LOGS,
+                    BlockTags.SAND,
+                    BlockTags.SNOW,
+                    BlockTags.BASE_STONE_OVERWORLD),
+            () -> Math.max(0, BlueJayParticle.maxActiveBlueJays - BlueJayParticle.getCount()));
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
-            CROW_SPAWN_DATA
+            CROW_SPAWN_DATA,
+            BLUE_JAY_SPAWN_DATA
     // Future bird types can be added here
     );
 
@@ -72,7 +92,7 @@ public class AmbientSpawning {
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
 
-    // --- SPAWN LOGIC ---
+    // MARK: --- SPAWN LOGIC ---
 
     public static void tick(ClientLevel world) {
         if ((world.getGameTime() % spawnTickDelay != 0) || !enableAmbientSpawning) {
@@ -105,31 +125,62 @@ public class AmbientSpawning {
     }
 
     private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
-        if (debugText)
-            AtmosphericFauna.LOGGER.info("Ambient spawning cycle started...");
+        String particleName = "unknown";
+        if (spawnData.particleType() == AtmosphericFauna.CROW) {
+            particleName = "crow";
+        } else if (spawnData.particleType() == AtmosphericFauna.BLUE_JAY) {
+            particleName = "blue_jay";
+        }
+
+        if (debugText) {
+            AtmosphericFauna.LOGGER.info("[AS] Attempting to spawn " + particleName);
+        }
 
         int availableGlobalSpots = Math.max(0, BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size());
         int availableTypedSpots = spawnData.availableSpots().getAsInt();
         int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
 
         if (availableSpots < spawnData.minPackSize()) {
+            if (debugText)
+                AtmosphericFauna.LOGGER
+                        .info("[AS] Not enough spots available" + " (global: " + availableGlobalSpots + ", typed: "
+                                + availableTypedSpots + ")");
             return;
         }
 
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
+            if (debugText)
+                AtmosphericFauna.LOGGER
+                        .info("[AS] Not spawning due to bad weather" + " (raining: " + world.isRaining()
+                                + ", thundering: " + world.isThundering() + ")");
             return;
         }
 
-        // Only spawn if time of day is right
-        boolean isDay = world.getGameTime() % 24000 < 12000;
+        // Only spawn if time of day is right (PS: Thank you pigcart T_T)
+        // >=26.1 {
+        // return level.isBrightOutside();
+        // } >=1.21.11 {
+        // return level.getDayTime() % 24000 < 13000;
+        // } else {
+        // level.isDay always returns true in 1.21.0
+        // return level.dayTime() % 24000 < 13000;
+        // }
+        boolean isDay = world.isBrightOutside();
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
+            if (debugText)
+                AtmosphericFauna.LOGGER
+                        .info("[AS] Not spawning due to time of day" + " (isDay: " + isDay + ")");
             return;
         }
 
         // Gather eligible players
         var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
-        if (players.isEmpty())
+        if (players.isEmpty()) {
+            if (debugText)
+                AtmosphericFauna.LOGGER
+                        .info("[AS] Not spawning due to no eligible players" + " (players: " + players.size() + ")");
             return;
+        }
 
         // Try several candidate positions to increase robustness
         for (int attempt = 0; attempt < attemptsPerTick; attempt++) {
@@ -177,11 +228,11 @@ public class AmbientSpawning {
                 if (debugText) {
                     if (spawnedCount >= targetPackSize) {
                         AtmosphericFauna.LOGGER
-                                .info("SUCCESS: Spawned pack of " + spawnedCount + " crows at "
+                                .info("[AS] SUCCESS: Spawned pack of " + spawnedCount + " " + particleName + " at "
                                         + foundCenter.toShortString());
                     } else {
                         AtmosphericFauna.LOGGER.info(
-                                "PARTIAL: Wanted " + targetPackSize + " but only found spots for "
+                                "[AS] PARTIAL: Wanted " + targetPackSize + " but only found spots for "
                                         + spawnedCount);
                     }
                 }
@@ -191,6 +242,8 @@ public class AmbientSpawning {
             }
         }
     }
+
+    // MARK: --- SPAWN LOCATION HELPERS ---
 
     // Helper to snap a position to the nearest solid ground within 3 blocks
     // vertical
