@@ -29,9 +29,9 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2;
-        this.preferredFlightHeight = 15.0 + (this.random.nextDouble() * 13.0 - 3.0);
+        this.preferredFlightHeight = 10.0 + (this.random.nextDouble() * 13.0 - 3.0);
         if (this.random.nextFloat() < 0.10f) {
-            this.preferredFlightHeight += 10.0 + this.random.nextDouble() * 15.0;
+            this.preferredFlightHeight += 10.0 + this.random.nextDouble() * 10.0;
         }
         this.maxVerticalSpeed = 0.35;
         this.verticalSteerFactor = 1.35;
