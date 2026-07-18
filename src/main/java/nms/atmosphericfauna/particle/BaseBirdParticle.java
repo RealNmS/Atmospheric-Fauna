@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.tags.BiomeTags;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 
@@ -78,6 +79,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double separationStrength;
     protected double flockGoalBias;
     protected int maxFlockSize = Integer.MAX_VALUE;
+    protected boolean fliesOverOcean = true;
 
     protected double scareRadius; // horizontal distance that startles perched birds
     protected double scareTakeoffSpeed; // horizontal speed applied when scared
@@ -325,6 +327,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double nx = Math.cos(angle) * randRadius + forwardBiasX * 5.0 * (this.random.nextFloat() - 0.5f);
         double nz = Math.sin(angle) * randRadius + forwardBiasZ * 5.0 * (this.random.nextFloat() - 0.5f);
 
+        // Water avoidance loop
+        if (!this.fliesOverOcean) {
+            for (int i = 0; i < 5; i++) {
+                if (!isOceanBiome(this.x + nx, this.z + nz)) {
+                    break; // Target is not an ocean (Rivers and lakes are perfectly fine!)
+                }
+                // Try a new random angle without the forward bias
+                angle = this.random.nextFloat() * Math.PI * 2;
+                nx = Math.cos(angle) * randRadius;
+                nz = Math.sin(angle) * randRadius;
+            }
+        }
+
         // Ensure we pick a goal above ground and bias upwards when low or just took off
         double ground = sampleGroundHeight(this.x, this.z);
         double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
@@ -414,6 +429,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (level.isEmptyBlock(mutablePos))
             return false;
         return !level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty();
+    }
+
+    private boolean isOceanBiome(double px, double pz) {
+        mutablePos.set(px, this.y, pz);
+        return level.getBiome(mutablePos).is(BiomeTags.IS_OCEAN);
     }
 
     // Find top-most solid block near the given x,z by scanning downward
@@ -598,16 +618,27 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double lookX = this.x + this.xd * lookAheadMultiplier;
         double lookY = this.y + this.yd * lookAheadMultiplier;
         double lookZ = this.z + this.zd * lookAheadMultiplier;
-        if (isBlocked(lookX, lookY, lookZ)) {
-            if (!isBlocked(this.x, this.y + 2.0, this.z)) {
+
+        boolean blockAvoidance = isBlocked(lookX, lookY, lookZ);
+        boolean waterAvoidance = !this.fliesOverOcean && isOceanBiome(lookX, lookZ);
+
+        if (blockAvoidance || waterAvoidance) {
+            if (blockAvoidance && !isBlocked(this.x, this.y + 2.0, this.z)) {
                 this.yd = Math.max(this.yd, 0.12);
             } else {
-                double angle = Math.atan2(this.zd, this.xd)
-                        + (this.random.nextFloat() < 0.5f ? Math.PI / 2 : -Math.PI / 2);
-                this.goalX = this.x + Math.cos(angle) * (2 + this.random.nextFloat() * 3);
+                double angle = Math.atan2(this.zd, this.xd);
+
+                if (waterAvoidance && !blockAvoidance) {
+                    angle += Math.PI * 0.75 * (this.random.nextFloat() > 0.5 ? 1 : -1);
+                    this.goalTimer = 40 + (int) (this.random.nextFloat() * 20);
+                } else {
+                    angle += (this.random.nextFloat() < 0.5f ? Math.PI / 2 : -Math.PI / 2);
+                    this.goalTimer = 20 + (int) (this.random.nextFloat() * 40);
+                }
+
+                this.goalX = this.x + Math.cos(angle) * (2 + this.random.nextFloat() * 5);
                 this.goalY = Math.max(this.y + 0.5, this.y + this.random.nextFloat() * 2);
-                this.goalZ = this.z + Math.sin(angle) * (2 + this.random.nextFloat() * 3);
-                this.goalTimer = 20 + (int) (this.random.nextFloat() * 40);
+                this.goalZ = this.z + Math.sin(angle) * (2 + this.random.nextFloat() * 5);
             }
         }
 

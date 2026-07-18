@@ -43,6 +43,7 @@ public class CrowParticle extends BaseBirdParticle {
         this.separationStrength = 0.05;
         this.flockGoalBias = 0.25;
         this.maxFlockSize = Integer.MAX_VALUE;
+        this.fliesOverOcean = true;
 
         this.scareRadius = 10.0; // horizontal distance that startles when perched
         this.scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
