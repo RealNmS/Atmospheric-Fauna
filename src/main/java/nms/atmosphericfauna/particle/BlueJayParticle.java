@@ -30,8 +30,8 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2; // how many blocks above ground
         this.maxFlightHeight = 85.0; // how many blocks from void
-        this.maxVerticalSpeed = 0.30;
-        this.verticalSteerFactor = 1.30;
+        this.maxVerticalSpeed = 0.35;
+        this.verticalSteerFactor = 1.35;
         this.takeoffClimb = 2.5;
         this.flockRadius = 10.0;
         this.cohesionStrength = 0.001;
