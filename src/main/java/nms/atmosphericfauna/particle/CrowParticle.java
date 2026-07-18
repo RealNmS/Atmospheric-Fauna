@@ -29,7 +29,10 @@ public class CrowParticle extends BaseBirdParticle {
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2.5;
-        this.preferredFlightHeight = 25.0;
+        this.preferredFlightHeight = 25.0 + (this.random.nextDouble() * 25.0 - 5.0);
+        if (this.random.nextFloat() < 0.15f) {
+            this.preferredFlightHeight += 25.0 + this.random.nextDouble() * 25.0;
+        }
         this.maxVerticalSpeed = 0.30;
         this.verticalSteerFactor = 1.25;
         this.takeoffClimb = 2.5;
@@ -41,7 +44,7 @@ public class CrowParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.25;
         this.maxFlockSize = Integer.MAX_VALUE;
 
-        this.scareRadius = 10.0; // horizontal distance that startles perched crows
+        this.scareRadius = 10.0; // horizontal distance that startles when perched
         this.scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
 
         this.perchingChance = 0.005;

@@ -29,7 +29,10 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
         this.minFlightHeight = 2;
-        this.preferredFlightHeight = 15.0;
+        this.preferredFlightHeight = 15.0 + (this.random.nextDouble() * 13.0 - 3.0);
+        if (this.random.nextFloat() < 0.10f) {
+            this.preferredFlightHeight += 10.0 + this.random.nextDouble() * 15.0;
+        }
         this.maxVerticalSpeed = 0.35;
         this.verticalSteerFactor = 1.35;
         this.takeoffClimb = 2.5;
@@ -41,7 +44,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.25;
         this.maxFlockSize = 3;
 
-        this.scareRadius = 12.5; // horizontal distance that startles perched crows
+        this.scareRadius = 12.5; // horizontal distance that startles when perched
         this.scareTakeoffSpeed = 0.40; // horizontal speed applied when scared
 
         this.perchingChance = 0.0025;
