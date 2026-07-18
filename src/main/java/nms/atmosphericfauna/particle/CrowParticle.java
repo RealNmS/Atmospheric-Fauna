@@ -21,7 +21,7 @@ public class CrowParticle extends BaseBirdParticle {
         this.baseSpriteName = "crow";
         this.spriteName = "crow_flying_1";
 
-        this.lifetime = 2400;
+        this.lifetime = 3200;
         this.quadSize = 0.5f;
 
         this.flySpeed = 0.20f;

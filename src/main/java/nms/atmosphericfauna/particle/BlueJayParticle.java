@@ -21,7 +21,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.baseSpriteName = "blue_jay";
         this.spriteName = "blue_jay_flying_1";
 
-        this.lifetime = 3200;
+        this.lifetime = 3800;
         this.quadSize = 0.4f;
 
         this.flySpeed = 0.15f;
