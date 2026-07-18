@@ -604,9 +604,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
                     if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
-                        setState(nb, State.LANDING);
+                        setState(this, State.LANDING);
                         this.landingBlockPos = target;
-                        this.landingTargetY = target.getY() + 2.0 + this.quadSize;
+                        this.landingTargetY = target.getY() + 1.0 + this.quadSize;
+                        this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+                        this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
                         groupPerch(target);
                         return;
                     }
@@ -670,7 +672,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.zd *= 0.98;
 
         // Estimate time to land
-        double verticalDist = this.y - this.landingTargetY;
+        double verticalDist = Math.max(0.0, this.y - this.landingTargetY);
         double timeToLand;
         if (this.yd < -0.001) {
             timeToLand = verticalDist / -this.yd;
@@ -695,9 +697,18 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.xd += (desiredXd - this.xd) * steerFactor;
         this.zd += (desiredZd - this.zd) * steerFactor;
 
-        // gentle descent proportional to remaining distance
-        double descent = Math.min(0.20, Math.max(0.06, verticalDist * 0.03));
-        this.yd = -descent;
+        // Prevent clipping below the target height
+        if (this.y <= this.landingTargetY) {
+            this.yd = 0;
+            this.y = this.landingTargetY;
+        } else {
+            double descent = Math.min(0.20, Math.max(0.06, verticalDist * 0.03));
+            if (this.y - descent < this.landingTargetY) {
+                this.yd = -(this.y - this.landingTargetY);
+            } else {
+                this.yd = -descent;
+            }
+        }
 
         double dx = targetX - this.x;
         double dz = targetZ - this.z;
@@ -705,7 +716,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
 
         // Snap if close and slow
-        if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) < 0.25 && horizSpeed < 0.06) {
+        if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) <= 0.01 && horizSpeed < 0.06) {
             if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
                 this.setPos(targetX, this.landingTargetY, targetZ);
                 this.xd = 0;
@@ -722,8 +733,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return;
         }
 
-        // Finalize if we pass the landing Y and are reasonably close horizontally
-        if (this.y <= this.landingTargetY + 0.2 && horizDist < 0.6) {
+        // Finalize if we reach the landing Y and are reasonably close horizontally
+        if (this.y <= this.landingTargetY + 0.05 && horizDist < 0.6) {
             if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
                 this.setPos(targetX, this.landingTargetY, targetZ);
                 this.xd = 0;
