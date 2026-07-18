@@ -1,0 +1,102 @@
+### current
+
+**Changes:**
+- Reworked project to use Stonecutter addon for multiversion support
+- Added support for Minecraft 1.21.11 (more versions to come later, hopefully)
+- Reworked landing and perching so birds don't clip into the perch block
+- Fixed max flock size not working properly, adding cooldown for joining a flock
+- Changed some of the Blue Jay spawning conditions, making it spawn mainly in forests
+- Updated sprite handling *(this is like the herobrine being removed every update)*
+
+### v0.3.0 [26.2, 26.1.x]
+
+Hello again, I'm sorry for the big pause on updates. I didn't have a lot of motivation or time to continue working on this, but I managed to make yet another banger update. With the new additions I figured multiversion handling will be a lot harder than I thought, and for this reason I won't be updating below the version 26.1 for now. I will look into Stonecutter gradle addon so I can hopefully manage it better, but no promises.
+
+**Changes:**
+- Added a new bird **Blue Jay**
+- Reworked crow textures
+- Updated flocking behaviour and added max flock size (crows are unlimited)
+- Added commands, for now mainly just for debugging
+- Fixed multiple texts in debugging and config screen
+- Updated the sprite handling (once again, this is the final time, I promise)
+- Changed some of the backend logic to support more bird additions in future
+- Fixed daylight spawning
+
+This update might still be buggy, I hope I fixed everything and made it polished enough, if anything comes up, please flood my Issues section on GitHub. I will read it all, even if it's dumb stuff.
+
+### v0.2.3 [26.1, 1.21.11]
+
+**Changes:**
+- Ported to Minecraft 26.1
+- Changed the way sprites are facing the camera
+
+### v0.2.2 [1.21.11]
+
+**Changes:**
+- Added "Spawning on Chunk Load" and "Ambient Spawning" config options
+- Added minimum values to the config options (to prevent user inputting negative values)
+- Changed some of the flocking behavior
+- Changed crow take off to be more smooth
+- Lowered crow wing flapping speed when rising
+- Optimized a bunch of small things
+- Fixed crow spawning when crow limit number in config was really low
+- Fixed crow sprite not updating when going fast upwards
+- Fixed possible crashes
+- Fixed small memory leak
+
+### v0.2.1 [1.21.11]
+
+**Changes:**
+- Added "Spawn Below Sea Level" config option
+- Optimized the flocking data management
+- Fixed several spawning issues
+- Fixed some of the spawning condition checks
+- Fixed possible memory leaks
+- Changed the log messages to be unified with the rest of the project
+
+### v0.2.0 [1.21.11]
+
+At first I thought I would release a few of small updates, gradually fixing what was broken. However since Modrinth took forever to review this mod (not blaming them though, I hope they enjoyed their break 🥰) I didn't feel like releasing the changes and they somehow built up into this massive release. Honestly it feels like a completely different mod at this point, but it's still early in development. There are still quite a lot of things I would like to fix before I start adding more bird variants.
+
+**Changes:**
+- Completely refactored and optimized the backend, now supporting easy addition of new birds
+- Fixed the crow spawning:
+  - Crows spawn like they should (just set the Minecraft var alwaysSpawn to true lol)
+  - Removed the custom height check -> Now only able to spawn above sea level
+  - Rewrote the spawn location calculation to be further away (closer to config value)
+  - Optimized the crow spawning if the max limit is reached
+  - Added spawning attempt after loading every 4th chunk (to populate the world when it loads)
+  - Added a list of spawnable blocks (to prevent spawning on things like water...)
+- Added a despawn distance (render distance + 16 blocks)
+- Added a random wing flapping offset to each crow
+- Rewrote perching logic:
+  - Crows now should land more sparsely from each other when in group
+  - Less inclined to perch after spawning
+  - Fixed some bugs with group perching
+  - Added longer perch cooldown based on how long the crows were perched
+- Added a check that adds any missing values inside the config file
+- Added max bird particle count config value
+- Replaced the missing Cloth Config disabled button with centered label
+- Changed some of the config tooltip texts
+- Categorized the config values inside the JSON file
+- Changed some of the default config values:
+  - Max number of crows: 120 -> 50
+  - Spawn tick delay: 100 -> 200
+
+### v0.1.0 [1.21.11]
+
+**Changes:**
+- Updated the wing flapping speed to be based on the vertical speed of the crow
+- Added crow debug text option to the config
+- Turned the mod to be completely  client-side only (will figure out the server-side later on)
+- Reduced final jar file size (by not including the /docs folder)
+- Updated the mod icon
+
+### v0.1.0 (alpha) [1.21.11]
+
+The first release, yippiee!!
+
+**Important info:**
+- This is the alpha release, most things will be bugged or just not working at all
+    - mostly the spawning and crow behaviour is not finished (but somewhat working)
+- Only works for Fabric loader and Minecraft 1.21.11
