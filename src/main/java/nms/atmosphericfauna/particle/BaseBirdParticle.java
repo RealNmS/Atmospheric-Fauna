@@ -66,8 +66,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected int wingFlapSpeed;
     protected int wingFlapOffset;
     protected double steerStrength;
-    protected double minFlightHeight; // how many blocks above ground
-    protected double maxFlightHeight; // how many blocks from void
+    protected double minFlightHeight;
+    protected double preferredFlightHeight;
     protected double maxVerticalSpeed;
     protected double verticalSteerFactor;
     protected double takeoffClimb;
@@ -327,18 +327,21 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // Ensure we pick a goal above ground and bias upwards when low or just took off
         double ground = sampleGroundHeight(this.x, this.z);
+        double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
+        double preferredMaxY = Math.min(ground + preferredFlightHeight, absoluteCeiling);
+
         double ny;
         if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
             ny = this.y + 2.5 + this.random.nextFloat() * 2.5;
-        } else if (this.y >= ground + maxFlightHeight - 1.0) {
-            ny = Math.max(ground + minFlightHeight, ground + maxFlightHeight - 2.0 - this.random.nextFloat() * 3.0);
+        } else if (this.y >= preferredMaxY - 1.0) {
+            ny = Math.max(ground + minFlightHeight, preferredMaxY - 2.0 - this.random.nextFloat() * 3.0);
         } else {
             ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + forwardBiasY * 1.5;
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
-        // Clamp Y to world bounds
-        ny = Math.max(level.getMinY() + 1.0, Math.min((level.getHeight() - 1.0), ny));
+        // Clamp Y to world bounds AND the absolute ceiling
+        ny = Math.max(level.getMinY() + 1.0, Math.min(absoluteCeiling, ny));
 
         // If there's a flock nearby, bias the goal toward the flock center OR scatter
         List<BaseBirdParticle> neighbors = getNeighbors(flockRadius);
@@ -426,6 +429,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     private void tickFlying() {
         double groundY = sampleGroundHeight(this.x, this.z);
+
+        // Fetch dimension height for active steering
+        double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
+        double preferredMaxY = Math.min(groundY + preferredFlightHeight, absoluteCeiling);
 
         double dxToGoal = Double.isNaN(goalX) ? Double.POSITIVE_INFINITY : (goalX - this.x);
         double dyToGoal = Double.isNaN(goalY) ? Double.POSITIVE_INFINITY : (goalY - this.y);
@@ -535,9 +542,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.goalTimer = Math.max(this.goalTimer, 20);
         }
 
-        double ceiling = groundY + maxFlightHeight;
-        if (this.y >= ceiling - 0.5) {
-            this.goalY = Math.min(this.goalY, ceiling - 2.0 - this.random.nextFloat() * 2.0);
+        if (this.y >= preferredMaxY - 0.5) {
+            this.goalY = Math.min(this.goalY, preferredMaxY - 2.0 - this.random.nextFloat() * 2.0);
             this.goalTimer = Math.min(this.goalTimer, 40);
         }
 
@@ -555,7 +561,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double steerY = (desiredY - this.yd) * verticalSteerFactor;
             double steerZ = desiredZ - this.zd;
 
-            if (this.y >= ceiling - 0.5) {
+            if (this.y >= preferredMaxY - 0.5) {
                 steerY -= 0.02 * verticalSteerFactor;
             }
 
