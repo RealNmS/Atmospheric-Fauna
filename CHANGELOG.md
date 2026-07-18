@@ -7,6 +7,9 @@
 - Fixed max flock size not working properly, adding cooldown for joining a flock
 - Changed some of the Blue Jay spawning conditions, making it spawn mainly in forests
 - Updated sprite handling *(this is like the herobrine being removed every update)*
+- Added ocean avoidence for Blue Jays
+- Reworked flight height handling, making it more varied and smooth
+- Optimized the ground sampling using heightmap
 
 ### v0.3.0 [26.2, 26.1.x]
 
