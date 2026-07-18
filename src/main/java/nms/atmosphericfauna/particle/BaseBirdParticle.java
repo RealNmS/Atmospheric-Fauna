@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 
@@ -45,6 +46,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
     protected Double takeoffGoalY = Double.NaN;
     protected int takeoffTime = 0;
+    protected double lastDistSqToGoal = -1.0;
+    protected int stuckTicks = 0;
 
     protected String baseSpriteName = null;
     protected String spriteName = null;
@@ -329,11 +332,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // Water avoidance loop
         if (!this.fliesOverOcean) {
-            for (int i = 0; i < 5; i++) {
-                if (!isOceanBiome(this.x + nx, this.z + nz)) {
-                    break; // Target is not an ocean (Rivers and lakes are perfectly fine!)
+            int attempts = 0;
+            while (isOceanBiome(this.x + nx, this.z + nz) && attempts < 15) {
+                attempts++;
+                if (attempts % 3 == 0) {
+                    randRadius += 15.0;
                 }
-                // Try a new random angle without the forward bias
+
                 angle = this.random.nextFloat() * Math.PI * 2;
                 nx = Math.cos(angle) * randRadius;
                 nz = Math.sin(angle) * randRadius;
@@ -432,20 +437,26 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     private boolean isOceanBiome(double px, double pz) {
-        mutablePos.set(px, this.y, pz);
+        mutablePos.set(px, 62, pz);
         return level.getBiome(mutablePos).is(BiomeTags.IS_OCEAN);
     }
 
-    // Find top-most solid block near the given x,z by scanning downward
+    // Find top-most solid block near the given x,z instantly using chunk data
     private double sampleGroundHeight(double px, double pz) {
+        int surfaceY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) Math.floor(px), (int) Math.floor(pz));
+
+        if (this.y >= surfaceY) {
+            return surfaceY;
+        }
+
         int startY = (int) Math.ceil(this.y);
-        for (int y = startY; y >= Math.max(0, startY - 20); y--) {
+        for (int y = startY; y >= Math.max(level.getMinY(), startY - 20); y--) {
             BlockPos pos = BlockPos.containing(px, y, pz);
             if (!level.getBlockState(pos).isAir()) {
                 return pos.getY() + 1.0;
             }
         }
-        return 0.0;
+        return level.getMinY();
     }
 
     // MARK: --- BEHAVIORS ---
@@ -461,8 +472,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double dzToGoal = Double.isNaN(goalZ) ? Double.POSITIVE_INFINITY : (goalZ - this.z);
         double distSqToGoal = dxToGoal * dxToGoal + dyToGoal * dyToGoal + dzToGoal * dzToGoal;
 
-        if (Double.isNaN(goalX) || goalTimer-- <= 0 || distSqToGoal < 0.5 * 0.5) {
+        // Stuck detection
+        if (Math.abs(this.lastDistSqToGoal - distSqToGoal) < 0.05) {
+            this.stuckTicks++;
+        } else {
+            this.stuckTicks = 0;
+        }
+        this.lastDistSqToGoal = distSqToGoal;
+
+        if (Double.isNaN(goalX) || goalTimer-- <= 0 || distSqToGoal < 0.5 * 0.5 || this.stuckTicks > 40) {
             chooseNewGoal();
+            this.stuckTicks = 0;
         }
 
         // Flocking behavior
@@ -493,6 +513,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
 
                 if (!isScattering && nb.flockCooldown == 0) {
+                    if (!this.fliesOverOcean && isOceanBiome(nb.x, nb.z))
+                        continue;
+
                     cx += nb.x;
                     cy += nb.y;
                     cz += nb.z;
@@ -551,10 +574,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                     // Group Synchronization
                     double aheadFactor = 4.0;
-                    this.goalX = this.x + (avx * aheadFactor) + (cx - this.x) * 0.18;
-                    this.goalY = this.y + (avy * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
-                    this.goalZ = this.z + (avz * aheadFactor) + (cz - this.z) * 0.18;
-                    this.goalTimer = Math.min(this.goalTimer, Math.max(8, (goalDurationMin + goalDurationMax) / 6));
+                    double syncX = this.x + (avx * aheadFactor) + (cx - this.x) * 0.18;
+                    double syncY = this.y + (avy * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
+                    double syncZ = this.z + (avz * aheadFactor) + (cz - this.z) * 0.18;
+
+                    if (this.fliesOverOcean || !isOceanBiome(syncX, syncZ)) {
+                        this.goalX = syncX;
+                        this.goalY = syncY;
+                        this.goalZ = syncZ;
+                        this.goalTimer = Math.min(this.goalTimer, Math.max(8, (goalDurationMin + goalDurationMax) / 6));
+                    }
                 }
             }
         }
@@ -574,6 +603,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double desiredY = goalY - this.y;
         double desiredZ = goalZ - this.z;
         double desiredDist = Math.sqrt(desiredX * desiredX + desiredY * desiredY + desiredZ * desiredZ);
+
+        double lookX = this.x + this.xd * lookAheadMultiplier;
+        double lookY = this.y + this.yd * lookAheadMultiplier;
+        double lookZ = this.z + this.zd * lookAheadMultiplier;
+
+        boolean blockAvoidance = isBlocked(lookX, lookY, lookZ);
+        boolean waterAvoidance = !this.fliesOverOcean && isOceanBiome(lookX, lookZ);
+
         if (desiredDist > 0.0001) {
             desiredX = (desiredX / desiredDist) * flySpeed;
             desiredY = (desiredY / desiredDist) * flySpeed;
@@ -592,11 +629,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
             }
 
+            double currentSteerStrength = steerStrength;
+            if (blockAvoidance || waterAvoidance) {
+                currentSteerStrength *= 4.0;
+            }
+
             double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
-            if (steerMag > steerStrength) {
-                steerX = (steerX / steerMag) * steerStrength;
-                steerY = (steerY / steerMag) * steerStrength;
-                steerZ = (steerZ / steerMag) * steerStrength;
+            if (steerMag > currentSteerStrength) {
+                steerX = (steerX / steerMag) * currentSteerStrength;
+                steerY = (steerY / steerMag) * currentSteerStrength;
+                steerZ = (steerZ / steerMag) * currentSteerStrength;
             }
 
             this.xd += steerX;
@@ -604,6 +646,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.zd += steerZ;
         }
 
+        // Apply speed limits
         double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);
         if (horizontalSpeed > flySpeed) {
             double scale = flySpeed / horizontalSpeed;
@@ -615,30 +658,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.yd < -maxVerticalSpeed)
             this.yd = -maxVerticalSpeed;
 
-        double lookX = this.x + this.xd * lookAheadMultiplier;
-        double lookY = this.y + this.yd * lookAheadMultiplier;
-        double lookZ = this.z + this.zd * lookAheadMultiplier;
-
-        boolean blockAvoidance = isBlocked(lookX, lookY, lookZ);
-        boolean waterAvoidance = !this.fliesOverOcean && isOceanBiome(lookX, lookZ);
-
         if (blockAvoidance || waterAvoidance) {
-            if (blockAvoidance && !isBlocked(this.x, this.y + 2.0, this.z)) {
-                this.yd = Math.max(this.yd, 0.12);
-            } else {
-                double angle = Math.atan2(this.zd, this.xd);
+            boolean currentGoalInvalid = isBlocked(goalX, goalY, goalZ)
+                    || (!this.fliesOverOcean && isOceanBiome(goalX, goalZ));
 
-                if (waterAvoidance && !blockAvoidance) {
-                    angle += Math.PI * 0.75 * (this.random.nextFloat() > 0.5 ? 1 : -1);
-                    this.goalTimer = 40 + (int) (this.random.nextFloat() * 20);
+            if (currentGoalInvalid) {
+                if (blockAvoidance && !isBlocked(this.x, this.y + 2.0, this.z)) {
+                    this.yd = Math.max(this.yd, 0.12);
                 } else {
-                    angle += (this.random.nextFloat() < 0.5f ? Math.PI / 2 : -Math.PI / 2);
-                    this.goalTimer = 20 + (int) (this.random.nextFloat() * 40);
+                    chooseNewGoal();
+                    this.goalTimer = 20 + this.random.nextInt(20);
                 }
-
-                this.goalX = this.x + Math.cos(angle) * (2 + this.random.nextFloat() * 5);
-                this.goalY = Math.max(this.y + 0.5, this.y + this.random.nextFloat() * 2);
-                this.goalZ = this.z + Math.sin(angle) * (2 + this.random.nextFloat() * 5);
             }
         }
 
