@@ -50,7 +50,7 @@ dependencies {
 
     // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    
+
     // Fabric API
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
@@ -102,6 +102,7 @@ tasks {
             register("name", "mod.name")
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
+            put("java", requiredJava.majorVersion)
         }
 
         filesMatching("fabric.mod.json") { expand(props) }

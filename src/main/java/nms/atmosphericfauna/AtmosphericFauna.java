@@ -11,9 +11,11 @@ import nms.atmosphericfauna.command.ModCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
-// import net.fabricmc.api.ModInitializer;
+//? if <=1.21.11 {
+/*import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+*//*?} else {*/
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
-// import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+//?}
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
@@ -23,7 +25,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 
-public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitializer {
+public class AtmosphericFauna implements ClientModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -31,20 +33,6 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 	public static final SimpleParticleType BLUE_JAY = FabricParticleTypes.simple(true);
 	private static int chunkLoadCount = 0;
 	public static boolean enableChunkLoadSpawning = true;
-
-	/*
-	 * only for now because idk how to set up client and server initializers
-	 * properly
-	 * 
-	 * @Override
-	 * public void onInitialize() {
-	 * LOGGER.info("Atmospheric Fauna is taking flight!");
-	 * ConfigHandler.load();
-	 * Registry.register(BuiltInRegistries.PARTICLE_TYPE,
-	 * Identifier.fromNamespaceAndPath(MOD_ID, "crow"), CROW);
-	 * ServerTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
-	 * }
-	 */
 
 	@Override
 	public void onInitializeClient() {
@@ -59,11 +47,20 @@ public class AtmosphericFauna implements /* ModInitializer, */ ClientModInitiali
 				BLUE_JAY);
 
 		// Register particle factories
+		//? if <=1.21.11 {
+		/*ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
+		*//*?} else {*/
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
+		//?}
 
 		// Ambient spawning
+		//? if <=1.21.11 {
+		/*ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
+		*//*?} else {*/
 		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
+		//?}
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
