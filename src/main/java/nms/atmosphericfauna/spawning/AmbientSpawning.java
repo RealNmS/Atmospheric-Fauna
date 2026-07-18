@@ -39,7 +39,7 @@ public class AmbientSpawning {
             boolean spawnInBadWeather, // spawn in bad weather
             boolean spawnDuringDay, // spawn during day
             boolean spawnDuringNight, // spawn during night
-            TagKey<Biome> validBiomeTag, // valid biome list
+            List<TagKey<Biome>> validBiomeTags, // valid biome list
             List<TagKey<Block>> validSpawnBlocks, // valid spawn blocks list
             IntSupplier availableSpots) { // max bird count
     }
@@ -52,7 +52,8 @@ public class AmbientSpawning {
             true,
             true,
             true,
-            BiomeTags.IS_OVERWORLD,
+            List.of(
+                    BiomeTags.IS_OVERWORLD),
             List.of(
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
@@ -70,12 +71,14 @@ public class AmbientSpawning {
             false,
             true,
             false,
-            BiomeTags.IS_OVERWORLD,
+            List.of(
+                    BiomeTags.IS_FOREST,
+                    BiomeTags.IS_JUNGLE,
+                    BiomeTags.IS_TAIGA),
             List.of(
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
                     BlockTags.LOGS,
-                    BlockTags.SAND,
                     BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD),
             () -> Math.max(0, BlueJayParticle.maxActiveBlueJays - BlueJayParticle.getCount()));
@@ -295,8 +298,16 @@ public class AmbientSpawning {
         if (!isValidBlock)
             return false;
 
-        // Biome Check
-        if (!world.getBiome(pos).is(spawnData.validBiomeTag()))
+        // Valid biome check
+        var biomeHolder = world.getBiome(pos);
+        boolean biomeMatch = false;
+        for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
+            if (biomeHolder.is(tag)) {
+                biomeMatch = true;
+                break;
+            }
+        }
+        if (!biomeMatch)
             return false;
 
         // Height Check
