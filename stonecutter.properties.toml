@@ -12,7 +12,7 @@ mod.mc_compat = "~1.21.11"
 mod.mc_releases = ["1.21.11"]
 
 deps.fabric_api = "0.141.5+1.21.11" 
-deps.modmenu = "17.0.1-beta.1"
+deps.modmenu = "17.0.0"
 deps.cloth_config = "21.11.153"
 
 ["26.1.x"]
