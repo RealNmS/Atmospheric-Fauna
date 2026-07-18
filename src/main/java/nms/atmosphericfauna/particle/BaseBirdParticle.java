@@ -884,31 +884,34 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     private boolean shouldFaceRightRelativeToCamera() {
-        double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
-        if (horizSpeed <= 0.01) {
+        double horizSpeedSq = this.xd * this.xd + this.zd * this.zd;
+        if (horizSpeedSq <= 0.0001) {
             return this.facingRight;
         }
 
-        Vec3 viewForward = mc.player != null ? mc.player.getViewVector(1.0F) : new Vec3(-1.0, 0.0, 0.0);
-        Vec3 viewRight = viewForward.cross(new Vec3(0.0, 1.0, 0.0));
-        if (viewRight.lengthSqr() < 1.0e-8) {
+        if (mc.player == null) {
             return this.facingRight;
         }
 
-        viewRight = viewRight.normalize();
-        Vec3 motion = new Vec3(this.xd, 0.0, this.zd);
-        if (motion.lengthSqr() < 1.0e-8) {
+        double dx = this.x - mc.player.getX();
+        double dz = this.z - mc.player.getZ();
+        double distSq = dx * dx + dz * dz;
+
+        if (distSq < 0.0001) {
             return this.facingRight;
         }
 
-        double speed = motion.length();
-        double dot = motion.scale(1.0 / speed).dot(viewRight);
+        double dist = Math.sqrt(distSq);
+        double nx = dx / dist;
+        double nz = dz / dist;
 
-        if (Math.abs(dot) < 0.18) {
+        double perpendicularSpeed = (this.zd * nx) - (this.xd * nz);
+
+        if (Math.abs(perpendicularSpeed) < 0.01) {
             return this.facingRight;
         }
 
-        return dot > 0.0;
+        return perpendicularSpeed > 0.0;
     }
 
     private void updateSpriteFacing() {
