@@ -451,7 +451,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (nb.state != State.FLYING)
                     continue;
 
-                // 1. Separation (ALWAYS applies to prevent physical collisions)
                 double dx = this.x - nb.x;
                 double dy = this.y - nb.y;
                 double dz = this.z - nb.z;
@@ -465,7 +464,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     sepZ += (dz / d) * factor;
                 }
 
-                // 2. Tally Cohesion and Alignment ONLY if neither bird is scattering
                 if (!isScattering && nb.flockCooldown == 0) {
                     cx += nb.x;
                     cy += nb.y;
@@ -485,7 +483,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.yd += sepY;
             this.zd += sepZ;
 
-            // 3. Process Flock Mind (Only if this bird is willing to flock)
+            // Process Flock Mind
             if (flockingCount > 0 && !isScattering) {
                 cx /= flockingCount;
                 cy /= flockingCount;
@@ -494,10 +492,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 avy /= flockingCount;
                 avz /= flockingCount;
 
-                boolean isOvercrowded = this.maxFlockSize > 0 && flockingCount > this.maxFlockSize;
+                boolean isOvercrowded = this.maxFlockSize > 0 && flockingCount >= this.maxFlockSize;
 
                 if (isOvercrowded) {
-                    // TRIGGER THE COOLDOWN: 10 to 20 seconds of forced alone time
                     this.flockCooldown = 200 + this.random.nextInt(200);
 
                     // Pick an escape goal entirely away from the flock's center
