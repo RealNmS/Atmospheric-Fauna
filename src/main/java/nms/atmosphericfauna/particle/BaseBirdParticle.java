@@ -270,11 +270,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     }
                 }
 
-                setState(nb, State.LANDING);
-                nb.landingBlockPos = actualTarget;
-                nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
-                nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
-                nb.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                if (actualTarget.getY() <= nb.y) {
+                    setState(nb, State.LANDING);
+                    nb.landingBlockPos = actualTarget;
+                    nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
+                    nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+                    nb.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                }
             }
         }
     }
@@ -714,14 +716,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
             for (BaseBirdParticle nb : getNeighbors(12.0)) {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
-                    if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
-                        setState(this, State.LANDING);
-                        this.landingBlockPos = target;
-                        this.landingTargetY = target.getY() + 1.0 + this.quadSize;
-                        this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
-                        this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
-                        groupPerch(target);
-                        return;
+                    if (target.getY() <= this.y) {
+                        if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
+                            setState(this, State.LANDING);
+                            this.landingBlockPos = target;
+                            this.landingTargetY = target.getY() + 1.0 + this.quadSize;
+                            this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+                            this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                            groupPerch(target);
+                            return;
+                        }
                     }
                 }
             }
@@ -936,7 +940,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.xd *= 0.995;
         this.zd *= 0.995;
 
-        if (perchTimer-- <= 0 && (this.y >= this.takeoffGoalY - 0.15 || this.takeoffTime > 50)) {
+        boolean pathBlocked = isBlocked(this.x + this.xd, this.y + this.yd + 0.5, this.z + this.zd)
+                || isBlocked(this.x, this.y + 1.2, this.z);
+
+        boolean takeoffComplete = (perchTimer-- <= 0 && (this.y >= this.takeoffGoalY - 0.15 || this.takeoffTime > 50));
+
+        if (pathBlocked || takeoffComplete) {
             setState(this, State.FLYING);
             this.landingCooldown = 100;
             chooseNewGoal();
