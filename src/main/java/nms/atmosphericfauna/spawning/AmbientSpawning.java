@@ -5,6 +5,7 @@ import nms.atmosphericfauna.particle.BaseBirdParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntSupplier;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -63,7 +64,7 @@ public class AmbientSpawning {
                     BlockTags.SNOW,
                     BlockTags.TERRACOTTA,
                     BlockTags.BASE_STONE_OVERWORLD),
-            () -> Math.max(0, CrowParticle.maxActiveCrows - CrowParticle.getCount()));
+            () -> Math.max(0, CrowParticle.getMaxActiveBirds() - CrowParticle.getCount()));
 
     private static final SpawnData BLUE_JAY_SPAWN_DATA = new SpawnData(
             AtmosphericFauna.BLUE_JAY,
@@ -84,7 +85,7 @@ public class AmbientSpawning {
                     BlockTags.LOGS,
                     BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD),
-            () -> Math.max(0, BlueJayParticle.maxActiveBlueJays - BlueJayParticle.getCount()));
+            () -> Math.max(0, BlueJayParticle.getMaxActiveBirds() - BlueJayParticle.getCount()));
 
     private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
             CROW_SPAWN_DATA,
@@ -112,6 +113,14 @@ public class AmbientSpawning {
             return;
         }
 
+        if (BaseBirdParticle.getAllBirds().size() >= BaseBirdParticle.getMaxActiveBirds()) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Global bird limit ("
+                        + BaseBirdParticle.getMaxActiveBirds() + ") reached.");
+            }
+            return;
+        }
+
         RandomSource random = world.getRandom();
         int choice = random.nextInt(TOTAL_SPAWN_WEIGHT);
 
@@ -126,6 +135,12 @@ public class AmbientSpawning {
         }
 
         if (selectedSpawn != null) {
+            if (selectedSpawn.availableSpots().getAsInt() <= 0) {
+                if (debugText) {
+                    AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Species limit reached.");
+                }
+                return;
+            }
             trySpawn(world, random, selectedSpawn);
         }
     }
@@ -142,7 +157,8 @@ public class AmbientSpawning {
             AtmosphericFauna.LOGGER.info("[AS] Attempting to spawn " + particleName);
         }
 
-        int availableGlobalSpots = Math.max(0, BaseBirdParticle.maxActiveBirds - BaseBirdParticle.ALL_BIRDS.size());
+        int availableGlobalSpots = Math.max(0,
+                BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size());
         int availableTypedSpots = spawnData.availableSpots().getAsInt();
         int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
 
@@ -206,11 +222,11 @@ public class AmbientSpawning {
                 int targetPackSize = random.nextInt(maxPackSize - spawnData.minPackSize() + 1)
                         + spawnData.minPackSize();
 
-                int spawnedCount = 0;
                 int failSafe = 0;
+                List<BlockPos> validSpots = new ArrayList<>();
 
-                // Try to spawn the whole pack
-                while (spawnedCount < targetPackSize && failSafe < targetPackSize * 8) {
+                // Try to find enough valid spots for the ENTIRE pack before spawning any
+                while (validSpots.size() < targetPackSize && failSafe < targetPackSize * 8) {
                     failSafe++;
 
                     int dx = random.nextInt(9) - 4;
@@ -219,35 +235,38 @@ public class AmbientSpawning {
                     BlockPos targetPos = foundCenter.offset(dx, 0, dz);
                     targetPos = adjustToGround(world, targetPos);
 
-                    if (isValidSpawnLocation(world, targetPos, spawnData)) {
+                    if (!validSpots.contains(targetPos) && isValidSpawnLocation(world, targetPos, spawnData)) {
+                        validSpots.add(targetPos);
+                    }
+                }
+
+                // Strictly require the full pack to be accommodated
+                if (validSpots.size() == targetPackSize) {
+                    for (BlockPos pos : validSpots) {
                         world.addParticle(spawnData.particleType(),
-                                targetPos.getX() + 0.5,
-                                targetPos.getY() + 0.5,
-                                targetPos.getZ() + 0.5,
+                                pos.getX() + 0.5,
+                                pos.getY() + 0.5,
+                                pos.getZ() + 0.5,
                                 (random.nextFloat() - 0.5f) * 0.05, 0, (random.nextFloat() - 0.5f) * 0.05);
-                        spawnedCount++;
                     }
-                }
 
-                if (debugText) {
-                    if (spawnedCount >= targetPackSize) {
-                        AtmosphericFauna.LOGGER
-                                .info("[AS] SUCCESS: Spawned pack of " + spawnedCount + " " + particleName + " at "
-                                        + foundCenter.toShortString());
-                    } else {
-                        AtmosphericFauna.LOGGER.info(
-                                "[AS] PARTIAL: Wanted " + targetPackSize + " but only found spots for "
-                                        + spawnedCount);
+                    if (debugText) {
+                        AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned full pack of " + targetPackSize + " "
+                                + particleName + " at " + foundCenter.toShortString());
                     }
-                }
-
-                if (spawnedCount > 0)
                     return;
+                } else {
+                    if (debugText) {
+                        AtmosphericFauna.LOGGER.info("[AS] ABORTED: Wanted " + targetPackSize
+                                + " but only found spots for " + validSpots.size());
+                    }
+                }
             }
         }
 
         if (debugText) {
-            AtmosphericFauna.LOGGER.info("[AS] Could not spawn " + particleName);
+            AtmosphericFauna.LOGGER.info("[AS] FAIL: Could not find a valid block to spawn " + particleName
+                    + " (Check light level, tags, or biome)");
         }
     }
 
