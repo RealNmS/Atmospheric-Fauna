@@ -55,8 +55,8 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
     // Mod Menu (Optional)
-    modCompileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}")
-    modLocalRuntime("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+    modCompileOnly("maven.modrinth:modmenu:${property("deps.modmenu")}")
+    modLocalRuntime("maven.modrinth:modmenu:${property("deps.modmenu")}")
 
     // Cloth Config (Optional)
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
