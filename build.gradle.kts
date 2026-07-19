@@ -61,6 +61,9 @@ dependencies {
     // Cloth Config (Optional)
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
     modLocalRuntime("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
+
+    // Provides JSpecify annotations to older MC versions during compilation
+    compileOnly("org.jspecify:jspecify:1.0.0")
 }
 
 loom {

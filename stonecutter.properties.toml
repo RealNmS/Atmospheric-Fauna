@@ -7,11 +7,19 @@ mod.version = "0.3.0"
 deps.fabric_loader = "0.19.3"
 loomx.loom_version = "1.17-SNAPSHOT"
 
+["1.21.9.x"]
+mod.mc_compat = ">=1.21.9 <=1.21.10"
+mod.mc_releases = ["1.21.9", "1.21.10"]
+
+deps.fabric_api = "0.134.1+1.21.9"
+deps.modmenu = "16.0.1"
+deps.cloth_config = "20.0.149"
+
 ["1.21.11.x"]
 mod.mc_compat = "~1.21.11"
 mod.mc_releases = ["1.21.11"]
 
-deps.fabric_api = "0.141.5+1.21.11" 
+deps.fabric_api = "0.141.5+1.21.11"
 deps.modmenu = "17.0.0"
 deps.cloth_config = "21.11.153"
 
