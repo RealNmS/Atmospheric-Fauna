@@ -44,6 +44,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected int takeoffTime = 0;
     protected double lastDistSqToGoal = -1.0;
     protected int stuckTicks = 0;
+    protected double heightAdherence = 0.0015; // How strongly the bird pulls back to its target height
+    protected double heightTolerance = 8.0; // How far (in blocks) they can drift before they start caring
 
     protected String baseSpriteName = null;
     protected String spriteName = null;
@@ -355,7 +357,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
             ny = this.y - 2.0 - this.random.nextFloat() * 3.0;
         } else {
             double heightDiff = targetHeight - this.y;
-            double drift = Math.signum(heightDiff) * (this.random.nextFloat() * 1.5);
+            double drift;
+
+            if (Math.abs(heightDiff) > this.heightTolerance) {
+                double pull = heightDiff * (this.heightAdherence * 50.0);
+                drift = pull + (Math.signum(heightDiff) * this.random.nextFloat() * 2.0);
+            } else {
+                drift = Math.signum(heightDiff) * (this.random.nextFloat() * 1.5);
+            }
+
             ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + this.yd * 1.5 + drift;
             ny = Math.max(ny, ground + minFlightHeight);
         }
@@ -616,8 +626,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 steerY -= 0.02 * verticalSteerFactor;
             } else {
                 double heightDiff = targetHeight - this.y;
-                if (Math.abs(heightDiff) > 8.0) {
-                    steerY += Math.signum(heightDiff) * 0.0015 * verticalSteerFactor;
+                if (Math.abs(heightDiff) > heightTolerance) {
+                    steerY += Math.signum(heightDiff) * heightAdherence * verticalSteerFactor;
                 }
             }
 

@@ -33,6 +33,8 @@ public class CrowParticle extends BaseBirdParticle {
         if (this.random.nextFloat() < 0.15f) {
             this.preferredFlightHeight += 25.0 + this.random.nextDouble() * 25.0;
         }
+        this.heightTolerance = 8.0;
+        this.heightAdherence = 0.0025;
         this.maxVerticalSpeed = 0.30;
         this.verticalSteerFactor = 1.25;
         this.takeoffClimb = 2.5;
