@@ -55,6 +55,7 @@ public class AmbientSpawning {
             List.of(
                     BiomeTags.IS_OVERWORLD),
             List.of(
+                    BlockTags.ANIMALS_SPAWNABLE_ON,
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
                     BlockTags.LOGS,
@@ -76,6 +77,7 @@ public class AmbientSpawning {
                     BiomeTags.IS_JUNGLE,
                     BiomeTags.IS_TAIGA),
             List.of(
+                    BlockTags.ANIMALS_SPAWNABLE_ON,
                     BlockTags.DIRT,
                     BlockTags.LEAVES,
                     BlockTags.LOGS,
