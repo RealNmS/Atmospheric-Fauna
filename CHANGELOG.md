@@ -1,14 +1,15 @@
-### current
+### current (wip)
 
 **Changes:**
 - Reworked project to use Stonecutter addon for multiversion support
-- Added support for Minecraft 1.21.11 (more versions to come later, hopefully)
+- Added support for Minecraft 1.21 - 1.21.11
+- Changed some of the Blue Jay and Crow spawning conditions, making Blue Jays spawn only in forests
+- Added ocean avoidence for Blue Jays
 - Reworked landing and perching so birds don't clip into the perch block
 - Fixed max flock size not working properly, adding cooldown for joining a flock
-- Changed some of the Blue Jay spawning conditions, making it spawn mainly in forests
-- Updated sprite handling *(this is like the herobrine being removed every update)*
-- Added ocean avoidence for Blue Jays
 - Reworked flight height handling, making it more varied and smooth
+- Changed flock flight behaviour to navigate more smoothly
+- Updated sprite handling *(this is like the herobrine being removed every update)*
 - Optimized the ground sampling using heightmap
 - Optimized perching logic and scanning
 
