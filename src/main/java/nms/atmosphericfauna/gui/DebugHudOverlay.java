@@ -1,6 +1,10 @@
 package nms.atmosphericfauna.gui;
 
+//? if <=1.21.5 {
+//  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+//?} else {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+//?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import nms.atmosphericfauna.AtmosphericFauna;
@@ -17,16 +21,20 @@ public class DebugHudOverlay {
     public static boolean showDebug = false;
 
     public static void register() {
+//? if <=1.21.5 {
+//      HudRenderCallback.EVENT.register((guiGraphics, tickCounter) -> {
+//?} else {
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "debug_hud"),
                 (guiGraphics, tickCounter) -> {
+//?}
                     if (!showDebug)
                         return;
 
                     Minecraft mc = Minecraft.getInstance();
                     //? if >=26.2 {
-                    /*if (mc.gui.hud.isHidden())
-                        return;
-                    *//*?} else {*/
+                    //  if (mc.gui.hud.isHidden())
+                    //      return;
+                    //?} else {
                     if (mc.options.hideGui)
                         return;
                     //?}
@@ -51,9 +59,10 @@ public class DebugHudOverlay {
                     String title = "[AF] Debug";
                     int titleWidth = mc.font.width(title);
                     guiGraphics.fill(screenWidth - titleWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
+                    
                     //? if <=1.21.11 {
-                    /*guiGraphics.drawString(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
-                    *//*?} else {*/
+                    //  guiGraphics.drawString(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
+                    //?} else {
                     guiGraphics.text(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
                     //?}
                     y += 12;
@@ -69,9 +78,10 @@ public class DebugHudOverlay {
                         String text = entry.getKey() + ": " + entry.getValue() + " / " + maxCount;
                         int width = mc.font.width(text);
                         guiGraphics.fill(screenWidth - width - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
+                        
                         //? if <=1.21.11 {
-                        /*guiGraphics.drawString(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
-                        *//*?} else {*/
+                        //  guiGraphics.drawString(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
+                        //?} else {
                         guiGraphics.text(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
                         //?}
                         y += 12;
@@ -81,9 +91,10 @@ public class DebugHudOverlay {
                     String totalText = "Total: " + total + " / " + BaseBirdParticle.getMaxActiveBirds();
                     int totalWidth = mc.font.width(totalText);
                     guiGraphics.fill(screenWidth - totalWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
+                    
                     //? if <=1.21.11 {
-                    /*guiGraphics.drawString(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
-                    *//*?} else {*/
+                    //  guiGraphics.drawString(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
+                    //?} else {
                     guiGraphics.text(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
                     //?}
                 });
