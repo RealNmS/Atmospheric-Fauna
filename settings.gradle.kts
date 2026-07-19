@@ -24,6 +24,7 @@ plugins {
 stonecutter {
     create(rootProject) {
         // See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
+        version("1.21.x", "1.21")
         version("1.21.2.x", "1.21.2")
         version("1.21.4.x", "1.21.4")
         version("1.21.5.x", "1.21.5")

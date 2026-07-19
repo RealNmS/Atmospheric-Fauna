@@ -101,6 +101,43 @@ public abstract class BaseBirdParticle extends BaseParticle {
         ALL_BIRDS.add(this);
     }
 
+    // MARK: --- HELPER METHODS ---
+
+    //? if <=1.21.1 {
+    // private int getLevelMinY() { return this.level.getMinBuildHeight(); }
+    //?} else {
+    private int getLevelMinY() {
+        return this.level.getMinY();
+    }
+    //?}
+
+    public static void reset() {
+        ALL_BIRDS.clear();
+    }
+
+    @Override
+    public void remove() {
+        ALL_BIRDS.remove(this);
+        super.remove();
+    }
+
+    public static Set<BaseBirdParticle> getAllBirds() {
+        return ALL_BIRDS;
+    }
+
+    public static int getMaxActiveBirds() {
+        return maxActiveBirds;
+    }
+
+    public String getBaseSpriteName() {
+        return this.baseSpriteName;
+    }
+
+    private static void setState(BaseBirdParticle bird, State newState) {
+        bird.state = newState;
+        bird.setSpriteName(1);
+    }
+
     // MARK: --- TICK ---
 
     @Override
@@ -168,35 +205,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         this.move(this.xd, this.yd, this.zd);
-    }
-
-    // MARK: --- HELPER METHODS ---
-
-    public static void reset() {
-        ALL_BIRDS.clear();
-    }
-
-    @Override
-    public void remove() {
-        ALL_BIRDS.remove(this);
-        super.remove();
-    }
-
-    public static Set<BaseBirdParticle> getAllBirds() {
-        return ALL_BIRDS;
-    }
-
-    public static int getMaxActiveBirds() {
-        return maxActiveBirds;
-    }
-
-    public String getBaseSpriteName() {
-        return this.baseSpriteName;
-    }
-
-    private static void setState(BaseBirdParticle bird, State newState) {
-        bird.state = newState;
-        bird.setSpriteName(1);
     }
 
     // Returns all other bird particles within radius
@@ -337,7 +345,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         double ground = sampleGroundHeight(this.x, this.z);
-        double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
+        double absoluteCeiling = (getLevelMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(ground + preferredFlightHeight, absoluteCeiling);
         double ny;
 
@@ -352,7 +360,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
-        ny = Math.max(level.getMinY() + 1.0, Math.min(absoluteCeiling, ny));
+        ny = Math.max(getLevelMinY() + 1.0, Math.min(absoluteCeiling, ny));
 
         // Flock Bias
         List<BaseBirdParticle> neighbors = getNeighbors(flockRadius);
@@ -423,13 +431,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return surfaceY;
 
         int startY = (int) Math.ceil(this.y);
-        for (int y = startY; y >= Math.max(level.getMinY(), startY - 20); y--) {
+        for (int y = startY; y >= Math.max(getLevelMinY(), startY - 20); y--) {
             mutablePos.set(px, y, pz);
             if (!level.getBlockState(mutablePos).isAir()) {
                 return y + 1.0;
             }
         }
-        return level.getMinY();
+        return getLevelMinY();
     }
 
     // MARK: --- BEHAVIORS ---
@@ -437,7 +445,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private void tickFlying() {
         double groundY = sampleGroundHeight(this.x, this.z);
 
-        double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
+        double absoluteCeiling = (getLevelMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(groundY + preferredFlightHeight, absoluteCeiling);
 
         double dxToGoal = Double.isNaN(goalX) ? Double.POSITIVE_INFINITY : (goalX - this.x);
