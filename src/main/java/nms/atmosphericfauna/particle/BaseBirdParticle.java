@@ -627,7 +627,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
             } else {
                 double heightDiff = targetHeight - this.y;
                 if (Math.abs(heightDiff) > heightTolerance) {
-                    steerY += Math.signum(heightDiff) * heightAdherence * verticalSteerFactor;
+                    boolean pullingUp = Math.signum(heightDiff) > 0;
+                    if (!pullingUp || !isBlocked(this.x, this.y + 2.0, this.z)) {
+                        steerY += Math.signum(heightDiff) * heightAdherence * verticalSteerFactor;
+                    }
                 }
             }
 
@@ -660,18 +663,50 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.yd < -maxVerticalSpeed)
             this.yd = -maxVerticalSpeed;
 
-        if (blockAvoidance || waterAvoidance) {
-            boolean currentGoalInvalid = isBlocked(goalX, goalY, goalZ)
-                    || (!this.fliesOverOcean && isOceanBiome(goalX, goalZ));
+        boolean currentGoalInvalid = isBlocked(goalX, goalY, goalZ)
+                || (!this.fliesOverOcean && isOceanBiome(goalX, goalZ));
 
-            if (currentGoalInvalid) {
-                if (blockAvoidance && !isBlocked(this.x, this.y + 2.0, this.z)) {
-                    this.yd = Math.max(this.yd, 0.12);
-                } else {
-                    chooseNewGoal();
-                    this.goalTimer = 20 + this.random.nextInt(20);
-                }
+        // Immediate path is blocked
+        if (blockAvoidance || waterAvoidance) {
+            this.xd = (this.xd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.08);
+            this.zd = (this.zd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.08);
+
+            double bounceSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
+            double maxBounceSpeed = 0.15;
+            if (bounceSpeed > maxBounceSpeed) {
+                this.xd = (this.xd / bounceSpeed) * maxBounceSpeed;
+                this.zd = (this.zd / bounceSpeed) * maxBounceSpeed;
             }
+
+            boolean ceilingDetected = isBlocked(this.x, this.y + 1.2, this.z)
+                    || isBlocked(this.x, this.y + 0.5, this.z);
+            boolean floorDetected = isBlocked(this.x, this.y - 1.2, this.z) || isBlocked(this.x, this.y - 0.5, this.z);
+
+            if (ceilingDetected && floorDetected) {
+                this.yd = (this.yd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.06);
+                this.goalY = this.y + (this.random.nextFloat() - 0.5f);
+            } else if (ceilingDetected) {
+                this.yd = Math.min(this.yd * -0.4, -0.05) - (this.random.nextFloat() * 0.05);
+                this.goalY = this.y - 1.5 - this.random.nextFloat();
+            } else if (floorDetected) {
+                this.yd = Math.max(this.yd * -0.4, 0.05) + (this.random.nextFloat() * 0.05);
+                this.goalY = this.y + 1.5 + this.random.nextFloat();
+            } else {
+                this.yd = Math.max(this.yd, 0.08) + (this.random.nextFloat() * 0.05);
+                this.goalY = this.y + 2.0 + this.random.nextFloat();
+            }
+
+            double pushX = Math.abs(this.xd) > 0.001 ? Math.signum(this.xd) : (this.random.nextFloat() - 0.5f);
+            double pushZ = Math.abs(this.zd) > 0.001 ? Math.signum(this.zd) : (this.random.nextFloat() - 0.5f);
+
+            this.goalX = this.x + (pushX * 5.0) + ((this.random.nextFloat() - 0.5f) * 4.0);
+            this.goalZ = this.z + (pushZ * 5.0) + ((this.random.nextFloat() - 0.5f) * 4.0);
+
+            this.goalTimer = 10 + this.random.nextInt(15);
+
+        } else if (currentGoalInvalid) {
+            chooseNewGoal();
+            this.goalTimer = 20 + this.random.nextInt(20);
         }
 
         // Perching Scan
