@@ -10,6 +10,7 @@
 - Added ocean avoidence for Blue Jays
 - Reworked flight height handling, making it more varied and smooth
 - Optimized the ground sampling using heightmap
+- Optimized perching logic and scanning
 
 ### v0.3.0 [26.2, 26.1.x]
 
