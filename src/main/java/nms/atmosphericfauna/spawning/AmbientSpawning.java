@@ -162,16 +162,14 @@ public class AmbientSpawning {
             return;
         }
 
-        // Only spawn if time of day is right (PS: Thank you pigcart T_T)
-        // >=26.1 {
-        // return level.isBrightOutside();
-        // } >=1.21.11 {
-        // return level.getDayTime() % 24000 < 13000;
-        // } else {
-        // level.isDay always returns true in 1.21.0
-        // return level.dayTime() % 24000 < 13000;
-        // }
+        // Only spawn if time of day is right (PS: Thank you pigcart T_T this had me
+        // scratching my head for a while)
+        //? if <=1.21.4 {
+        // boolean isDay = world.getDayTime() % 24000 < 13000;
+        //?} else {
         boolean isDay = world.isBrightOutside();
+        //?}
+
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
             if (debugText)
                 AtmosphericFauna.LOGGER
@@ -247,6 +245,10 @@ public class AmbientSpawning {
                     return;
             }
         }
+
+        if (debugText) {
+            AtmosphericFauna.LOGGER.info("[AS] Could not spawn " + particleName);
+        }
     }
 
     // MARK: --- SPAWN LOCATION HELPERS ---
@@ -275,7 +277,7 @@ public class AmbientSpawning {
             int dz = random.nextInt(radius * 2 + 1) - radius;
             int sx = centerX + dx;
             int sz = centerZ + dz;
-            int sy = world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, sx, sz);
+            int sy = world.getHeight(Heightmap.Types.WORLD_SURFACE, sx, sz);
             BlockPos candidate = new BlockPos(sx, sy, sz);
 
             if (isValidSpawnLocation(world, candidate, spawnData))
@@ -286,8 +288,12 @@ public class AmbientSpawning {
 
     private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
         // Must have air above and block below
-        if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below()))
+        if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+            }
             return false;
+        }
 
         // Check for valid spawn blocks
         var stateBelow = world.getBlockState(pos.below());
@@ -298,8 +304,12 @@ public class AmbientSpawning {
                 break;
             }
         }
-        if (!isValidBlock)
+        if (!isValidBlock) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+            }
             return false;
+        }
 
         // Valid biome check
         var biomeHolder = world.getBiome(pos);
@@ -310,16 +320,31 @@ public class AmbientSpawning {
                 break;
             }
         }
-        if (!biomeMatch)
+        if (!biomeMatch) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome to spawn");
+            }
             return false;
+        }
 
         // Height Check
-        if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel()))
+        if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel())) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid height to spawn");
+            }
             return false;
+        }
 
         // Light Check
         int lightLevel = world.getMaxLocalRawBrightness(pos);
+        boolean lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
 
-        return lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
+        if (!lightValid) {
+            if (debugText) {
+                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid light level to spawn");
+            }
+        }
+
+        return lightValid;
     }
 }
