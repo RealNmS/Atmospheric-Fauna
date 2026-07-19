@@ -61,6 +61,7 @@ public class AmbientSpawning {
                     BlockTags.LOGS,
                     BlockTags.SAND,
                     BlockTags.SNOW,
+                    BlockTags.TERRACOTTA,
                     BlockTags.BASE_STONE_OVERWORLD),
             () -> Math.max(0, CrowParticle.maxActiveCrows - CrowParticle.getCount()));
 
