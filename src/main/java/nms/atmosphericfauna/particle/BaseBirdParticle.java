@@ -20,11 +20,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 public abstract class BaseBirdParticle extends BaseParticle {
 
     private enum State {
-        FLYING,
-        LANDING,
-        PERCHED,
-        TAKING_OFF,
-        DYING
+        FLYING, LANDING, PERCHED, TAKING_OFF, DYING
     }
 
     protected State state = State.FLYING;
@@ -152,11 +148,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                         frame = Character.getNumericValue(lastChar);
                     }
                 }
-                if (frame == 1)
-                    frame = 2;
-                else
-                    frame = 1;
-                setSpriteName(frame);
+                setSpriteName(frame == 1 ? 2 : 1);
             }
             if (this.age % 3 == 0)
                 updateSpriteFacing();
@@ -318,26 +310,20 @@ public abstract class BaseBirdParticle extends BaseParticle {
         groupTakeoff();
     }
 
-    // Pick a new wandering goal near the bird, biased slightly upward and slightly
-    // in current motion direction
+    // Pick a new wandering goal
     private void chooseNewGoal() {
-        double forwardBiasX = this.xd;
-        double forwardBiasY = this.yd;
-        double forwardBiasZ = this.zd;
-
         double randRadius = 2.5 + this.random.nextFloat() * (goalRadius - 2.5);
         double angle = this.random.nextFloat() * Math.PI * 2;
-        double nx = Math.cos(angle) * randRadius + forwardBiasX * 5.0 * (this.random.nextFloat() - 0.5f);
-        double nz = Math.sin(angle) * randRadius + forwardBiasZ * 5.0 * (this.random.nextFloat() - 0.5f);
+        double nx = Math.cos(angle) * randRadius + this.xd * 5.0 * (this.random.nextFloat() - 0.5f);
+        double nz = Math.sin(angle) * randRadius + this.zd * 5.0 * (this.random.nextFloat() - 0.5f);
 
         // Water avoidance loop
         if (!this.fliesOverOcean) {
             int attempts = 0;
             while (isOceanBiome(this.x + nx, this.z + nz) && attempts < 15) {
                 attempts++;
-                if (attempts % 3 == 0) {
+                if (attempts % 3 == 0)
                     randRadius += 15.0;
-                }
 
                 angle = this.random.nextFloat() * Math.PI * 2;
                 nx = Math.cos(angle) * randRadius;
@@ -345,12 +331,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        // Ensure we pick a goal above ground and bias upwards when low or just took off
         double ground = sampleGroundHeight(this.x, this.z);
         double absoluteCeiling = (level.getMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(ground + preferredFlightHeight, absoluteCeiling);
-
         double ny;
+
         if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
             ny = this.y + 2.5 + this.random.nextFloat() * 2.5;
         } else if (this.y >= absoluteCeiling - 1.0) {
@@ -358,15 +343,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
         } else {
             double heightDiff = targetHeight - this.y;
             double drift = Math.signum(heightDiff) * (this.random.nextFloat() * 1.5);
-
-            ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + forwardBiasY * 1.5 + drift;
+            ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + this.yd * 1.5 + drift;
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
-        // Clamp Y to world bounds AND the absolute ceiling
         ny = Math.max(level.getMinY() + 1.0, Math.min(absoluteCeiling, ny));
 
-        // If there's a flock nearby, bias the goal toward the flock center OR scatter
+        // Flock Bias
         List<BaseBirdParticle> neighbors = getNeighbors(flockRadius);
         int flyingCount = 0;
         double cx = 0, cy = 0, cz = 0;
@@ -385,9 +368,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             cy /= flyingCount;
             cz /= flyingCount;
 
-            // NEW: Overcrowding check
             if (this.maxFlockSize > 0 && flyingCount > this.maxFlockSize) {
-                // OVERCROWDED: Actively pick a goal away from the flock center
                 double pushX = this.x - cx;
                 double pushZ = this.z - cz;
                 double dist = Math.sqrt(pushX * pushX + pushZ * pushZ);
@@ -403,32 +384,22 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.goalX = this.x + pushX * (goalRadius * 1.5) + (this.random.nextFloat() - 0.5f) * 5.0;
                 this.goalY = ny;
                 this.goalZ = this.z + pushZ * (goalRadius * 1.5) + (this.random.nextFloat() - 0.5f) * 5.0;
-                this.goalTimer = Math.min(this.goalTimer, goalDurationMin / 2); // Force quick commitment
-                return;
+                this.goalTimer = Math.min(this.goalTimer, goalDurationMin / 2);
             } else {
-                // NORMAL FLOCKING: Bias toward the center
-                double baseX = this.x + nx;
-                double baseY = ny;
-                double baseZ = this.z + nz;
-
-                this.goalX = baseX * (1.0 - flockGoalBias) + cx * flockGoalBias;
-                this.goalY = baseY * (1.0 - flockGoalBias) + cy * flockGoalBias;
-                this.goalZ = baseZ * (1.0 - flockGoalBias) + cz * flockGoalBias;
-
+                this.goalX = (this.x + nx) * (1.0 - flockGoalBias) + cx * flockGoalBias;
+                this.goalY = ny * (1.0 - flockGoalBias) + cy * flockGoalBias;
+                this.goalZ = (this.z + nz) * (1.0 - flockGoalBias) + cz * flockGoalBias;
                 this.goalTimer = Math.min(this.goalTimer, (goalDurationMin + goalDurationMax) / 4);
-                return;
             }
+            return;
         }
 
         this.goalX = this.x + nx;
         this.goalY = ny;
         this.goalZ = this.z + nz;
-
         this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
     }
 
-    // Checks if there's a solid/occupied collision at the given point (coarse
-    // check)
     private boolean isBlocked(double px, double py, double pz) {
         mutablePos.set(px, py, pz);
         if (level.isEmptyBlock(mutablePos))
@@ -441,19 +412,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return level.getBiome(mutablePos).is(BiomeTags.IS_OCEAN);
     }
 
-    // Find top-most solid block near the given x,z instantly using chunk data
     private double sampleGroundHeight(double px, double pz) {
         int surfaceY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) Math.floor(px), (int) Math.floor(pz));
-
-        if (this.y >= surfaceY) {
+        if (this.y >= surfaceY)
             return surfaceY;
-        }
 
         int startY = (int) Math.ceil(this.y);
         for (int y = startY; y >= Math.max(level.getMinY(), startY - 20); y--) {
-            BlockPos pos = BlockPos.containing(px, y, pz);
-            if (!level.getBlockState(pos).isAir()) {
-                return pos.getY() + 1.0;
+            mutablePos.set(px, y, pz);
+            if (!level.getBlockState(mutablePos).isAir()) {
+                return y + 1.0;
             }
         }
         return level.getMinY();
@@ -901,21 +869,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     private void tickDying() {
         this.yd -= 0.02;
-
-        // Remove if we hit the void or have fallen far enough
-        if (this.y < -64) {
+        if (this.y < -64 || this.age > this.lifetime + 240) {
             if (debugText) {
-                AtmosphericFauna.LOGGER.info(
-                        this.baseSpriteName + " #" + this.hashCode() + " has died at age " + this.age + " ticks.");
-            }
-            this.remove();
-        }
-
-        // Hard limit to prevent memory leaks if it falls forever
-        if (this.age > this.lifetime + 200) {
-            if (debugText) {
-                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode()
-                        + " forcibly removed after exceeding death time limit.");
+                AtmosphericFauna.LOGGER
+                        .info("Bird particle removed due to age or falling out of world: " + this.baseSpriteName);
             }
             this.remove();
         }
