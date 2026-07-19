@@ -224,7 +224,7 @@ public class AmbientSpawning {
                                 targetPos.getX() + 0.5,
                                 targetPos.getY() + 0.5,
                                 targetPos.getZ() + 0.5,
-                                0, 0, 0); // velocity x, y, z
+                                (random.nextFloat() - 0.5f) * 0.05, 0, (random.nextFloat() - 0.5f) * 0.05);
                         spawnedCount++;
                     }
                 }
