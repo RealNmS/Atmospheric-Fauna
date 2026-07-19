@@ -20,6 +20,7 @@
 - Fixed a spawn bug, making birds fly infinitely to the sky (hopefully)
 - Optimized the ground sampling using heightmap
 - Optimized perching logic and scanning
+- Small optimization when spawning
 
 ### v0.3.0 [26.2, 26.1.x]
 
