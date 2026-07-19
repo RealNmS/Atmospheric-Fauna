@@ -545,17 +545,28 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     this.yd += cohY + aliY;
                     this.zd += cohZ + aliZ;
 
-                    // Group Synchronization
-                    double aheadFactor = 4.0;
-                    double syncX = this.x + (avx * aheadFactor) + (cx - this.x) * 0.18;
-                    double syncY = this.y + (avy * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
-                    double syncZ = this.z + (avz * aheadFactor) + (cz - this.z) * 0.18;
+                    BaseBirdParticle leader = this;
+                    for (BaseBirdParticle nb : neighbors) {
+                        if (nb.state == State.FLYING && nb.hashCode() < leader.hashCode()) {
+                            leader = nb;
+                        }
+                    }
 
-                    if (this.fliesOverOcean || !isOceanBiome(syncX, syncZ)) {
-                        this.goalX = syncX;
-                        this.goalY = syncY;
-                        this.goalZ = syncZ;
-                        this.goalTimer = Math.min(this.goalTimer, Math.max(8, (goalDurationMin + goalDurationMax) / 6));
+                    // If we are NOT the leader, we sync our goal to the leader's exact direction
+                    if (leader != this) {
+                        double aheadFactor = 4.0;
+                        double syncX = this.x + (leader.xd * aheadFactor) + (cx - this.x) * 0.18;
+                        double syncY = this.y + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
+                        double syncZ = this.z + (leader.zd * aheadFactor) + (cz - this.z) * 0.18;
+
+                        if (this.fliesOverOcean || !isOceanBiome(syncX, syncZ)) {
+                            this.goalX = syncX;
+                            this.goalY = syncY;
+                            this.goalZ = syncZ;
+                            // Keep followers locked into the leader's path
+                            this.goalTimer = Math.min(this.goalTimer,
+                                    Math.max(8, (goalDurationMin + goalDurationMax) / 6));
+                        }
                     }
                 }
             }
