@@ -3,6 +3,8 @@
 **Changes:**
 - Reworked project to use Stonecutter addon for multiversion support
 - Added support for Minecraft 1.21 - 1.21.11
+- Added GitHub wiki for documentation on spawn data
+- Added new subcommand "help" to see links to the wiki and issues
 - Changed some of the Blue Jay and Crow spawning conditions, making Blue Jays spawn only in forests
 - Added ocean avoidence for Blue Jays
 - Reworked landing and perching so birds don't clip into the perch block
@@ -10,6 +12,7 @@
 - Reworked flight height handling, making it more varied and smooth
 - Changed flock flight behaviour to navigate more smoothly
 - Updated sprite handling *(this is like the herobrine being removed every update)*
+- Changed base command to be prettier, with a link to the wiki
 - Optimized the ground sampling using heightmap
 - Optimized perching logic and scanning
 
