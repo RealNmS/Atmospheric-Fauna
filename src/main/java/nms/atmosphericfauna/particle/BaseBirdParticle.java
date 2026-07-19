@@ -645,6 +645,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
+        // Perching Scan
         if (landingCooldown == 0 && this.random.nextFloat() < this.perchingChance) {
             for (BaseBirdParticle nb : getNeighbors(12.0)) {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
@@ -661,33 +662,42 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
             }
 
-            for (int i = 1; i <= this.perchingDistance; i++) {
-                BlockPos below = BlockPos.containing(this.x, this.y - i, this.z);
-                BlockPos above = below.above();
-                BlockState belowState = level.getBlockState(below);
-                BlockState aboveState = level.getBlockState(above);
+            int px = (int) Math.floor(this.x);
+            int py = (int) Math.floor(this.y);
+            int pz = (int) Math.floor(this.z);
 
+            for (int i = 1; i <= this.perchingDistance; i++) {
+                int checkY = py - i;
+                mutablePos.set(px, checkY, pz);
+
+                BlockState belowState = level.getBlockState(mutablePos);
                 if (belowState.isAir())
                     continue;
-                if (!aboveState.isAir())
+
+                mutablePos.move(Direction.UP);
+                if (!level.getBlockState(mutablePos).isAir())
                     continue;
 
-                if (!belowState.isFaceSturdy(level, below, Direction.UP))
+                mutablePos.move(Direction.DOWN);
+                if (!belowState.isFaceSturdy(level, mutablePos, Direction.UP))
+                    continue;
+                if (belowState.getCollisionShape(level, mutablePos).isEmpty())
                     continue;
 
-                if (belowState.getCollisionShape(level, below).isEmpty())
-                    continue;
+                // Neighbor check reusing mutablePos entirely
+                boolean hasNeighbor = !level.isEmptyBlock(mutablePos.set(px, checkY, pz - 1)) ||
+                        !level.isEmptyBlock(mutablePos.set(px, checkY, pz + 1)) ||
+                        !level.isEmptyBlock(mutablePos.set(px - 1, checkY, pz)) ||
+                        !level.isEmptyBlock(mutablePos.set(px + 1, checkY, pz));
 
-                boolean hasNeighbor = !level.isEmptyBlock(below.north()) || !level.isEmptyBlock(below.south())
-                        || !level.isEmptyBlock(below.east()) || !level.isEmptyBlock(below.west());
                 if (!hasNeighbor)
                     continue;
 
                 setState(this, State.LANDING);
-                this.landingBlockPos = below;
+                this.landingBlockPos = mutablePos.set(px, checkY, pz).immutable();
                 this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
                 this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
-                this.landingTargetY = below.getY() + 1.0 + this.quadSize;
+                this.landingTargetY = checkY + 1.0 + this.quadSize;
                 break;
             }
 
