@@ -227,13 +227,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return reusableNeighborList;
     }
 
-    // Ask nearby flockmates to go land on the given perch (same BlockPos)
+    // Ask nearby flockmates to go land on the given perch
     private void groupPerch(BlockPos target) {
         if (target == null)
             return;
         for (BaseBirdParticle nb : getNeighbors(flockRadius)) {
             if (nb == this)
                 continue;
+
             if (nb.state == State.FLYING) {
                 BlockPos actualTarget = target;
 
@@ -242,15 +243,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     int dx = random.nextInt(7) - 3;
                     int dz = random.nextInt(7) - 3;
 
-                    // Scan vertical range to find ground at this offset
                     for (int dy = 3; dy >= -3; dy--) {
-                        BlockPos p = target.offset(dx, dy, dz);
-                        BlockState state = level.getBlockState(p);
-                        if (!state.isAir() &&
-                                level.getBlockState(p.above()).isAir() &&
-                                state.isFaceSturdy(level, p, Direction.UP)) {
-                            actualTarget = p;
-                            break;
+                        mutablePos.set(target.getX() + dx, target.getY() + dy, target.getZ() + dz);
+                        BlockState state = level.getBlockState(mutablePos);
+
+                        if (!state.isAir()) {
+                            mutablePos.move(Direction.UP);
+                            if (level.getBlockState(mutablePos).isAir()) {
+                                mutablePos.move(Direction.DOWN);
+                                if (state.isFaceSturdy(level, mutablePos, Direction.UP)) {
+                                    actualTarget = mutablePos.immutable();
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
