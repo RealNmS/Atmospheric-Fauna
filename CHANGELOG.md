@@ -16,11 +16,13 @@
 - Reworked flight height handling, making it more varied and smooth
 - Made Blue Jays fly lower to the ground than crows, and avoid flying too high
 - Changed flock flight behaviour to navigate more smoothly
+- Added small random delay before taking off
 - Updated sprite handling *(this is like the herobrine being removed every update)*
 - Changed base command to be prettier, with a link to the wiki
 - Added new subcommand "help" to see links to the wiki and issues
 - Fixed max flock size not working properly, adding cooldown for joining a flock
 - Fixed a spawn bug, making birds fly infinitely to the sky (hopefully)
+- Fixed perching cooldown not having any effect, also making it longer
 - Optimized a bunch of things, making the mod faster than ever
   - Caching flock neighbours to avoid recalculating them every tick
   - Ground sampling is using heightmap instead of raycasting
