@@ -376,7 +376,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         ny = Math.max(getLevelMinY() + 1.0, Math.min(absoluteCeiling, ny));
 
         // Flock Bias
-        List<BaseBirdParticle> neighbors = getNeighbors(flockRadius);
+        List<BaseBirdParticle> neighbors = this.cachedFlockNeighbors;
         int flyingCount = 0;
         double cx = 0, cy = 0, cz = 0;
 
