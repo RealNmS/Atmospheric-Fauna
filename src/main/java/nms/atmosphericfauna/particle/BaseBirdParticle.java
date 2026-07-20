@@ -924,8 +924,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return;
         }
 
-        // If a player gets too close, scare the bird and make it fly off
-        double scareRadiusSq = scareRadius * scareRadius;
+        Player threateningPlayer = null;
+        double closestDistSq = scareRadius * scareRadius;
+
         for (Player p : this.level.players()) {
             if (p.isSpectator())
                 continue;
@@ -934,16 +935,44 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double dz = p.getZ() - this.z;
             double distSq = dx * dx + dz * dz;
             double dy = Math.abs(p.getY() - this.y);
-            if (distSq <= scareRadiusSq && dy < 3.0) {
-                performTakeoff(p);
-                return;
+
+            if (distSq <= closestDistSq && dy < 3.0) {
+                closestDistSq = distSq;
+                threateningPlayer = p;
+            }
+        }
+
+        if (threateningPlayer != null) {
+            boolean amIClosest = true;
+            for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
+                if (nb.state == State.PERCHED) {
+                    double dx = nb.x - threateningPlayer.getX();
+                    double dz = nb.z - threateningPlayer.getZ();
+                    if ((dx * dx + dz * dz) < closestDistSq) {
+                        amIClosest = false;
+                        break;
+                    }
+                }
+            }
+
+            if (amIClosest) {
+                this.perchTimer = 0;
+            } else {
+                int waveDelay = (int) (Math.sqrt(closestDistSq) * 2.0);
+                if (this.perchTimer > waveDelay) {
+                    this.perchTimer = waveDelay;
+                }
             }
         }
 
         if (perchTimer-- <= 0) {
-            setState(this, State.TAKING_OFF);
-            this.perchTimer = 20;
-            groupTakeoff();
+            if (threateningPlayer != null) {
+                performTakeoff(threateningPlayer);
+            } else {
+                setState(this, State.TAKING_OFF);
+                this.perchTimer = 20;
+                groupTakeoff();
+            }
         }
     }
 
