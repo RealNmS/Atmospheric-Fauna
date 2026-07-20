@@ -5,8 +5,6 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -51,10 +49,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected String spriteName = null;
     protected boolean facingRight = false;
 
-    public static final Set<BaseBirdParticle> ALL_BIRDS = Collections
-            .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
-
+    public static final List<BaseBirdParticle> ALL_BIRDS = Collections.synchronizedList(new ArrayList<>());
     private final List<BaseBirdParticle> reusableNeighborList = new ArrayList<>();
+    private final List<BaseBirdParticle> cachedFlockNeighbors = new ArrayList<>();
+    private int neighborCacheTimer = 0;
+
     protected static Minecraft mc = Minecraft.getInstance();
 
     // --- CONFIG STUFF ---
@@ -123,7 +122,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         super.remove();
     }
 
-    public static Set<BaseBirdParticle> getAllBirds() {
+    public static List<BaseBirdParticle> getAllBirds() {
         return ALL_BIRDS;
     }
 
@@ -215,7 +214,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
         reusableNeighborList.clear();
 
         synchronized (ALL_BIRDS) {
-            for (BaseBirdParticle other : ALL_BIRDS) {
+            int size = ALL_BIRDS.size();
+            for (int i = 0; i < size; i++) {
+                BaseBirdParticle other = ALL_BIRDS.get(i);
                 if (other == this || other.level != this.level || other.getClass() != this.getClass())
                     continue;
 
@@ -478,8 +479,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.stuckTicks = 0;
         }
 
-        // Flocking behavior
-        List<BaseBirdParticle> neighbors = getNeighbors(flockRadius);
+        // Caches are randomized per-bird to stagger the CPU load across different game
+        // ticks.
+        if (neighborCacheTimer-- <= 0 || cachedFlockNeighbors.isEmpty()) {
+            neighborCacheTimer = 2 + this.random.nextInt(3);
+            cachedFlockNeighbors.clear();
+            cachedFlockNeighbors.addAll(getNeighbors(flockRadius));
+        }
+
+        List<BaseBirdParticle> neighbors = cachedFlockNeighbors;
         boolean isScattering = this.flockCooldown > 0;
 
         if (!neighbors.isEmpty()) {
