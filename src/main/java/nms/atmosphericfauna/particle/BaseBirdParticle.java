@@ -807,6 +807,23 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     private void tickLanding() {
+        double scareRadiusSq = scareRadius * scareRadius;
+        for (Player p : this.level.players()) {
+            if (p.isSpectator())
+                continue;
+
+            double dx = p.getX() - this.x;
+            double dz = p.getZ() - this.z;
+            double distSq = dx * dx + dz * dz;
+            double dy = Math.abs(p.getY() - this.y);
+
+            if (distSq <= scareRadiusSq && dy < 3.0) {
+                performTakeoff(p);
+                this.landingDelay = 0;
+                return;
+            }
+        }
+
         this.perchedTimer = 0;
 
         // If target missing, abort to flying
