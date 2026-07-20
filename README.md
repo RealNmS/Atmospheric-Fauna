@@ -1,3 +1,8 @@
+> [!CAUTION]
+> This is an experimental branch of the mod and won't be touched or updated! Please go to the "main" branch to see the newest and active version.
+
+---
+
 ![Atmospheric Fauna Logo](src/main/resources/assets/docs/banner_logo.gif)
 
 Minecraft mod that adds birds and other fauna making your world feel alive. Hugely inspired by the amazing mod [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters).
