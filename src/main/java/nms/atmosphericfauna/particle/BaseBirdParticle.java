@@ -161,7 +161,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
             double maxDist = (renderDist + 1) * 16.0;
+
             if (distSq > maxDist * maxDist) {
+                for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
+                    if (!nb.removed) {
+                        nb.remove();
+                    }
+                }
                 this.remove();
                 return;
             }
