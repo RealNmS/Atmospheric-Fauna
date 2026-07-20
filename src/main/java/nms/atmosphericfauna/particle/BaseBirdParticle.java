@@ -36,7 +36,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected BlockPos landingBlockPos = null;
     protected double landingOffsetX = 0.0;
     protected double landingOffsetZ = 0.0;
-    protected BlockPos perchBlockPos = null; // stores actual perch while perched
+    protected int landingDelay = 0;
+    protected BlockPos perchBlockPos = null;
     private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
     protected Double takeoffGoalY = Double.NaN;
     protected int takeoffTime = 0;
@@ -82,12 +83,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected int maxFlockSize = Integer.MAX_VALUE;
     protected boolean fliesOverOcean = true;
 
-    protected double scareRadius; // horizontal distance that startles perched birds
-    protected double scareTakeoffSpeed; // horizontal speed applied when scared
+    protected double scareRadius;
+    protected double scareTakeoffSpeed;
 
     protected double perchingChance;
-    protected int perchingTime; // base time spent perched
-    protected int perchingDistance; // how many blocks down to scan for landing spots
+    protected int perchingTime;
+    protected int perchingDistance;
 
     protected double goalRadius;
     protected int goalDurationMin;
@@ -289,7 +290,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
 
                 if (actualTarget.getY() <= nb.y) {
-                    setState(nb, State.LANDING);
+                    nb.landingDelay = 10 + this.random.nextInt(35);
                     nb.landingBlockPos = actualTarget;
                     nb.landingTargetY = actualTarget.getY() + 1.0 + nb.quadSize;
                     nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -305,10 +306,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
             if (nb == this)
                 continue;
             if (nb.state == State.PERCHED) {
-                setState(nb, State.TAKING_OFF);
-                nb.perchTimer = 5;
-                nb.landingCooldown = 100 + nb.perchedTimer;
-                nb.perchBlockPos = null;
+                if (nb.perchTimer > 30) {
+                    nb.perchTimer = 5 + this.random.nextInt(25);
+                }
             }
         }
     }
@@ -475,6 +475,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // MARK: --- BEHAVIORS ---
 
     private void tickFlying() {
+        if (this.landingDelay > 0) {
+            this.landingDelay--;
+            if (this.landingDelay <= 0 && this.landingBlockPos != null) {
+                setState(this, State.LANDING);
+                return;
+            }
+        }
+
         double groundY = sampleGroundHeight(this.x, this.z);
 
         double absoluteCeiling = (getLevelMinY() + level.getHeight()) - 5.0;
@@ -944,6 +952,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.landingBlockPos = null;
         this.landingOffsetX = 0.0;
         this.landingOffsetZ = 0.0;
+        this.landingDelay = 0;
         this.perchBlockPos = null;
 
         if (this.takeoffTime == 0) {
