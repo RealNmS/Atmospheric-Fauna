@@ -444,9 +444,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return surfaceY;
 
         int startY = (int) Math.ceil(this.y);
-        for (int y = startY; y >= Math.max(getLevelMinY(), startY - 20); y--) {
+        int endY = Math.max(getLevelMinY(), startY - 8);
+
+        for (int y = startY; y >= endY; y--) {
             mutablePos.set(px, y, pz);
-            if (!level.getBlockState(mutablePos).isAir()) {
+            if (!level.isEmptyBlock(mutablePos)) {
                 return y + 1.0;
             }
         }
@@ -956,8 +958,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (pathBlocked || takeoffComplete) {
             setState(this, State.FLYING);
             this.landingCooldown = 100;
-            chooseNewGoal();
-            this.goalTimer = 30 + (int) (this.random.nextFloat() * 40);
+
+            this.goalX = this.x + (this.xd * 15.0);
+            this.goalY = this.y + (this.yd * 15.0);
+            this.goalZ = this.z + (this.zd * 15.0);
+            this.goalTimer = this.random.nextInt(20);
+
             this.takeoffGoalY = Double.NaN;
             this.takeoffTime = 0;
         }
