@@ -445,9 +445,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     private boolean isBlocked(double px, double py, double pz) {
         mutablePos.set(px, py, pz);
-        if (level.isEmptyBlock(mutablePos))
+        BlockState state = level.getBlockState(mutablePos);
+
+        if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
             return false;
-        return !level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty();
+        }
+
+        return !state.getCollisionShape(level, mutablePos).isEmpty();
     }
 
     private boolean isOceanBiome(double px, double pz) {
@@ -721,6 +725,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             } else if (ceilingDetected) {
                 this.yd = Math.min(this.yd * -0.4, -0.05) - (this.random.nextFloat() * 0.05);
                 this.goalY = this.y - 1.5 - this.random.nextFloat();
+                this.xd += (this.random.nextFloat() - 0.5f) * 0.4;
+                this.zd += (this.random.nextFloat() - 0.5f) * 0.4;
             } else if (floorDetected) {
                 this.yd = Math.max(this.yd * -0.4, 0.05) + (this.random.nextFloat() * 0.05);
                 this.goalY = this.y + 1.5 + this.random.nextFloat();
