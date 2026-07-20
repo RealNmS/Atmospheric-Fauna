@@ -50,6 +50,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected boolean facingRight = false;
 
     public static final List<BaseBirdParticle> ALL_BIRDS = Collections.synchronizedList(new ArrayList<>());
+    public static final List<List<BaseBirdParticle>> SPECIES_REGISTRY = new ArrayList<>();
     private final List<BaseBirdParticle> reusableNeighborList = new ArrayList<>();
     private final List<BaseBirdParticle> cachedFlockNeighbors = new ArrayList<>();
     private int neighborCacheTimer = 0;
@@ -100,6 +101,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.removed)
             return;
         ALL_BIRDS.add(this);
+        getSpeciesList().add(this); // Track inside species partition[cite: 10]
     }
 
     // MARK: --- HELPER METHODS ---
@@ -112,13 +114,21 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
     //?}
 
+    protected abstract List<BaseBirdParticle> getSpeciesList();
+
     public static void reset() {
         ALL_BIRDS.clear();
+        synchronized (SPECIES_REGISTRY) {
+            for (int i = 0; i < SPECIES_REGISTRY.size(); i++) {
+                SPECIES_REGISTRY.get(i).clear();
+            }
+        }
     }
 
     @Override
     public void remove() {
         ALL_BIRDS.remove(this);
+        getSpeciesList().remove(this);
         super.remove();
     }
 
@@ -213,11 +223,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double rsq = radius * radius;
         reusableNeighborList.clear();
 
-        synchronized (ALL_BIRDS) {
-            int size = ALL_BIRDS.size();
+        List<BaseBirdParticle> speciesList = getSpeciesList();
+        synchronized (speciesList) {
+            int size = speciesList.size();
             for (int i = 0; i < size; i++) {
-                BaseBirdParticle other = ALL_BIRDS.get(i);
-                if (other == this || other.level != this.level || other.getClass() != this.getClass())
+                BaseBirdParticle other = speciesList.get(i);
+                if (other == this || other.level != this.level)
                     continue;
 
                 // Fast fail bounds check
@@ -481,8 +492,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.stuckTicks = 0;
         }
 
-        // Caches are randomized per-bird to stagger the CPU load across different game
-        // ticks.
         if (neighborCacheTimer-- <= 0 || cachedFlockNeighbors.isEmpty()) {
             neighborCacheTimer = 2 + this.random.nextInt(3);
             cachedFlockNeighbors.clear();
@@ -582,7 +591,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
                         }
                     }
 
-                    // If we are NOT the leader, we sync our goal to the leader's exact direction
                     if (leader != this) {
                         double aheadFactor = 4.0;
                         double syncX = this.x + (leader.xd * aheadFactor) + (cx - this.x) * 0.18;
@@ -593,7 +601,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
                             this.goalX = syncX;
                             this.goalY = syncY;
                             this.goalZ = syncZ;
-                            // Keep followers locked into the leader's path
                             this.goalTimer = Math.min(this.goalTimer,
                                     Math.max(8, (goalDurationMin + goalDurationMax) / 6));
                         }
@@ -906,7 +913,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // If a player gets too close, scare the bird and make it fly off
         double scareRadiusSq = scareRadius * scareRadius;
         for (Player p : this.level.players()) {
-            // Ignore spectator players
             if (p.isSpectator())
                 continue;
 

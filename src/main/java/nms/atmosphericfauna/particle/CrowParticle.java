@@ -1,5 +1,8 @@
 package nms.atmosphericfauna.particle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
@@ -10,6 +13,11 @@ public class CrowParticle extends BaseBirdParticle {
     // --- CONFIG STUFF ---
 
     public static int maxActiveCrows = 50;
+
+    private static final List<BaseBirdParticle> CROWS = Collections.synchronizedList(new ArrayList<>());
+    static {
+        BaseBirdParticle.SPECIES_REGISTRY.add(CROWS);
+    }
 
     // --- CONSTRUCTOR ---
 
@@ -47,12 +55,12 @@ public class CrowParticle extends BaseBirdParticle {
         this.maxFlockSize = Integer.MAX_VALUE;
         this.fliesOverOcean = true;
 
-        this.scareRadius = 10.0; // horizontal distance that startles when perched
-        this.scareTakeoffSpeed = 0.35; // horizontal speed applied when scared
+        this.scareRadius = 10.0;
+        this.scareTakeoffSpeed = 0.35;
 
         this.perchingChance = 0.005;
-        this.perchingTime = 600; // base time spent perched
-        this.perchingDistance = 10; // how many blocks down to scan for landing spots
+        this.perchingTime = 600;
+        this.perchingDistance = 10;
 
         this.goalRadius = 50.0;
         this.goalDurationMin = 80;
@@ -66,14 +74,13 @@ public class CrowParticle extends BaseBirdParticle {
 
     // --- HELPER METHODS ---
 
+    @Override
+    protected List<BaseBirdParticle> getSpeciesList() {
+        return CROWS;
+    }
+
     public static int getCount() {
-        int count = 0;
-        for (BaseBirdParticle bird : getAllBirds()) {
-            if (bird instanceof CrowParticle) {
-                count++;
-            }
-        }
-        return count;
+        return CROWS.size();
     }
 
     public static int getMaxActiveBirds() {

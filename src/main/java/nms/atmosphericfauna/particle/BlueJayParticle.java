@@ -1,5 +1,8 @@
 package nms.atmosphericfauna.particle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
@@ -10,6 +13,11 @@ public class BlueJayParticle extends BaseBirdParticle {
     // --- CONFIG STUFF ---
 
     public static int maxActiveBlueJays = 10;
+
+    private static final List<BaseBirdParticle> BLUE_JAYS = Collections.synchronizedList(new ArrayList<>());
+    static {
+        BaseBirdParticle.SPECIES_REGISTRY.add(BLUE_JAYS);
+    }
 
     // --- CONSTRUCTOR ---
 
@@ -47,12 +55,12 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.maxFlockSize = 3;
         this.fliesOverOcean = false;
 
-        this.scareRadius = 12.5; // horizontal distance that startles when perched
-        this.scareTakeoffSpeed = 0.40; // horizontal speed applied when scared
+        this.scareRadius = 12.5;
+        this.scareTakeoffSpeed = 0.40;
 
         this.perchingChance = 0.0025;
-        this.perchingTime = 800; // base time spent perched
-        this.perchingDistance = 10; // how many blocks down to scan for landing spots
+        this.perchingTime = 800;
+        this.perchingDistance = 10;
 
         this.goalRadius = 50.0;
         this.goalDurationMin = 80;
@@ -66,14 +74,13 @@ public class BlueJayParticle extends BaseBirdParticle {
 
     // --- HELPER METHODS ---
 
+    @Override
+    protected List<BaseBirdParticle> getSpeciesList() {
+        return BLUE_JAYS;
+    }
+
     public static int getCount() {
-        int count = 0;
-        for (BaseBirdParticle bird : getAllBirds()) {
-            if (bird instanceof BlueJayParticle) {
-                count++;
-            }
-        }
-        return count;
+        return BLUE_JAYS.size();
     }
 
     public static int getMaxActiveBirds() {
