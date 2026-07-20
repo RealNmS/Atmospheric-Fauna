@@ -333,7 +333,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         this.yd += 0.06 + this.random.nextFloat() * 0.06;
         this.perchTimer = 8 + this.random.nextInt(8);
-        this.landingCooldown = 100 + this.perchedTimer;
+        this.landingCooldown = 200 + this.perchedTimer + this.random.nextInt(400);
 
         double base = this.perchBlockPos != null ? this.perchBlockPos.getY() + 1.0 : this.y;
         this.perchBlockPos = null;
@@ -743,8 +743,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         // Perching Scan
-        if (landingCooldown == 0 && this.random.nextFloat() < this.perchingChance) {
-            for (BaseBirdParticle nb : getNeighbors(12.0)) {
+        int effectiveFlockSize = this.cachedFlockNeighbors.size() + 1;
+        if (landingCooldown == 0 && this.random.nextFloat() < (this.perchingChance / effectiveFlockSize)) {
+            for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
                     if (target.getY() <= this.y) {
@@ -1024,7 +1025,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         if (pathBlocked || takeoffComplete) {
             setState(this, State.FLYING);
-            this.landingCooldown = 100;
+            this.landingCooldown = 300 + this.random.nextInt(400);
 
             this.goalX = this.x + (this.xd * 15.0);
             this.goalY = this.y + (this.yd * 15.0);
