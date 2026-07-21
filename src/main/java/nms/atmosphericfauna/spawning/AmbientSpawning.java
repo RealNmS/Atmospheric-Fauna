@@ -2,19 +2,12 @@ package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
-import nms.atmosphericfauna.particle.BlueJayParticle;
-import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntSupplier;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-// import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.biome.Biome;
@@ -28,73 +21,7 @@ public class AmbientSpawning {
     public static boolean spawnBelowSeaLevel = false;
     public static boolean enableAmbientSpawning = true;
 
-    // MARK: --- SPAWN DATA CONSTANTS ---
-
-    private record SpawnData(
-            SimpleParticleType particleType,
-            int weight, // weight
-            int minPackSize, // pack size
-            int maxPackSize,
-            int minLightLevel, // light level
-            int maxLightLevel,
-            boolean spawnInBadWeather, // spawn in bad weather
-            boolean spawnDuringDay, // spawn during day
-            boolean spawnDuringNight, // spawn during night
-            List<TagKey<Biome>> validBiomeTags, // valid biome list
-            List<TagKey<Block>> validSpawnBlocks, // valid spawn blocks list
-            IntSupplier availableSpots) { // max bird count
-    }
-
-    private static final SpawnData CROW_SPAWN_DATA = new SpawnData(
-            AtmosphericFauna.CROW,
-            30,
-            3, 9,
-            8, 15,
-            true,
-            true,
-            true,
-            List.of(
-                    BiomeTags.IS_OVERWORLD),
-            List.of(
-                    BlockTags.ANIMALS_SPAWNABLE_ON,
-                    BlockTags.DIRT,
-                    BlockTags.LEAVES,
-                    BlockTags.LOGS,
-                    BlockTags.SAND,
-                    BlockTags.SNOW,
-                    BlockTags.TERRACOTTA,
-                    BlockTags.BASE_STONE_OVERWORLD),
-            () -> Math.max(0, CrowParticle.getMaxActiveBirds() - CrowParticle.getCount()));
-
-    private static final SpawnData BLUE_JAY_SPAWN_DATA = new SpawnData(
-            AtmosphericFauna.BLUE_JAY,
-            25,
-            1, 2,
-            8, 15,
-            false,
-            true,
-            false,
-            List.of(
-                    BiomeTags.IS_FOREST,
-                    BiomeTags.IS_JUNGLE,
-                    BiomeTags.IS_TAIGA),
-            List.of(
-                    BlockTags.ANIMALS_SPAWNABLE_ON,
-                    BlockTags.DIRT,
-                    BlockTags.LEAVES,
-                    BlockTags.LOGS,
-                    BlockTags.SNOW,
-                    BlockTags.BASE_STONE_OVERWORLD),
-            () -> Math.max(0, BlueJayParticle.getMaxActiveBirds() - BlueJayParticle.getCount()));
-
-    private static final List<SpawnData> SPAWN_DATA_LIST = List.of(
-            CROW_SPAWN_DATA,
-            BLUE_JAY_SPAWN_DATA
-    // Future bird types can be added here
-    );
-
     public static int spawnRangeFromPlayer = 96;
-    private static final int TOTAL_SPAWN_WEIGHT = SPAWN_DATA_LIST.stream().mapToInt(SpawnData::weight).sum();
     public static int spawnTickDelay = 200;
     public static int attemptsPerTick = 15;
     public static int searchRadius = 12;
@@ -109,7 +36,7 @@ public class AmbientSpawning {
     }
 
     public static void runSpawnAttempt(ClientLevel world) {
-        if (TOTAL_SPAWN_WEIGHT <= 0) {
+        if (SpawnData.TOTAL_WEIGHT <= 0) {
             return;
         }
 
@@ -122,11 +49,11 @@ public class AmbientSpawning {
         }
 
         RandomSource random = world.getRandom();
-        int choice = random.nextInt(TOTAL_SPAWN_WEIGHT);
+        int choice = random.nextInt(SpawnData.TOTAL_WEIGHT);
 
         SpawnData selectedSpawn = null;
         int cumulativeWeight = 0;
-        for (SpawnData data : SPAWN_DATA_LIST) {
+        for (SpawnData data : SpawnData.ALL_SPAWNS) {
             cumulativeWeight += data.weight();
             if (choice < cumulativeWeight) {
                 selectedSpawn = data;
@@ -146,12 +73,7 @@ public class AmbientSpawning {
     }
 
     private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
-        String particleName = "unknown";
-        if (spawnData.particleType() == AtmosphericFauna.CROW) {
-            particleName = "crow";
-        } else if (spawnData.particleType() == AtmosphericFauna.BLUE_JAY) {
-            particleName = "blue_jay";
-        }
+        String particleName = spawnData.name();
 
         if (debugText) {
             AtmosphericFauna.LOGGER.info("[AS] Attempting to spawn " + particleName);
@@ -178,8 +100,7 @@ public class AmbientSpawning {
             return;
         }
 
-        // Only spawn if time of day is right (PS: Thank you pigcart T_T this had me
-        // scratching my head for a while)
+        // Only spawn if time of day is right
         //? if <=1.21.4 {
         // boolean isDay = world.getDayTime() % 24000 < 13000;
         //?} else {
