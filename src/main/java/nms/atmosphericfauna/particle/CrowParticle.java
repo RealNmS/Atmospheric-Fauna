@@ -79,6 +79,11 @@ public class CrowParticle extends BaseBirdParticle {
         return CROWS;
     }
 
+    @Override
+    public int getSpeciesMaxCount() {
+        return maxActiveCrows;
+    }
+
     public static int getCount() {
         return CROWS.size();
     }

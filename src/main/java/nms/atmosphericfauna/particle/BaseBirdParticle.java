@@ -117,6 +117,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected abstract List<BaseBirdParticle> getSpeciesList();
 
+    public abstract int getSpeciesMaxCount();
+
     public static void reset() {
         ALL_BIRDS.clear();
         synchronized (SPECIES_REGISTRY) {

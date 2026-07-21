@@ -79,6 +79,11 @@ public class BlueJayParticle extends BaseBirdParticle {
         return BLUE_JAYS;
     }
 
+    @Override
+    public int getSpeciesMaxCount() {
+        return maxActiveBlueJays;
+    }
+
     public static int getCount() {
         return BLUE_JAYS.size();
     }

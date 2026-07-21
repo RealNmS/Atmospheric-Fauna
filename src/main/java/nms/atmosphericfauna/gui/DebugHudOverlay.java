@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
-import nms.atmosphericfauna.particle.BlueJayParticle;
-import nms.atmosphericfauna.particle.CrowParticle;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +38,16 @@ public class DebugHudOverlay {
                     //?}
 
                     Map<String, Integer> birdCounts = new HashMap<>();
+                    Map<String, Integer> birdMaxCounts = new HashMap<>();
+
                     synchronized (BaseBirdParticle.ALL_BIRDS) {
                         for (BaseBirdParticle bird : BaseBirdParticle.ALL_BIRDS) {
                             String type = bird.getBaseSpriteName();
                             if (type == null)
                                 type = "unknown";
+
                             birdCounts.put(type, birdCounts.getOrDefault(type, 0) + 1);
+                            birdMaxCounts.putIfAbsent(type, bird.getSpeciesMaxCount());
                         }
                     }
 
@@ -69,11 +71,7 @@ public class DebugHudOverlay {
 
                     int total = 0;
                     for (Map.Entry<String, Integer> entry : sorted) {
-                        int maxCount = switch (entry.getKey()) {
-                            case "blue_jay" -> BlueJayParticle.getMaxActiveBirds();
-                            case "crow" -> CrowParticle.getMaxActiveBirds();
-                            default -> BaseBirdParticle.getMaxActiveBirds();
-                        };
+                        int maxCount = birdMaxCounts.getOrDefault(entry.getKey(), BaseBirdParticle.getMaxActiveBirds());
 
                         String text = entry.getKey() + ": " + entry.getValue() + " / " + maxCount;
                         int width = mc.font.width(text);
