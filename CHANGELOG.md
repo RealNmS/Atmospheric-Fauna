@@ -3,26 +3,26 @@
 **Changes:**
 - Reworked project to use Stonecutter addon for multiversion support
   - Added support for Minecraft 1.21 - 1.21.11
-- Added GitHub Wiki for documentation on spawn data
+- Created GitHub Wiki for documentation on spawn data
 - Changed some of the spawning conditions
   - Blue Jays will now spawn only in biomes with tags: IS_FOREST, IS_TAIGA, IS_JUNGLE
   - Crows can now spawn on Terracotta
 - Added ocean avoidance for Blue Jays
 - Reworked block avoidance, making birds bounce off walls and ceilings instead of clipping through them
-- Reworked landing, perching and taking off
-  - Fixed birds being able to perch onto a block above them
-  - Fixed taking off animation making birds clip through walls
-  - Fixed birds clipping into the ground when landing
 - Reworked flight height handling, making it more varied and smooth
-- Made Blue Jays fly lower to the ground than crows, and avoid flying too high
+- Made Blue Jays fly lower to the ground than crows
 - Changed flock flight behaviour to navigate more smoothly
 - Added small random delay before taking off
 - Updated sprite handling *(this is like the herobrine being removed every update)*
 - Changed base command to be prettier, with a link to the wiki
 - Added new subcommand "help" to see links to the wiki and issues
+- Removed unused mixins, making the mod compatible with Sinytra Connector
 - Fixed max flock size not working properly, adding cooldown for joining a flock
 - Fixed a spawn bug, making birds fly infinitely to the sky (hopefully)
 - Fixed perching cooldown not having any effect, also making it longer
+- Fixed birds being able to perch onto a block above them
+- Fixed taking off animation making birds clip through walls
+- Fixed birds clipping into the ground when landing
 - Optimized a bunch of things, making the mod faster than ever
   - Caching flock neighbours to avoid recalculating them every tick
   - Ground sampling is using heightmap instead of raycasting
