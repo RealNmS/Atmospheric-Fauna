@@ -48,13 +48,18 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 
 _More birds will be added in the future!_
 
+> [!INFO]
+> For more information about the birds and their spawn conditions, check out the [Wiki](https://github.com/RealNmS/Atmospheric-Fauna/wiki).
+
 ---
 
 ## Installation
 
-Just make sure you have the latest version of [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api) installed.
+Just make sure you have the latest version of [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api) installed. For installation on **NeoForge** I recommend using [Sinytra Connector](https://modrinth.com/mod/connector), which is compatible with this mod.
 
-For the best experience I recommend using this alongside with [ModMenu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
+For the best experience I recommend using this alongside with [Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
+
+The mod is completely **client-side**, so you don't need to install it on the server. As of now, there is no server-side functionality.
 
 ---
 
