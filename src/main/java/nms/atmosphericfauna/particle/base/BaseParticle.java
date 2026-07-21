@@ -1,4 +1,4 @@
-package nms.atmosphericfauna.particle;
+package nms.atmosphericfauna.particle.base;
 
 import nms.atmosphericfauna.AtmosphericFauna;
 
@@ -82,7 +82,7 @@ public abstract class BaseParticle extends SingleQuadParticle
     }
 
     public abstract static class FaunaFactory implements ParticleProvider<SimpleParticleType> {
-        SpriteSet sprite;
+        protected final SpriteSet sprite;
 
         public FaunaFactory(SpriteSet sprite) {
             this.sprite = sprite;

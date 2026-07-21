@@ -1,5 +1,6 @@
 package nms.atmosphericfauna.particle;
 
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import net.minecraft.client.multiplayer.ClientLevel;

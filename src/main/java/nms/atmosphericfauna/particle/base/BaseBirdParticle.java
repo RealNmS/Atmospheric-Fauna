@@ -1,4 +1,4 @@
-package nms.atmosphericfauna.particle;
+package nms.atmosphericfauna.particle.base;
 
 import nms.atmosphericfauna.AtmosphericFauna;
 import static nms.atmosphericfauna.config.ConfigHandler.*;

@@ -1,7 +1,8 @@
 package nms.atmosphericfauna.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import nms.atmosphericfauna.gui.DebugHudOverlay;
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
+
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 //? if <=1.21.11 {
 //  import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -11,8 +12,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import nms.atmosphericfauna.gui.DebugHudOverlay;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModCommands {
 

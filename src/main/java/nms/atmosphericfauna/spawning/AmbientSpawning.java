@@ -1,7 +1,7 @@
 package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import net.minecraft.client.multiplayer.ClientLevel;

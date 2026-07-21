@@ -1,7 +1,7 @@
 package nms.atmosphericfauna.gui;
 
 import nms.atmosphericfauna.AtmosphericFauna;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 
 //? if <=1.21.5 {
 //  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;

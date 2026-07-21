@@ -2,7 +2,7 @@ package nms.atmosphericfauna;
 
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.gui.DebugHudOverlay;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
