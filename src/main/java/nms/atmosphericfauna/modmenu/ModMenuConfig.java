@@ -26,7 +26,7 @@ public class ModMenuConfig {
                 .startBooleanToggle(Component
                         .translatable("option.atmosphericfauna.chunk_load_spawning"),
                                         ConfigHandler.enableChunkLoadSpawning)
-                .setDefaultValue(true)
+                        .setDefaultValue(ConfigHandler.Defaults.ENABLE_CHUNK_LOAD_SPAWNING)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.chunk_load_spawning.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.enableChunkLoadSpawning = newValue)
@@ -36,7 +36,7 @@ public class ModMenuConfig {
                 .startBooleanToggle(Component
                         .translatable("option.atmosphericfauna.ambient_spawning"),
                                         ConfigHandler.enableAmbientSpawning)
-                .setDefaultValue(true)
+                        .setDefaultValue(ConfigHandler.Defaults.ENABLE_AMBIENT_SPAWNING)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.ambient_spawning.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.enableAmbientSpawning = newValue)
@@ -46,7 +46,7 @@ public class ModMenuConfig {
                 .startIntField(Component
                         .translatable("option.atmosphericfauna.spawn_range_from_player"),
                                         ConfigHandler.spawnRangeFromPlayer)
-                .setDefaultValue(96)
+                        .setDefaultValue(ConfigHandler.Defaults.SPAWN_RANGE_FROM_PLAYER)
                 .setMin(32)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.spawn_range_from_player.tooltip"))
@@ -56,7 +56,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
                                         ConfigHandler.spawnTickDelay)
-                .setDefaultValue(200)
+                        .setDefaultValue(ConfigHandler.Defaults.SPAWN_TICK_DELAY)
                 .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.spawnTickDelay = newValue)
@@ -65,7 +65,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.attempts_per_tick"),
                                         ConfigHandler.attemptsPerTick)
-                .setDefaultValue(15)
+                        .setDefaultValue(ConfigHandler.Defaults.ATTEMPTS_PER_TICK)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.attempts_per_tick.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.attemptsPerTick = newValue)
@@ -74,7 +74,7 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.search_radius"),
                                         ConfigHandler.searchRadius)
-                .setDefaultValue(12)
+                        .setDefaultValue(ConfigHandler.Defaults.SEARCH_RADIUS)
                 .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.search_radius.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.searchRadius = newValue)
@@ -84,7 +84,7 @@ public class ModMenuConfig {
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.spawn_below_sea_level"),
                                         ConfigHandler.spawnBelowSeaLevel)
-                .setDefaultValue(false)
+                        .setDefaultValue(ConfigHandler.Defaults.SPAWN_BELOW_SEA_LEVEL)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.spawn_below_sea_level.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.spawnBelowSeaLevel = newValue)
@@ -98,7 +98,7 @@ public class ModMenuConfig {
         birds.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_birds"),
                                         ConfigHandler.maxActiveBirds)
-                .setDefaultValue(100)
+                        .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_BIRDS)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_birds.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.maxActiveBirds = newValue)
@@ -110,7 +110,7 @@ public class ModMenuConfig {
         crows.add(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
                                         ConfigHandler.maxActiveCrows)
-                .setDefaultValue(50)
+                        .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_CROWS)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
@@ -124,7 +124,7 @@ public class ModMenuConfig {
         blueJays.add(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_blue_jays"),
                                         ConfigHandler.maxActiveBlueJays)
-                .setDefaultValue(10)
+                        .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_BLUE_JAYS)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_blue_jays.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.maxActiveBlueJays = newValue)
@@ -141,7 +141,7 @@ public class ModMenuConfig {
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.debug_text_spawning"),
                                         ConfigHandler.debugTextSpawning)
-                .setDefaultValue(false)
+                        .setDefaultValue(ConfigHandler.Defaults.DEBUG_TEXT_SPAWNING)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.debug_text_spawning.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.debugTextSpawning = newValue)
@@ -151,7 +151,7 @@ public class ModMenuConfig {
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.debug_text_birds"),
                                         ConfigHandler.debugTextBirds)
-                .setDefaultValue(false)
+                        .setDefaultValue(ConfigHandler.Defaults.DEBUG_TEXT_BIRDS)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.debug_text_birds.tooltip"))
                         .setSaveConsumer(newValue -> ConfigHandler.debugTextBirds = newValue)

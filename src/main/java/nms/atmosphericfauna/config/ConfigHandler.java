@@ -17,19 +17,35 @@ public class ConfigHandler {
             .resolve(AtmosphericFauna.MOD_ID + ".json").toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static boolean enableChunkLoadSpawning = true;
-    public static boolean enableAmbientSpawning = true;
-    public static int spawnRangeFromPlayer = 96;
-    public static int spawnTickDelay = 200;
-    public static int attemptsPerTick = 15;
-    public static int searchRadius = 12;
-    public static boolean spawnBelowSeaLevel = false;
-    public static boolean debugTextSpawning = false;
+    public static class Defaults {
+        public static final boolean ENABLE_CHUNK_LOAD_SPAWNING = true;
+        public static final boolean ENABLE_AMBIENT_SPAWNING = true;
+        public static final int SPAWN_RANGE_FROM_PLAYER = 96;
+        public static final int SPAWN_TICK_DELAY = 200;
+        public static final int ATTEMPTS_PER_TICK = 15;
+        public static final int SEARCH_RADIUS = 12;
+        public static final boolean SPAWN_BELOW_SEA_LEVEL = false;
+        public static final boolean DEBUG_TEXT_SPAWNING = false;
 
-    public static int maxActiveBirds = 100;
-    public static int maxActiveCrows = 50;
-    public static int maxActiveBlueJays = 10;
-    public static boolean debugTextBirds = false;
+        public static final int MAX_ACTIVE_BIRDS = 100;
+        public static final int MAX_ACTIVE_CROWS = 50;
+        public static final int MAX_ACTIVE_BLUE_JAYS = 10;
+        public static final boolean DEBUG_TEXT_BIRDS = false;
+    }
+
+    public static boolean enableChunkLoadSpawning = Defaults.ENABLE_CHUNK_LOAD_SPAWNING;
+    public static boolean enableAmbientSpawning = Defaults.ENABLE_AMBIENT_SPAWNING;
+    public static int spawnRangeFromPlayer = Defaults.SPAWN_RANGE_FROM_PLAYER;
+    public static int spawnTickDelay = Defaults.SPAWN_TICK_DELAY;
+    public static int attemptsPerTick = Defaults.ATTEMPTS_PER_TICK;
+    public static int searchRadius = Defaults.SEARCH_RADIUS;
+    public static boolean spawnBelowSeaLevel = Defaults.SPAWN_BELOW_SEA_LEVEL;
+    public static boolean debugTextSpawning = Defaults.DEBUG_TEXT_SPAWNING;
+
+    public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
+    public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
+    public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
+    public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
 
     public static void load() {
         if (!CONFIG_FILE.exists()) {
