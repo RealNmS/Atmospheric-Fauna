@@ -10,8 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.level.levelgen.Heightmap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +45,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double heightAdherence = 0.0015; // How strongly the bird pulls back to its target height
     protected double heightTolerance = 8.0; // How far (in blocks) they can drift before they start caring
 
+    protected final BirdAnimator animator;
+    protected final EnvironmentScanner env;
     protected String baseSpriteName = null;
     protected String spriteName = null;
     protected boolean facingRight = false;
@@ -95,6 +95,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected BaseBirdParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
         super(level, x, y, z, sprite);
+        this.animator = new BirdAnimator(this);
+        this.env = new EnvironmentScanner(level);
         if (this.removed)
             return;
         ALL_BIRDS.add(this);
@@ -102,14 +104,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     // MARK: --- HELPER METHODS ---
-
-    //? if <=1.21.1 {
-    // private int getLevelMinY() { return this.level.getMinBuildHeight(); }
-    //?} else {
-    private int getLevelMinY() {
-        return this.level.getMinY();
-    }
-    //?}
 
     protected abstract List<BaseBirdParticle> getSpeciesList();
 
@@ -143,9 +137,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return this.baseSpriteName;
     }
 
+    public void applySprite(String name) {
+        this.setSprite(BaseParticle.getSprite(name));
+    }
+
     private static void setState(BaseBirdParticle bird, State newState) {
         bird.state = newState;
-        bird.setSpriteName(1);
+        bird.animator.updateSprite(1, newState == State.PERCHED);
     }
 
     // MARK: --- TICK ---
@@ -194,17 +192,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
             int flapAdjustment = (int) (this.yd * 10);
             int effectiveFlapSpeed = Math.max(1, this.wingFlapSpeed - flapAdjustment);
             if ((this.age - this.wingFlapOffset) % effectiveFlapSpeed == 0) {
-                int frame = 1;
-                if (this.spriteName != null && !this.spriteName.isEmpty()) {
-                    char lastChar = this.spriteName.charAt(this.spriteName.length() - 1);
-                    if (Character.isDigit(lastChar)) {
-                        frame = Character.getNumericValue(lastChar);
-                    }
-                }
-                setSpriteName(frame == 1 ? 2 : 1);
+                int frame = this.animator.getCurrentFrame();
+                this.animator.updateSprite(frame == 1 ? 2 : 1, false);
             }
-            if (this.age % 3 == 0)
-                updateSpriteFacing();
+            if (this.age % 3 == 0) {
+                this.animator.updateFacingDirection(false, this.x, this.z, this.xd, this.zd);
+            }
         }
 
         // debug stuff
@@ -353,7 +346,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // Water avoidance loop
         if (!this.fliesOverOcean) {
             int attempts = 0;
-            while (isOceanBiome(this.x + nx, this.z + nz) && attempts < 15) {
+            while (env.isOceanBiome(this.x + nx, this.z + nz) && attempts < 15) {
                 attempts++;
                 if (attempts % 3 == 0)
                     randRadius += 15.0;
@@ -364,8 +357,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        double ground = sampleGroundHeight(this.x, this.z);
-        double absoluteCeiling = (getLevelMinY() + level.getHeight()) - 5.0;
+        double ground = env.sampleGroundHeight(this.x, this.y, this.z);
+        double absoluteCeiling = (env.getLevelMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(ground + preferredFlightHeight, absoluteCeiling);
         double ny;
 
@@ -388,7 +381,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
-        ny = Math.max(getLevelMinY() + 1.0, Math.min(absoluteCeiling, ny));
+        ny = Math.max(env.getLevelMinY() + 1.0, Math.min(absoluteCeiling, ny));
 
         // Flock Bias
         List<BaseBirdParticle> neighbors = this.cachedFlockNeighbors;
@@ -441,39 +434,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
     }
 
-    private boolean isBlocked(double px, double py, double pz) {
-        mutablePos.set(px, py, pz);
-        BlockState state = level.getBlockState(mutablePos);
-
-        if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
-            return false;
-        }
-
-        return !state.getCollisionShape(level, mutablePos).isEmpty();
-    }
-
-    private boolean isOceanBiome(double px, double pz) {
-        mutablePos.set(px, 62, pz);
-        return level.getBiome(mutablePos).is(BiomeTags.IS_OCEAN);
-    }
-
-    private double sampleGroundHeight(double px, double pz) {
-        int surfaceY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) Math.floor(px), (int) Math.floor(pz));
-        if (this.y >= surfaceY)
-            return surfaceY;
-
-        int startY = (int) Math.ceil(this.y);
-        int endY = Math.max(getLevelMinY(), startY - 8);
-
-        for (int y = startY; y >= endY; y--) {
-            mutablePos.set(px, y, pz);
-            if (!level.isEmptyBlock(mutablePos)) {
-                return y + 1.0;
-            }
-        }
-        return getLevelMinY();
-    }
-
     // MARK: --- BEHAVIORS ---
 
     private void tickFlying() {
@@ -485,9 +445,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        double groundY = sampleGroundHeight(this.x, this.z);
+        double groundY = env.sampleGroundHeight(this.x, this.y, this.z);
 
-        double absoluteCeiling = (getLevelMinY() + level.getHeight()) - 5.0;
+        double absoluteCeiling = (env.getLevelMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(groundY + preferredFlightHeight, absoluteCeiling);
 
         double dxToGoal = Double.isNaN(goalX) ? Double.POSITIVE_INFINITY : (goalX - this.x);
@@ -541,7 +501,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
 
                 if (!isScattering && nb.flockCooldown == 0) {
-                    if (!this.fliesOverOcean && isOceanBiome(nb.x, nb.z))
+                    if (!this.fliesOverOcean && env.isOceanBiome(nb.x, nb.z))
                         continue;
 
                     cx += nb.x;
@@ -613,7 +573,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                         double syncY = this.y + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
                         double syncZ = this.z + (leader.zd * aheadFactor) + (cz - this.z) * 0.18;
 
-                        if (this.fliesOverOcean || !isOceanBiome(syncX, syncZ)) {
+                        if (this.fliesOverOcean || !env.isOceanBiome(syncX, syncZ)) {
                             this.goalX = syncX;
                             this.goalY = syncY;
                             this.goalZ = syncZ;
@@ -645,8 +605,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double lookY = this.y + this.yd * lookAheadMultiplier;
         double lookZ = this.z + this.zd * lookAheadMultiplier;
 
-        boolean blockAvoidance = isBlocked(lookX, lookY, lookZ);
-        boolean waterAvoidance = !this.fliesOverOcean && isOceanBiome(lookX, lookZ);
+        boolean blockAvoidance = env.isBlocked(lookX, lookY, lookZ);
+        boolean waterAvoidance = !this.fliesOverOcean && env.isOceanBiome(lookX, lookZ);
 
         if (desiredDist > 0.0001) {
             desiredX = (desiredX / desiredDist) * flySpeed;
@@ -663,7 +623,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 double heightDiff = targetHeight - this.y;
                 if (Math.abs(heightDiff) > heightTolerance) {
                     boolean pullingUp = Math.signum(heightDiff) > 0;
-                    if (!pullingUp || !isBlocked(this.x, this.y + 2.0, this.z)) {
+                    if (!pullingUp || !env.isBlocked(this.x, this.y + 2.0, this.z)) {
                         steerY += Math.signum(heightDiff) * heightAdherence * verticalSteerFactor;
                     }
                 }
@@ -698,8 +658,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.yd < -maxVerticalSpeed)
             this.yd = -maxVerticalSpeed;
 
-        boolean currentGoalInvalid = isBlocked(goalX, goalY, goalZ)
-                || (!this.fliesOverOcean && isOceanBiome(goalX, goalZ));
+        boolean currentGoalInvalid = env.isBlocked(goalX, goalY, goalZ)
+                || (!this.fliesOverOcean && env.isOceanBiome(goalX, goalZ));
 
         // Immediate path is blocked
         if (blockAvoidance || waterAvoidance) {
@@ -713,9 +673,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.zd = (this.zd / bounceSpeed) * maxBounceSpeed;
             }
 
-            boolean ceilingDetected = isBlocked(this.x, this.y + 1.2, this.z)
-                    || isBlocked(this.x, this.y + 0.5, this.z);
-            boolean floorDetected = isBlocked(this.x, this.y - 1.2, this.z) || isBlocked(this.x, this.y - 0.5, this.z);
+            boolean ceilingDetected = env.isBlocked(this.x, this.y + 1.2, this.z)
+                    || env.isBlocked(this.x, this.y + 0.5, this.z);
+            boolean floorDetected = env.isBlocked(this.x, this.y - 1.2, this.z)
+                    || env.isBlocked(this.x, this.y - 0.5, this.z);
 
             if (ceilingDetected && floorDetected) {
                 this.yd = (this.yd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.06);
@@ -938,7 +899,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.yd = 0;
 
         if (this.random.nextFloat() < 0.05f) {
-            this.setSpriteName((1 + (int) (this.random.nextFloat() * 2)));
+            this.animator.updateSprite(1 + (int) (this.random.nextFloat() * 2), true);
         }
 
         if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
@@ -1022,8 +983,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.xd *= 0.995;
         this.zd *= 0.995;
 
-        boolean pathBlocked = isBlocked(this.x + this.xd, this.y + this.yd + 0.5, this.z + this.zd)
-                || isBlocked(this.x, this.y + 1.2, this.z);
+        boolean pathBlocked = env.isBlocked(this.x + this.xd, this.y + this.yd + 0.5, this.z + this.zd)
+                || env.isBlocked(this.x, this.y + 1.2, this.z);
 
         boolean takeoffComplete = (perchTimer-- <= 0 && (this.y >= this.takeoffGoalY - 0.15 || this.takeoffTime > 50));
 
@@ -1054,83 +1015,27 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // MARK: --- SPRITE HANDLING ---
 
-    protected void setSpriteName(Integer frame) {
-        if (this.baseSpriteName == null) {
-            return;
-        }
-
-        StringBuilder builder = new StringBuilder(this.baseSpriteName);
-        if (this.state == State.PERCHED) {
-            builder.append("_perched");
-        } else {
-            builder.append("_flying");
-        }
-
-        if (this.facingRight) {
-            builder.append("_r");
-        }
-
-        builder.append("_").append(frame == null ? "1" : frame);
-
-        this.spriteName = builder.toString();
-        this.setSprite(getSprite(this.spriteName));
-    }
-
-    private int getFrameFromSpriteName(String spriteName) {
-        if (spriteName == null || spriteName.isEmpty()) {
-            return 1;
-        }
-
-        int idx = spriteName.length() - 1;
-        while (idx >= 0 && Character.isDigit(spriteName.charAt(idx))) {
-            idx--;
-        }
-
-        String num = spriteName.substring(idx + 1);
-        if (!num.isEmpty()) {
-            try {
-                return Integer.parseInt(num);
-            } catch (NumberFormatException ignored) {
-                // fall back to frame 1
-            }
-        }
-
-        return 1;
-    }
-
-    private boolean shouldFaceRightRelativeToCamera() {
-        double horizSpeedSq = this.xd * this.xd + this.zd * this.zd;
-        if (horizSpeedSq <= 0.0001) {
-            return this.facingRight;
-        }
-
-        if (mc.player == null) {
-            return this.facingRight;
-        }
-
-        double dx = this.x - mc.player.getX();
-        double dz = this.z - mc.player.getZ();
-        double distSq = dx * dx + dz * dz;
-
-        if (distSq < 0.0001) {
-            return this.facingRight;
-        }
-
-        double dist = Math.sqrt(distSq);
-        double nx = dx / dist;
-        double nz = dz / dist;
-
-        double perpendicularSpeed = (this.zd * nx) - (this.xd * nz);
-
-        if (Math.abs(perpendicularSpeed) < 0.01) {
-            return this.facingRight;
-        }
-
-        return perpendicularSpeed > 0.0;
-    }
-
-    private void updateSpriteFacing() {
-        this.facingRight = shouldFaceRightRelativeToCamera();
-        setSpriteName(getFrameFromSpriteName(this.spriteName));
-    }
+    /*
+     * protected void setSpriteName(Integer frame) {
+     * if (this.baseSpriteName == null) {
+     * return;
+     * }
+     * 
+     * StringBuilder builder = new StringBuilder(this.baseSpriteName);
+     * if (this.state == State.PERCHED) {
+     * builder.append("_perched");
+     * } else {
+     * builder.append("_flying");
+     * }
+     * 
+     * if (this.facingRight) {
+     * builder.append("_r");
+     * }
+     * 
+     * builder.append("_").append(frame == null ? "1" : frame);
+     * 
+     * this.spriteName = builder.toString();
+     * this.setSprite(getSprite(this.spriteName));
+     * }
+     */
 }
