@@ -1,10 +1,6 @@
 package nms.atmosphericfauna.config;
 
 import nms.atmosphericfauna.AtmosphericFauna;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
-import nms.atmosphericfauna.particle.CrowParticle;
-import nms.atmosphericfauna.particle.BlueJayParticle;
-import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +16,20 @@ public class ConfigHandler {
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir()
             .resolve(AtmosphericFauna.MOD_ID + ".json").toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    public static boolean enableChunkLoadSpawning = true;
+    public static boolean enableAmbientSpawning = true;
+    public static int spawnRangeFromPlayer = 96;
+    public static int spawnTickDelay = 200;
+    public static int attemptsPerTick = 15;
+    public static int searchRadius = 12;
+    public static boolean spawnBelowSeaLevel = false;
+    public static boolean debugTextSpawning = false;
+
+    public static int maxActiveBirds = 100;
+    public static int maxActiveCrows = 50;
+    public static int maxActiveBlueJays = 10;
+    public static boolean debugTextBirds = false;
 
     public static void load() {
         if (!CONFIG_FILE.exists()) {
@@ -109,44 +119,43 @@ public class ConfigHandler {
         ConfigData data = new ConfigData();
 
         // Spawning Category
-        data.spawning.enableChunkLoadSpawning = AtmosphericFauna.enableChunkLoadSpawning;
-        data.spawning.enableAmbientSpawning = AmbientSpawning.enableAmbientSpawning;
-        data.spawning.spawnRangeFromPlayer = AmbientSpawning.spawnRangeFromPlayer;
-        data.spawning.spawnTickDelay = AmbientSpawning.spawnTickDelay;
-        data.spawning.attemptsPerTick = AmbientSpawning.attemptsPerTick;
-        data.spawning.searchRadius = AmbientSpawning.searchRadius;
-        data.spawning.spawnBelowSeaLevel = AmbientSpawning.spawnBelowSeaLevel;
+        data.spawning.enableChunkLoadSpawning = enableChunkLoadSpawning;
+        data.spawning.enableAmbientSpawning = enableAmbientSpawning;
+        data.spawning.spawnRangeFromPlayer = spawnRangeFromPlayer;
+        data.spawning.spawnTickDelay = spawnTickDelay;
+        data.spawning.attemptsPerTick = attemptsPerTick;
+        data.spawning.searchRadius = searchRadius;
+        data.spawning.spawnBelowSeaLevel = spawnBelowSeaLevel;
 
         // Birds Category
-        data.birds.maxActiveBirds = BaseBirdParticle.maxActiveBirds;
-        data.birds.maxActiveCrows = CrowParticle.maxActiveCrows;
-        data.birds.maxActiveBlueJays = BlueJayParticle.maxActiveBlueJays;
+        data.birds.maxActiveBirds = maxActiveBirds;
+        data.birds.maxActiveCrows = maxActiveCrows;
+        data.birds.maxActiveBlueJays = maxActiveBlueJays;
 
         // Debug Category
-        data.debug.debugText = AmbientSpawning.debugText;
-        data.debug.debugBirds = BaseBirdParticle.debugText;
+        data.debug.debugText = debugTextSpawning;
+        data.debug.debugBirds = debugTextBirds;
 
         return data;
     }
 
     private static void loadData(ConfigData data) {
-
         // Spawning Category
-        AtmosphericFauna.enableChunkLoadSpawning = data.spawning.enableChunkLoadSpawning;
-        AmbientSpawning.enableAmbientSpawning = data.spawning.enableAmbientSpawning;
-        AmbientSpawning.spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
-        AmbientSpawning.spawnTickDelay = data.spawning.spawnTickDelay;
-        AmbientSpawning.attemptsPerTick = data.spawning.attemptsPerTick;
-        AmbientSpawning.searchRadius = data.spawning.searchRadius;
-        AmbientSpawning.spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
+        enableChunkLoadSpawning = data.spawning.enableChunkLoadSpawning;
+        enableAmbientSpawning = data.spawning.enableAmbientSpawning;
+        spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
+        spawnTickDelay = data.spawning.spawnTickDelay;
+        attemptsPerTick = data.spawning.attemptsPerTick;
+        searchRadius = data.spawning.searchRadius;
+        spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
 
         // Birds Category
-        BaseBirdParticle.maxActiveBirds = data.birds.maxActiveBirds;
-        CrowParticle.maxActiveCrows = data.birds.maxActiveCrows;
-        BlueJayParticle.maxActiveBlueJays = data.birds.maxActiveBlueJays;
+        maxActiveBirds = data.birds.maxActiveBirds;
+        maxActiveCrows = data.birds.maxActiveCrows;
+        maxActiveBlueJays = data.birds.maxActiveBlueJays;
 
         // Debug Category
-        AmbientSpawning.debugText = data.debug.debugText;
-        BaseBirdParticle.debugText = data.debug.debugBirds;
+        debugTextSpawning = data.debug.debugText;
+        debugTextBirds = data.debug.debugBirds;
     }
 }

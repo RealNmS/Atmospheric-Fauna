@@ -1,6 +1,7 @@
 package nms.atmosphericfauna.particle;
 
 import nms.atmosphericfauna.AtmosphericFauna;
+import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,11 +58,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private int neighborCacheTimer = 0;
 
     protected static Minecraft mc = Minecraft.getInstance();
-
-    // --- CONFIG STUFF ---
-
-    public static int maxActiveBirds = 100;
-    public static boolean debugText = false;
 
     // --- VARIABLES ---
 
@@ -212,7 +208,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         // debug stuff
-        if (debugText) {
+        if (debugTextBirds) {
             if (this.age % 10 == 0) {
                 AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
                         " | Height: "
@@ -1048,7 +1044,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private void tickDying() {
         this.yd -= 0.02;
         if (this.y < -64 || this.age > this.lifetime + 240) {
-            if (debugText) {
+            if (debugTextBirds) {
                 AtmosphericFauna.LOGGER
                         .info("Bird particle removed due to age or falling out of world: " + this.baseSpriteName);
             }

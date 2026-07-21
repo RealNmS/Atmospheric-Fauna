@@ -1,11 +1,6 @@
 package nms.atmosphericfauna.modmenu;
 
-import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.config.ConfigHandler;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
-import nms.atmosphericfauna.particle.CrowParticle;
-import nms.atmosphericfauna.particle.BlueJayParticle;
-import nms.atmosphericfauna.spawning.AmbientSpawning;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -30,69 +25,69 @@ public class ModMenuConfig {
         spawning.addEntry(entryBuilder
                 .startBooleanToggle(Component
                         .translatable("option.atmosphericfauna.chunk_load_spawning"),
-                        AtmosphericFauna.enableChunkLoadSpawning)
+                                        ConfigHandler.enableChunkLoadSpawning)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.chunk_load_spawning.tooltip"))
-                .setSaveConsumer(newValue -> AtmosphericFauna.enableChunkLoadSpawning = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.enableChunkLoadSpawning = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startBooleanToggle(Component
                         .translatable("option.atmosphericfauna.ambient_spawning"),
-                        AmbientSpawning.enableAmbientSpawning)
+                                        ConfigHandler.enableAmbientSpawning)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.ambient_spawning.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.enableAmbientSpawning = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.enableAmbientSpawning = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startIntField(Component
                         .translatable("option.atmosphericfauna.spawn_range_from_player"),
-                        AmbientSpawning.spawnRangeFromPlayer)
+                                        ConfigHandler.spawnRangeFromPlayer)
                 .setDefaultValue(96)
                 .setMin(32)
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.spawn_range_from_player.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.spawnRangeFromPlayer = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.spawnRangeFromPlayer = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.spawn_tick_delay"),
-                        AmbientSpawning.spawnTickDelay)
+                                        ConfigHandler.spawnTickDelay)
                 .setDefaultValue(200)
                 .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.spawn_tick_delay.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.spawnTickDelay = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.spawnTickDelay = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.attempts_per_tick"),
-                        AmbientSpawning.attemptsPerTick)
+                                        ConfigHandler.attemptsPerTick)
                 .setDefaultValue(15)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.attempts_per_tick.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.attemptsPerTick = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.attemptsPerTick = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.search_radius"),
-                        AmbientSpawning.searchRadius)
+                                        ConfigHandler.searchRadius)
                 .setDefaultValue(12)
                 .setMin(1)
                 .setTooltip(Component.translatable("option.atmosphericfauna.search_radius.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.searchRadius = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.searchRadius = newValue)
                 .build());
 
         spawning.addEntry(entryBuilder
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.spawn_below_sea_level"),
-                        AmbientSpawning.spawnBelowSeaLevel)
+                                        ConfigHandler.spawnBelowSeaLevel)
                 .setDefaultValue(false)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.spawn_below_sea_level.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.spawnBelowSeaLevel = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.spawnBelowSeaLevel = newValue)
                 .build());
 
         // MARK: --- BIRDS ---
@@ -102,11 +97,11 @@ public class ModMenuConfig {
 
         birds.addEntry(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_birds"),
-                        BaseBirdParticle.maxActiveBirds)
+                                        ConfigHandler.maxActiveBirds)
                 .setDefaultValue(100)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_birds.tooltip"))
-                .setSaveConsumer(newValue -> BaseBirdParticle.maxActiveBirds = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.maxActiveBirds = newValue)
                 .build());
 
         SubCategoryBuilder crows = entryBuilder
@@ -114,11 +109,11 @@ public class ModMenuConfig {
 
         crows.add(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
-                        CrowParticle.maxActiveCrows)
+                                        ConfigHandler.maxActiveCrows)
                 .setDefaultValue(50)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
-                .setSaveConsumer(newValue -> CrowParticle.maxActiveCrows = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
                 .build());
 
         birds.addEntry(crows.build());
@@ -128,11 +123,11 @@ public class ModMenuConfig {
 
         blueJays.add(entryBuilder
                 .startIntField(Component.translatable("option.atmosphericfauna.max_active_blue_jays"),
-                        BlueJayParticle.maxActiveBlueJays)
+                                        ConfigHandler.maxActiveBlueJays)
                 .setDefaultValue(10)
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_blue_jays.tooltip"))
-                .setSaveConsumer(newValue -> BlueJayParticle.maxActiveBlueJays = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.maxActiveBlueJays = newValue)
                 .build());
 
         birds.addEntry(blueJays.build());
@@ -145,21 +140,21 @@ public class ModMenuConfig {
         debug.addEntry(entryBuilder
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.debug_text_spawning"),
-                        AmbientSpawning.debugText)
+                                        ConfigHandler.debugTextSpawning)
                 .setDefaultValue(false)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.debug_text_spawning.tooltip"))
-                .setSaveConsumer(newValue -> AmbientSpawning.debugText = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.debugTextSpawning = newValue)
                 .build());
 
         debug.addEntry(entryBuilder
                 .startBooleanToggle(
                         Component.translatable("option.atmosphericfauna.debug_text_birds"),
-                        BaseBirdParticle.debugText)
+                                        ConfigHandler.debugTextBirds)
                 .setDefaultValue(false)
                 .setTooltip(Component
                         .translatable("option.atmosphericfauna.debug_text_birds.tooltip"))
-                .setSaveConsumer(newValue -> BaseBirdParticle.debugText = newValue)
+                        .setSaveConsumer(newValue -> ConfigHandler.debugTextBirds = newValue)
                 .build());
 
         return builder.build();

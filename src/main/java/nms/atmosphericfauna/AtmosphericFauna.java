@@ -7,6 +7,7 @@ import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 import nms.atmosphericfauna.command.ModCommands;
+import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,6 @@ public class AtmosphericFauna implements ClientModInitializer {
 	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
 	public static final SimpleParticleType BLUE_JAY = FabricParticleTypes.simple(true);
 	private static int chunkLoadCount = 0;
-	public static boolean enableChunkLoadSpawning = true;
 
 	@Override
 	public void onInitializeClient() {

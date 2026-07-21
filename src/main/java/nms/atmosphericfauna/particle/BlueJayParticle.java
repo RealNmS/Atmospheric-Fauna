@@ -1,5 +1,7 @@
 package nms.atmosphericfauna.particle;
 
+import static nms.atmosphericfauna.config.ConfigHandler.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,10 +11,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class BlueJayParticle extends BaseBirdParticle {
-
-    // --- CONFIG STUFF ---
-
-    public static int maxActiveBlueJays = 10;
 
     private static final List<BaseBirdParticle> BLUE_JAYS = Collections.synchronizedList(new ArrayList<>());
     static {

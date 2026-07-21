@@ -2,6 +2,7 @@ package nms.atmosphericfauna.spawning;
 
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
+import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +15,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
 public class AmbientSpawning {
-
-    // --- CONFIG STUFF ---
-
-    public static boolean debugText = false;
-    public static boolean spawnBelowSeaLevel = false;
-    public static boolean enableAmbientSpawning = true;
-
-    public static int spawnRangeFromPlayer = 96;
-    public static int spawnTickDelay = 200;
-    public static int attemptsPerTick = 15;
-    public static int searchRadius = 12;
 
     // MARK: --- SPAWN LOGIC ---
 
@@ -41,7 +31,7 @@ public class AmbientSpawning {
         }
 
         if (BaseBirdParticle.getAllBirds().size() >= BaseBirdParticle.getMaxActiveBirds()) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Global bird limit ("
                         + BaseBirdParticle.getMaxActiveBirds() + ") reached.");
             }
@@ -63,7 +53,7 @@ public class AmbientSpawning {
 
         if (selectedSpawn != null) {
             if (selectedSpawn.availableSpots().getAsInt() <= 0) {
-                if (debugText) {
+                if (debugTextSpawning) {
                     AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Species limit reached.");
                 }
                 return;
@@ -75,7 +65,7 @@ public class AmbientSpawning {
     private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
         String particleName = spawnData.name();
 
-        if (debugText) {
+        if (debugTextSpawning) {
             AtmosphericFauna.LOGGER.info("[AS] Attempting to spawn " + particleName);
         }
 
@@ -85,7 +75,7 @@ public class AmbientSpawning {
         int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
 
         if (availableSpots < spawnData.minPackSize()) {
-            if (debugText)
+            if (debugTextSpawning)
                 AtmosphericFauna.LOGGER
                         .info("[AS] Not enough spots available" + " (global: " + availableGlobalSpots + ", typed: "
                                 + availableTypedSpots + ")");
@@ -93,7 +83,7 @@ public class AmbientSpawning {
         }
 
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
-            if (debugText)
+            if (debugTextSpawning)
                 AtmosphericFauna.LOGGER
                         .info("[AS] Not spawning due to bad weather" + " (raining: " + world.isRaining()
                                 + ", thundering: " + world.isThundering() + ")");
@@ -108,7 +98,7 @@ public class AmbientSpawning {
         //?}
 
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
-            if (debugText)
+            if (debugTextSpawning)
                 AtmosphericFauna.LOGGER
                         .info("[AS] Not spawning due to time of day" + " (isDay: " + isDay + ")");
             return;
@@ -117,7 +107,7 @@ public class AmbientSpawning {
         // Gather eligible players
         var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
         if (players.isEmpty()) {
-            if (debugText)
+            if (debugTextSpawning)
                 AtmosphericFauna.LOGGER
                         .info("[AS] Not spawning due to no eligible players" + " (players: " + players.size() + ")");
             return;
@@ -171,13 +161,13 @@ public class AmbientSpawning {
                                 (random.nextFloat() - 0.5f) * 0.05, 0, (random.nextFloat() - 0.5f) * 0.05);
                     }
 
-                    if (debugText) {
+                    if (debugTextSpawning) {
                         AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned full pack of " + targetPackSize + " "
                                 + particleName + " at " + foundCenter.toShortString());
                     }
                     return;
                 } else {
-                    if (debugText) {
+                    if (debugTextSpawning) {
                         AtmosphericFauna.LOGGER.info("[AS] ABORTED: Wanted " + targetPackSize
                                 + " but only found spots for " + validSpots.size());
                     }
@@ -185,7 +175,7 @@ public class AmbientSpawning {
             }
         }
 
-        if (debugText) {
+        if (debugTextSpawning) {
             AtmosphericFauna.LOGGER.info("[AS] FAIL: Could not find a valid block to spawn " + particleName
                     + " (Check light level, tags, or biome)");
         }
@@ -229,7 +219,7 @@ public class AmbientSpawning {
     private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
         // Must have air above and block below
         if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
             }
             return false;
@@ -245,7 +235,7 @@ public class AmbientSpawning {
             }
         }
         if (!isValidBlock) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
             }
             return false;
@@ -261,7 +251,7 @@ public class AmbientSpawning {
             }
         }
         if (!biomeMatch) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome to spawn");
             }
             return false;
@@ -269,7 +259,7 @@ public class AmbientSpawning {
 
         // Height Check
         if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel())) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Could not find a valid height to spawn");
             }
             return false;
@@ -280,7 +270,7 @@ public class AmbientSpawning {
         boolean lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
 
         if (!lightValid) {
-            if (debugText) {
+            if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Could not find a valid light level to spawn");
             }
         }
