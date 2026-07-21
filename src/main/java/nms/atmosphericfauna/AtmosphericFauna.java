@@ -9,8 +9,6 @@ import nms.atmosphericfauna.spawning.AmbientSpawning;
 import nms.atmosphericfauna.command.ModCommands;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ClientModInitializer;
 //? if <=1.21.11 {
 /*import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -25,6 +23,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AtmosphericFauna implements ClientModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";

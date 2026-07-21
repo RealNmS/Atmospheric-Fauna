@@ -3,14 +3,15 @@ package nms.atmosphericfauna.spawning;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
-import java.util.List;
-import java.util.function.IntSupplier;
+
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import java.util.List;
+import java.util.function.IntSupplier;
 
 public record SpawnData(
         String name,

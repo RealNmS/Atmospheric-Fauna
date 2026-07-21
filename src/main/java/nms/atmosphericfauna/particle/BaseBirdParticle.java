@@ -3,9 +3,6 @@ package nms.atmosphericfauna.particle;
 import nms.atmosphericfauna.AtmosphericFauna;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,6 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.Heightmap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 

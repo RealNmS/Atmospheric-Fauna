@@ -1,5 +1,8 @@
 package nms.atmosphericfauna.gui;
 
+import nms.atmosphericfauna.AtmosphericFauna;
+import nms.atmosphericfauna.particle.BaseBirdParticle;
+
 //? if <=1.21.5 {
 //  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 //?} else {
@@ -7,9 +10,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 //?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import nms.atmosphericfauna.AtmosphericFauna;
-import nms.atmosphericfauna.particle.BaseBirdParticle;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +19,12 @@ public class DebugHudOverlay {
     public static boolean showDebug = false;
 
     public static void register() {
-//? if <=1.21.5 {
-//      HudRenderCallback.EVENT.register((guiGraphics, tickCounter) -> {
-//?} else {
+    //? if <=1.21.5 {
+    //      HudRenderCallback.EVENT.register((guiGraphics, tickCounter) -> {
+    //?} else {
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "debug_hud"),
                 (guiGraphics, tickCounter) -> {
-//?}
+    //?}
                     if (!showDebug)
                         return;
 

@@ -4,8 +4,6 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.BaseBirdParticle;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -13,6 +11,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AmbientSpawning {
 

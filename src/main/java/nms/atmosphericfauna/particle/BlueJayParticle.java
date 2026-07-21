@@ -2,13 +2,13 @@ package nms.atmosphericfauna.particle;
 
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BlueJayParticle extends BaseBirdParticle {
 
