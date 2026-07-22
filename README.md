@@ -46,9 +46,9 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 ### Blue Jays
 ![Selection of photos: Blue Jays](src/main/resources/assets/docs/selection_blue_jay.jpg)
 
-_More birds will be added in the future!_
+> _More birds will be added in the future!_
 
-> [!INFO]
+> [!TIP]
 > For more information about the birds and their spawn conditions, check out the [Wiki](https://github.com/RealNmS/Atmospheric-Fauna/wiki).
 
 ---
