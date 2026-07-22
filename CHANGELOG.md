@@ -25,6 +25,7 @@
 - Fixed taking off animation making birds clip through walls
 - Fixed birds clipping into the ground when landing
 - Optimized a bunch of things, making the mod faster than ever
+  - Added grid partitioning to the flocking logic
   - Caching flock neighbours to avoid recalculating them every tick
   - Ground sampling is using heightmap instead of raycasting
   - Optimized perching logic and scanning

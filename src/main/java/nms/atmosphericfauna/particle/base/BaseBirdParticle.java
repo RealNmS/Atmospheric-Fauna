@@ -12,7 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseBirdParticle extends BaseParticle {
 
@@ -57,6 +60,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private final List<BaseBirdParticle> cachedFlockNeighbors = new ArrayList<>();
     private int neighborCacheTimer = 0;
 
+    private static final Map<List<BaseBirdParticle>, SpatialGrid> SPECIES_GRIDS = new IdentityHashMap<>();
+    private long currentCellKey = 0L;
+    private boolean inGrid = false;
+
+    private static final class SpatialGrid {
+        final Map<Long, ArrayList<BaseBirdParticle>> cells = new HashMap<>();
+        double cellSize;
+    }
+
+    private static long cellKey(int x, int y, int z) {
+        return ((long) (x & 0x1FFFFF) << 42) | ((long) (y & 0x1FFFFF) << 21) | (long) (z & 0x1FFFFF);
+    }
+
     protected static Minecraft mc = Minecraft.getInstance();
 
     // --- VARIABLES ---
@@ -100,7 +116,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.removed)
             return;
         ALL_BIRDS.add(this);
-        getSpeciesList().add(this); // Track inside species partition[cite: 10]
+        getSpeciesList().add(this);
     }
 
     // MARK: --- HELPER METHODS ---
@@ -116,12 +132,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 SPECIES_REGISTRY.get(i).clear();
             }
         }
+        SPECIES_GRIDS.clear();
     }
 
     @Override
     public void remove() {
         ALL_BIRDS.remove(this);
         getSpeciesList().remove(this);
+        unregisterFromGrid();
         super.remove();
     }
 
@@ -218,33 +236,134 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // Returns all other bird particles within radius
     private List<BaseBirdParticle> getNeighbors(double radius) {
+        updateGridPosition();
+
         double rsq = radius * radius;
         reusableNeighborList.clear();
 
-        List<BaseBirdParticle> speciesList = getSpeciesList();
-        synchronized (speciesList) {
-            int size = speciesList.size();
-            for (int i = 0; i < size; i++) {
-                BaseBirdParticle other = speciesList.get(i);
-                if (other == this || other.level != this.level)
-                    continue;
+        SpatialGrid grid = SPECIES_GRIDS.get(getSpeciesList());
+        if (grid == null)
+            return reusableNeighborList;
 
-                // Fast fail bounds check
-                if (Math.abs(other.x - this.x) > radius ||
-                        Math.abs(other.y - this.y) > radius ||
-                        Math.abs(other.z - this.z) > radius)
-                    continue;
+        double cs = grid.cellSize;
+        int cellRange = (int) Math.ceil(radius / cs);
+        if (cellRange < 1)
+            cellRange = 1;
 
-                double dx = other.x - this.x;
-                double dy = other.y - this.y;
-                double dz = other.z - this.z;
+        int cx = (int) Math.floor(this.x / cs);
+        int cy = (int) Math.floor(this.y / cs);
+        int cz = (int) Math.floor(this.z / cs);
 
-                if (dx * dx + dy * dy + dz * dz <= rsq) {
-                    reusableNeighborList.add(other);
+        for (int dx = -cellRange; dx <= cellRange; dx++) {
+            for (int dy = -cellRange; dy <= cellRange; dy++) {
+                for (int dz = -cellRange; dz <= cellRange; dz++) {
+                    long key = cellKey(cx + dx, cy + dy, cz + dz);
+                    ArrayList<BaseBirdParticle> cell = grid.cells.get(key);
+                    if (cell == null)
+                        continue;
+                    int cellSize = cell.size();
+                    for (int j = 0; j < cellSize; j++) {
+                        BaseBirdParticle other = cell.get(j);
+                        if (other == this)
+                            continue;
+
+                        // Fast fail bounds check (avoids Math.abs overhead)
+                        double ddx = other.x - this.x;
+                        if (ddx > radius || ddx < -radius)
+                            continue;
+                        double ddy = other.y - this.y;
+                        if (ddy > radius || ddy < -radius)
+                            continue;
+                        double ddz = other.z - this.z;
+                        if (ddz > radius || ddz < -radius)
+                            continue;
+
+                        if (ddx * ddx + ddy * ddy + ddz * ddz <= rsq) {
+                            reusableNeighborList.add(other);
+                        }
+                    }
                 }
             }
         }
         return reusableNeighborList;
+    }
+
+    // Grid management
+    private SpatialGrid getOrCreateGrid() {
+        List<BaseBirdParticle> species = getSpeciesList();
+        SpatialGrid grid = SPECIES_GRIDS.get(species);
+        if (grid == null) {
+            grid = new SpatialGrid();
+            grid.cellSize = this.flockRadius;
+            SPECIES_GRIDS.put(species, grid);
+        }
+        return grid;
+    }
+
+    private void registerInGrid() {
+        if (inGrid)
+            return;
+        // Defer if flockRadius hasn't been set by the subclass yet.
+        if (this.flockRadius <= 0.0)
+            return;
+        SpatialGrid grid = getOrCreateGrid();
+        int cx = (int) Math.floor(this.x / grid.cellSize);
+        int cy = (int) Math.floor(this.y / grid.cellSize);
+        int cz = (int) Math.floor(this.z / grid.cellSize);
+        long key = cellKey(cx, cy, cz);
+        currentCellKey = key;
+        inGrid = true;
+        ArrayList<BaseBirdParticle> cell = grid.cells.get(key);
+        if (cell == null) {
+            cell = new ArrayList<>(4);
+            grid.cells.put(key, cell);
+        }
+        cell.add(this);
+    }
+
+    private void unregisterFromGrid() {
+        if (!inGrid)
+            return;
+        SpatialGrid grid = SPECIES_GRIDS.get(getSpeciesList());
+        if (grid != null) {
+            ArrayList<BaseBirdParticle> cell = grid.cells.get(currentCellKey);
+            if (cell != null) {
+                cell.remove(this);
+                if (cell.isEmpty())
+                    grid.cells.remove(currentCellKey);
+            }
+        }
+        inGrid = false;
+    }
+
+    private void updateGridPosition() {
+        if (!inGrid) {
+            registerInGrid();
+            return;
+        }
+        SpatialGrid grid = SPECIES_GRIDS.get(getSpeciesList());
+        if (grid == null)
+            return;
+        int cx = (int) Math.floor(this.x / grid.cellSize);
+        int cy = (int) Math.floor(this.y / grid.cellSize);
+        int cz = (int) Math.floor(this.z / grid.cellSize);
+        long newKey = cellKey(cx, cy, cz);
+        if (newKey == currentCellKey)
+            return;
+
+        ArrayList<BaseBirdParticle> oldCell = grid.cells.get(currentCellKey);
+        if (oldCell != null) {
+            oldCell.remove(this);
+            if (oldCell.isEmpty())
+                grid.cells.remove(currentCellKey);
+        }
+        ArrayList<BaseBirdParticle> newCell = grid.cells.get(newKey);
+        if (newCell == null) {
+            newCell = new ArrayList<>(4);
+            grid.cells.put(newKey, newCell);
+        }
+        newCell.add(this);
+        currentCellKey = newKey;
     }
 
     // Ask nearby flockmates to go land on the given perch
@@ -523,30 +642,52 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (neighbors.isEmpty())
             return;
 
+        // Hoist loop-invariants out of the inner loop so the JIT doesn't
+        // re-read fields on every iteration.
+        double sepDist = separationDistance;
+        double sepDistSq = sepDist * sepDist;
+        double invSepDist = 1.0 / sepDist;
+        boolean checkOcean = !this.fliesOverOcean;
+        double thisX = this.x;
+        double thisY = this.y;
+        double thisZ = this.z;
+
         double cx = 0, cy = 0, cz = 0;
         double avx = 0, avy = 0, avz = 0;
         double sepX = 0, sepY = 0, sepZ = 0;
         int flockingCount = 0;
 
-        for (BaseBirdParticle nb : neighbors) {
+        BaseBirdParticle leader = this;
+        int leaderHash = leader.hashCode();
+
+        int n = neighbors.size();
+        for (int i = 0; i < n; i++) {
+            BaseBirdParticle nb = neighbors.get(i);
             if (nb.state != State.FLYING)
                 continue;
 
-            double dx = this.x - nb.x;
-            double dy = this.y - nb.y;
-            double dz = this.z - nb.z;
+            int nbHash = nb.hashCode();
+            if (nbHash < leaderHash) {
+                leader = nb;
+                leaderHash = nbHash;
+            }
+
+            double dx = thisX - nb.x;
+            double dy = thisY - nb.y;
+            double dz = thisZ - nb.z;
             double d2 = dx * dx + dy * dy + dz * dz;
 
-            if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
+            if (d2 <= sepDistSq && d2 > 0.0001) {
                 double d = Math.sqrt(d2);
-                double factor = (separationDistance - d) / separationDistance;
-                sepX += (dx / d) * factor;
-                sepY += (dy / d) * factor;
-                sepZ += (dz / d) * factor;
+                double invD = 1.0 / d;
+                double factor = (sepDist - d) * invSepDist;
+                sepX += dx * invD * factor;
+                sepY += dy * invD * factor;
+                sepZ += dz * invD * factor;
             }
 
             if (!isScattering && nb.flockCooldown == 0) {
-                if (!this.fliesOverOcean && env.isOceanBiome(nb.x, nb.z))
+                if (checkOcean && env.isOceanBiome(nb.x, nb.z))
                     continue;
 
                 cx += nb.x;
@@ -582,13 +723,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.flockCooldown = 200 + this.random.nextInt(200);
 
                 // Pick an escape goal entirely away from the flock's center
-                double angleAway = Math.atan2(this.z - cz, this.x - cx);
+                double angleAway = Math.atan2(thisZ - cz, thisX - cx);
                 if (Double.isNaN(angleAway))
                     angleAway = this.random.nextFloat() * Math.PI * 2;
 
-                this.goalX = this.x + Math.cos(angleAway) * (goalRadius * 1.5);
-                this.goalY = Math.max(groundY + minFlightHeight, this.y + (this.random.nextFloat() - 0.2f) * 10.0);
-                this.goalZ = this.z + Math.sin(angleAway) * (goalRadius * 1.5);
+                this.goalX = thisX + Math.cos(angleAway) * (goalRadius * 1.5);
+                this.goalY = Math.max(groundY + minFlightHeight, thisY + (this.random.nextFloat() - 0.2f) * 10.0);
+                this.goalZ = thisZ + Math.sin(angleAway) * (goalRadius * 1.5);
                 this.goalTimer = 80; // Hard commit to this escape route
             } else {
                 // Normal Alignment and Cohesion
@@ -597,26 +738,20 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 double aliZ = (avz - this.zd) * (alignmentStrength * 1.6);
 
                 double currentCohesion = cohesionStrength * 0.45;
-                double cohX = (cx - this.x) * currentCohesion;
-                double cohY = (cy - this.y) * currentCohesion;
-                double cohZ = (cz - this.z) * currentCohesion;
+                double cohX = (cx - thisX) * currentCohesion;
+                double cohY = (cy - thisY) * currentCohesion;
+                double cohZ = (cz - thisZ) * currentCohesion;
 
                 this.xd += cohX + aliX;
                 this.yd += cohY + aliY;
                 this.zd += cohZ + aliZ;
 
-                BaseBirdParticle leader = this;
-                for (BaseBirdParticle nb : neighbors) {
-                    if (nb.state == State.FLYING && nb.hashCode() < leader.hashCode()) {
-                        leader = nb;
-                    }
-                }
-
+                // Leader was found during the main pass — no second loop needed.
                 if (leader != this) {
                     double aheadFactor = 4.0;
-                    double syncX = this.x + (leader.xd * aheadFactor) + (cx - this.x) * 0.18;
-                    double syncY = this.y + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
-                    double syncZ = this.z + (leader.zd * aheadFactor) + (cz - this.z) * 0.18;
+                    double syncX = thisX + (leader.xd * aheadFactor) + (cx - thisX) * 0.18;
+                    double syncY = thisY + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - thisY) * 0.12;
+                    double syncZ = thisZ + (leader.zd * aheadFactor) + (cz - thisZ) * 0.18;
 
                     if (this.fliesOverOcean || !env.isOceanBiome(syncX, syncZ)) {
                         this.goalX = syncX;
