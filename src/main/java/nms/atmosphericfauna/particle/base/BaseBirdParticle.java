@@ -434,7 +434,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
     }
 
-    // MARK: --- BEHAVIORS ---
+    // MARK: --- TICK FLYING ---
 
     private void tickFlying() {
         if (this.landingDelay > 0) {
@@ -772,6 +772,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    // MARK: --- TICK LANDING ---
+
     private void tickLanding() {
         double scareRadiusSq = scareRadius * scareRadius;
         for (Player p : this.level.players()) {
@@ -891,6 +893,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    // MARK: --- TICK PERCHED ---
+
     private void tickPerched() {
         this.perchedTimer++;
 
@@ -959,6 +963,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    // MARK: --- TICK TAKING OFF ---
+
     private void tickTakingOff() {
         this.landingTargetY = Double.NaN;
         this.landingBlockPos = null;
@@ -1002,6 +1008,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    // MARK: --- TICK DYING ---
+
     private void tickDying() {
         this.yd -= 0.02;
         if (this.y < -64 || this.age > this.lifetime + 240) {
@@ -1012,30 +1020,4 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.remove();
         }
     }
-
-    // MARK: --- SPRITE HANDLING ---
-
-    /*
-     * protected void setSpriteName(Integer frame) {
-     * if (this.baseSpriteName == null) {
-     * return;
-     * }
-     * 
-     * StringBuilder builder = new StringBuilder(this.baseSpriteName);
-     * if (this.state == State.PERCHED) {
-     * builder.append("_perched");
-     * } else {
-     * builder.append("_flying");
-     * }
-     * 
-     * if (this.facingRight) {
-     * builder.append("_r");
-     * }
-     * 
-     * builder.append("_").append(frame == null ? "1" : frame);
-     * 
-     * this.spriteName = builder.toString();
-     * this.setSprite(getSprite(this.spriteName));
-     * }
-     */
 }
