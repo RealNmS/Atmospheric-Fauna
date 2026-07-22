@@ -446,27 +446,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         double groundY = env.sampleGroundHeight(this.x, this.y, this.z);
-
         double absoluteCeiling = (env.getLevelMinY() + level.getHeight()) - 5.0;
         double targetHeight = Math.min(groundY + preferredFlightHeight, absoluteCeiling);
 
-        double dxToGoal = Double.isNaN(goalX) ? Double.POSITIVE_INFINITY : (goalX - this.x);
-        double dyToGoal = Double.isNaN(goalY) ? Double.POSITIVE_INFINITY : (goalY - this.y);
-        double dzToGoal = Double.isNaN(goalZ) ? Double.POSITIVE_INFINITY : (goalZ - this.z);
-        double distSqToGoal = dxToGoal * dxToGoal + dyToGoal * dyToGoal + dzToGoal * dzToGoal;
-
-        // Stuck detection
-        if (Math.abs(this.lastDistSqToGoal - distSqToGoal) < 0.05) {
-            this.stuckTicks++;
-        } else {
-            this.stuckTicks = 0;
-        }
-        this.lastDistSqToGoal = distSqToGoal;
-
-        if (Double.isNaN(goalX) || goalTimer-- <= 0 || distSqToGoal < 0.5 * 0.5 || this.stuckTicks > 40) {
-            chooseNewGoal();
-            this.stuckTicks = 0;
-        }
+        handleStuckDetection();
 
         if (neighborCacheTimer-- <= 0 || cachedFlockNeighbors.isEmpty()) {
             neighborCacheTimer = 2 + this.random.nextInt(3);
@@ -474,116 +457,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             cachedFlockNeighbors.addAll(getNeighbors(flockRadius));
         }
 
-        List<BaseBirdParticle> neighbors = cachedFlockNeighbors;
-        boolean isScattering = this.flockCooldown > 0;
-
-        if (!neighbors.isEmpty()) {
-            double cx = 0, cy = 0, cz = 0;
-            double avx = 0, avy = 0, avz = 0;
-            double sepX = 0, sepY = 0, sepZ = 0;
-            int flockingCount = 0;
-
-            for (BaseBirdParticle nb : neighbors) {
-                if (nb.state != State.FLYING)
-                    continue;
-
-                double dx = this.x - nb.x;
-                double dy = this.y - nb.y;
-                double dz = this.z - nb.z;
-                double d2 = dx * dx + dy * dy + dz * dz;
-
-                if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
-                    double d = Math.sqrt(d2);
-                    double factor = (separationDistance - d) / separationDistance;
-                    sepX += (dx / d) * factor;
-                    sepY += (dy / d) * factor;
-                    sepZ += (dz / d) * factor;
-                }
-
-                if (!isScattering && nb.flockCooldown == 0) {
-                    if (!this.fliesOverOcean && env.isOceanBiome(nb.x, nb.z))
-                        continue;
-
-                    cx += nb.x;
-                    cy += nb.y;
-                    cz += nb.z;
-                    avx += nb.xd;
-                    avy += nb.yd;
-                    avz += nb.zd;
-                    flockingCount++;
-                }
-            }
-
-            // Apply universal separation
-            sepX *= separationStrength * 1.6;
-            sepY *= separationStrength * 0.9;
-            sepZ *= separationStrength * 1.6;
-            this.xd += sepX;
-            this.yd += sepY;
-            this.zd += sepZ;
-
-            // Process Flock Mind
-            if (flockingCount > 0 && !isScattering) {
-                cx /= flockingCount;
-                cy /= flockingCount;
-                cz /= flockingCount;
-                avx /= flockingCount;
-                avy /= flockingCount;
-                avz /= flockingCount;
-
-                boolean isOvercrowded = this.maxFlockSize > 0 && flockingCount >= this.maxFlockSize;
-
-                if (isOvercrowded) {
-                    this.flockCooldown = 200 + this.random.nextInt(200);
-
-                    // Pick an escape goal entirely away from the flock's center
-                    double angleAway = Math.atan2(this.z - cz, this.x - cx);
-                    if (Double.isNaN(angleAway))
-                        angleAway = this.random.nextFloat() * Math.PI * 2;
-
-                    this.goalX = this.x + Math.cos(angleAway) * (goalRadius * 1.5);
-                    this.goalY = Math.max(groundY + minFlightHeight, this.y + (this.random.nextFloat() - 0.2f) * 10.0);
-                    this.goalZ = this.z + Math.sin(angleAway) * (goalRadius * 1.5);
-                    this.goalTimer = 80; // Hard commit to this escape route
-                } else {
-                    // Normal Alignment and Cohesion
-                    double aliX = (avx - this.xd) * (alignmentStrength * 1.6);
-                    double aliY = (avy - this.yd) * (alignmentStrength * 1.2);
-                    double aliZ = (avz - this.zd) * (alignmentStrength * 1.6);
-
-                    double currentCohesion = cohesionStrength * 0.45;
-                    double cohX = (cx - this.x) * currentCohesion;
-                    double cohY = (cy - this.y) * currentCohesion;
-                    double cohZ = (cz - this.z) * currentCohesion;
-
-                    this.xd += cohX + aliX;
-                    this.yd += cohY + aliY;
-                    this.zd += cohZ + aliZ;
-
-                    BaseBirdParticle leader = this;
-                    for (BaseBirdParticle nb : neighbors) {
-                        if (nb.state == State.FLYING && nb.hashCode() < leader.hashCode()) {
-                            leader = nb;
-                        }
-                    }
-
-                    if (leader != this) {
-                        double aheadFactor = 4.0;
-                        double syncX = this.x + (leader.xd * aheadFactor) + (cx - this.x) * 0.18;
-                        double syncY = this.y + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
-                        double syncZ = this.z + (leader.zd * aheadFactor) + (cz - this.z) * 0.18;
-
-                        if (this.fliesOverOcean || !env.isOceanBiome(syncX, syncZ)) {
-                            this.goalX = syncX;
-                            this.goalY = syncY;
-                            this.goalZ = syncZ;
-                            this.goalTimer = Math.min(this.goalTimer,
-                                    Math.max(8, (goalDurationMin + goalDurationMax) / 6));
-                        }
-                    }
-                }
-            }
-        }
+        applyFlockingBehavior(groundY);
 
         if (this.y <= groundY + minFlightHeight + 0.3) {
             this.goalY = Math.max(this.goalY, this.y + takeoffClimb + this.random.nextFloat() * 1.5);
@@ -595,18 +469,174 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.goalTimer = Math.min(this.goalTimer, 40);
         }
 
-        // Desired vector towards the goal
-        double desiredX = goalX - this.x;
-        double desiredY = goalY - this.y;
-        double desiredZ = goalZ - this.z;
-        double desiredDist = Math.sqrt(desiredX * desiredX + desiredY * desiredY + desiredZ * desiredZ);
-
         double lookX = this.x + this.xd * lookAheadMultiplier;
         double lookY = this.y + this.yd * lookAheadMultiplier;
         double lookZ = this.z + this.zd * lookAheadMultiplier;
 
         boolean blockAvoidance = env.isBlocked(lookX, lookY, lookZ);
         boolean waterAvoidance = !this.fliesOverOcean && env.isOceanBiome(lookX, lookZ);
+
+        applyDesiredVector(targetHeight, absoluteCeiling, blockAvoidance, waterAvoidance);
+
+        // Apply speed limits
+        double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);
+        if (horizontalSpeed > flySpeed) {
+            double scale = flySpeed / horizontalSpeed;
+            this.xd *= scale;
+            this.zd *= scale;
+        }
+        if (this.yd > maxVerticalSpeed)
+            this.yd = maxVerticalSpeed;
+        if (this.yd < -maxVerticalSpeed)
+            this.yd = -maxVerticalSpeed;
+
+        handleBlockAvoidance(blockAvoidance, waterAvoidance);
+
+        scanForPerch();
+    }
+
+    // Stuck detection
+    private void handleStuckDetection() {
+        double dxToGoal = Double.isNaN(goalX) ? Double.POSITIVE_INFINITY : (goalX - this.x);
+        double dyToGoal = Double.isNaN(goalY) ? Double.POSITIVE_INFINITY : (goalY - this.y);
+        double dzToGoal = Double.isNaN(goalZ) ? Double.POSITIVE_INFINITY : (goalZ - this.z);
+        double distSqToGoal = dxToGoal * dxToGoal + dyToGoal * dyToGoal + dzToGoal * dzToGoal;
+
+        if (Math.abs(this.lastDistSqToGoal - distSqToGoal) < 0.05) {
+            this.stuckTicks++;
+        } else {
+            this.stuckTicks = 0;
+        }
+        this.lastDistSqToGoal = distSqToGoal;
+
+        if (Double.isNaN(goalX) || goalTimer-- <= 0 || distSqToGoal < 0.5 * 0.5 || this.stuckTicks > 40) {
+            chooseNewGoal();
+            this.stuckTicks = 0;
+        }
+    }
+
+    // Flocking behavior
+    private void applyFlockingBehavior(double groundY) {
+        List<BaseBirdParticle> neighbors = this.cachedFlockNeighbors;
+        boolean isScattering = this.flockCooldown > 0;
+
+        if (neighbors.isEmpty())
+            return;
+
+        double cx = 0, cy = 0, cz = 0;
+        double avx = 0, avy = 0, avz = 0;
+        double sepX = 0, sepY = 0, sepZ = 0;
+        int flockingCount = 0;
+
+        for (BaseBirdParticle nb : neighbors) {
+            if (nb.state != State.FLYING)
+                continue;
+
+            double dx = this.x - nb.x;
+            double dy = this.y - nb.y;
+            double dz = this.z - nb.z;
+            double d2 = dx * dx + dy * dy + dz * dz;
+
+            if (d2 <= (separationDistance * separationDistance) && d2 > 0.0001) {
+                double d = Math.sqrt(d2);
+                double factor = (separationDistance - d) / separationDistance;
+                sepX += (dx / d) * factor;
+                sepY += (dy / d) * factor;
+                sepZ += (dz / d) * factor;
+            }
+
+            if (!isScattering && nb.flockCooldown == 0) {
+                if (!this.fliesOverOcean && env.isOceanBiome(nb.x, nb.z))
+                    continue;
+
+                cx += nb.x;
+                cy += nb.y;
+                cz += nb.z;
+                avx += nb.xd;
+                avy += nb.yd;
+                avz += nb.zd;
+                flockingCount++;
+            }
+        }
+
+        // Apply universal separation
+        sepX *= separationStrength * 1.6;
+        sepY *= separationStrength * 0.9;
+        sepZ *= separationStrength * 1.6;
+        this.xd += sepX;
+        this.yd += sepY;
+        this.zd += sepZ;
+
+        // Process Flock Mind
+        if (flockingCount > 0 && !isScattering) {
+            cx /= flockingCount;
+            cy /= flockingCount;
+            cz /= flockingCount;
+            avx /= flockingCount;
+            avy /= flockingCount;
+            avz /= flockingCount;
+
+            boolean isOvercrowded = this.maxFlockSize > 0 && flockingCount >= this.maxFlockSize;
+
+            if (isOvercrowded) {
+                this.flockCooldown = 200 + this.random.nextInt(200);
+
+                // Pick an escape goal entirely away from the flock's center
+                double angleAway = Math.atan2(this.z - cz, this.x - cx);
+                if (Double.isNaN(angleAway))
+                    angleAway = this.random.nextFloat() * Math.PI * 2;
+
+                this.goalX = this.x + Math.cos(angleAway) * (goalRadius * 1.5);
+                this.goalY = Math.max(groundY + minFlightHeight, this.y + (this.random.nextFloat() - 0.2f) * 10.0);
+                this.goalZ = this.z + Math.sin(angleAway) * (goalRadius * 1.5);
+                this.goalTimer = 80; // Hard commit to this escape route
+            } else {
+                // Normal Alignment and Cohesion
+                double aliX = (avx - this.xd) * (alignmentStrength * 1.6);
+                double aliY = (avy - this.yd) * (alignmentStrength * 1.2);
+                double aliZ = (avz - this.zd) * (alignmentStrength * 1.6);
+
+                double currentCohesion = cohesionStrength * 0.45;
+                double cohX = (cx - this.x) * currentCohesion;
+                double cohY = (cy - this.y) * currentCohesion;
+                double cohZ = (cz - this.z) * currentCohesion;
+
+                this.xd += cohX + aliX;
+                this.yd += cohY + aliY;
+                this.zd += cohZ + aliZ;
+
+                BaseBirdParticle leader = this;
+                for (BaseBirdParticle nb : neighbors) {
+                    if (nb.state == State.FLYING && nb.hashCode() < leader.hashCode()) {
+                        leader = nb;
+                    }
+                }
+
+                if (leader != this) {
+                    double aheadFactor = 4.0;
+                    double syncX = this.x + (leader.xd * aheadFactor) + (cx - this.x) * 0.18;
+                    double syncY = this.y + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - this.y) * 0.12;
+                    double syncZ = this.z + (leader.zd * aheadFactor) + (cz - this.z) * 0.18;
+
+                    if (this.fliesOverOcean || !env.isOceanBiome(syncX, syncZ)) {
+                        this.goalX = syncX;
+                        this.goalY = syncY;
+                        this.goalZ = syncZ;
+                        this.goalTimer = Math.min(this.goalTimer,
+                                Math.max(8, (goalDurationMin + goalDurationMax) / 6));
+                    }
+                }
+            }
+        }
+    }
+
+    // Desired vector towards the goal
+    private void applyDesiredVector(double targetHeight, double absoluteCeiling, boolean blockAvoidance,
+            boolean waterAvoidance) {
+        double desiredX = goalX - this.x;
+        double desiredY = goalY - this.y;
+        double desiredZ = goalZ - this.z;
+        double desiredDist = Math.sqrt(desiredX * desiredX + desiredY * desiredY + desiredZ * desiredZ);
 
         if (desiredDist > 0.0001) {
             desiredX = (desiredX / desiredDist) * flySpeed;
@@ -645,23 +675,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.yd += steerY;
             this.zd += steerZ;
         }
+    }
 
-        // Apply speed limits
-        double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);
-        if (horizontalSpeed > flySpeed) {
-            double scale = flySpeed / horizontalSpeed;
-            this.xd *= scale;
-            this.zd *= scale;
-        }
-        if (this.yd > maxVerticalSpeed)
-            this.yd = maxVerticalSpeed;
-        if (this.yd < -maxVerticalSpeed)
-            this.yd = -maxVerticalSpeed;
-
+    // Immediate path is blocked
+    private void handleBlockAvoidance(boolean blockAvoidance, boolean waterAvoidance) {
         boolean currentGoalInvalid = env.isBlocked(goalX, goalY, goalZ)
                 || (!this.fliesOverOcean && env.isOceanBiome(goalX, goalZ));
 
-        // Immediate path is blocked
         if (blockAvoidance || waterAvoidance) {
             this.xd = (this.xd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.08);
             this.zd = (this.zd * -0.3) + ((this.random.nextFloat() - 0.5f) * 0.08);
@@ -706,8 +726,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
             chooseNewGoal();
             this.goalTimer = 20 + this.random.nextInt(20);
         }
+    }
 
-        // Perching Scan
+    // Perching Scan
+    private void scanForPerch() {
         int effectiveFlockSize = this.cachedFlockNeighbors.size() + 1;
         if (landingCooldown == 0 && this.random.nextFloat() < (this.perchingChance / effectiveFlockSize)) {
             for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
