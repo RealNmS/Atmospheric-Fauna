@@ -481,7 +481,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double targetHeight = Math.min(ground + preferredFlightHeight, absoluteCeiling);
         double ny;
 
-        if (this.y <= ground + minFlightHeight + 0.5 || landingCooldown > 0) {
+        if (this.y <= ground + minFlightHeight + 0.5) {
             ny = this.y + 2.5 + this.random.nextFloat() * 2.5;
         } else if (this.y >= absoluteCeiling - 1.0) {
             ny = this.y - 2.0 - this.random.nextFloat() * 3.0;
@@ -750,7 +750,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (leader != this) {
                     double aheadFactor = 4.0;
                     double syncX = thisX + (leader.xd * aheadFactor) + (cx - thisX) * 0.18;
-                    double syncY = thisY + (leader.yd * Math.max(1.0, aheadFactor * 0.5)) + (cy - thisY) * 0.12;
+                    double syncY = thisY + (cy - thisY) * 0.12;
                     double syncZ = thisZ + (leader.zd * aheadFactor) + (cz - thisZ) * 0.18;
 
                     if (this.fliesOverOcean || !env.isOceanBiome(syncX, syncZ)) {
