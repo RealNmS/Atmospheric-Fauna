@@ -12,14 +12,15 @@
 - Reworked flight height handling, making it more varied and smooth
 - Made Blue Jays fly lower to the ground than crows
 - Changed flock flight behaviour to navigate more smoothly
-- Added small random delay before taking off
+- Added small random delay before taking off normally
+- Added small delay before scared take off based on player distance from each bird
 - Updated sprite handling *(this is like the herobrine being removed every update)*
 - Changed base command to be prettier, with a link to the wiki
 - Added new subcommand "help" to see links to the wiki and issues
 - Removed unused mixins, making the mod compatible with Sinytra Connector
 - Refactored most of the backend for easier management and better performance tracking
 - Fixed max flock size not working properly, adding cooldown for joining a flock
-- Fixed a spawn bug, making birds fly infinitely to the sky (hopefully)
+- Fixed a bug making birds fly infinitely to the sky (hopefully)
 - Fixed perching cooldown not having any effect, also making it longer
 - Fixed birds being able to perch onto a block above them
 - Fixed taking off animation making birds clip through walls
