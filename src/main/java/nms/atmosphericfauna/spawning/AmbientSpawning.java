@@ -26,7 +26,12 @@ public class AmbientSpawning {
     }
 
     public static void runSpawnAttempt(ClientLevel world) {
-        if (SpawnData.TOTAL_WEIGHT <= 0) {
+        List<SpawnData> eligibleSpawns = SpawnData.ALL_SPAWNS.stream()
+                .filter(SpawnData::spawnAllowed)
+                .toList();
+
+        int totalWeight = eligibleSpawns.stream().mapToInt(SpawnData::weight).sum();
+        if (totalWeight <= 0) {
             return;
         }
 
@@ -39,11 +44,11 @@ public class AmbientSpawning {
         }
 
         RandomSource random = world.getRandom();
-        int choice = random.nextInt(SpawnData.TOTAL_WEIGHT);
+        int choice = random.nextInt(totalWeight);
 
         SpawnData selectedSpawn = null;
         int cumulativeWeight = 0;
-        for (SpawnData data : SpawnData.ALL_SPAWNS) {
+        for (SpawnData data : eligibleSpawns) {
             cumulativeWeight += data.weight();
             if (choice < cumulativeWeight) {
                 selectedSpawn = data;

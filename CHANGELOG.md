@@ -17,6 +17,7 @@
 - Updated sprite handling *(this is like the herobrine being removed every update)*
 - Changed base command to be prettier, with a link to the wiki
 - Added new subcommand "help" to see links to the wiki and issues
+- Added config option to disable spawning for each bird type
 - Removed unused mixins, making the mod compatible with Sinytra Connector
 - Refactored most of the backend for easier management and better performance tracking
 - Fixed max flock size not working properly, adding cooldown for joining a flock

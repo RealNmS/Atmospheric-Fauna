@@ -30,6 +30,8 @@ public class ConfigHandler {
         public static final int MAX_ACTIVE_BIRDS = 100;
         public static final int MAX_ACTIVE_CROWS = 50;
         public static final int MAX_ACTIVE_BLUE_JAYS = 10;
+        public static final boolean ENABLE_CROW_SPAWNING = true;
+        public static final boolean ENABLE_BLUE_JAY_SPAWNING = true;
         public static final boolean DEBUG_TEXT_BIRDS = false;
     }
 
@@ -45,6 +47,8 @@ public class ConfigHandler {
     public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
     public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
     public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
+    public static boolean enableCrowSpawning = Defaults.ENABLE_CROW_SPAWNING;
+    public static boolean enableBlueJaySpawning = Defaults.ENABLE_BLUE_JAY_SPAWNING;
     public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
 
     public static void load() {
@@ -92,6 +96,7 @@ public class ConfigHandler {
 
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(data, writer);
+            nms.atmosphericfauna.spawning.SpawnData.syncFromConfig();
         } catch (IOException e) {
             AtmosphericFauna.LOGGER.error("Failed to save config", e);
         }
@@ -119,6 +124,8 @@ public class ConfigHandler {
             public Integer maxActiveBirds;
             public Integer maxActiveCrows;
             public Integer maxActiveBlueJays;
+            public Boolean enableCrowSpawning;
+            public Boolean enableBlueJaySpawning;
         }
 
         // Debug Category
@@ -147,6 +154,8 @@ public class ConfigHandler {
         data.birds.maxActiveBirds = maxActiveBirds;
         data.birds.maxActiveCrows = maxActiveCrows;
         data.birds.maxActiveBlueJays = maxActiveBlueJays;
+        data.birds.enableCrowSpawning = enableCrowSpawning;
+        data.birds.enableBlueJaySpawning = enableBlueJaySpawning;
 
         // Debug Category
         data.debug.debugText = debugTextSpawning;
@@ -169,9 +178,13 @@ public class ConfigHandler {
         maxActiveBirds = data.birds.maxActiveBirds;
         maxActiveCrows = data.birds.maxActiveCrows;
         maxActiveBlueJays = data.birds.maxActiveBlueJays;
+        enableCrowSpawning = data.birds.enableCrowSpawning;
+        enableBlueJaySpawning = data.birds.enableBlueJaySpawning;
 
         // Debug Category
         debugTextSpawning = data.debug.debugText;
         debugTextBirds = data.debug.debugBirds;
+
+        nms.atmosphericfauna.spawning.SpawnData.syncFromConfig();
     }
 }
