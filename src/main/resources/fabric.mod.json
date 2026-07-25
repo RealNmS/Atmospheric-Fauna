@@ -30,6 +30,7 @@
   "custom": {
     "modmenu": {
       "links": {
+        "modmenu.wiki": "https://github.com/RealNmS/Atmospheric-Fauna/wiki",
         "modmenu.kofi": "https://ko-fi.com/onlynms"
       },
       "update_checker": true
