@@ -12,7 +12,7 @@
   },
   "license": "GPL-3.0",
   "icon": "assets/atmospheric-fauna/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": ["nms.atmosphericfauna.AtmosphericFauna"],
     "modmenu": ["nms.atmosphericfauna.modmenu.ModMenuCompat"]
