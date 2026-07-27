@@ -1,3 +1,7 @@
+## current (wip)
+
+- Added "Client" badge to the mod menu
+
 ## 0.4.0
 
 Hello once again. This is a big update, huge even. I've been working basically nonstop for a week and this is the result. I made a lot of changes to the backend, so I hope everything is working and there are no bugs or crashes. I also figured out the multiversion thing, which is cool. If you find any issues, want a new feature, or just want something to get improved, please open an issue on GitHub. I will read it all and try to implement it if I can or if it's a good idea. I still have lots of plans for this mod, but I can assure you this was probably the biggest update it will receive for a while.
