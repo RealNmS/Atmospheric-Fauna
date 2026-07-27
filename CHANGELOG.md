@@ -1,6 +1,32 @@
-## current (wip)
+## future plans
 
-- Added "Client" badge to the mod menu
+- add bugs (like ladybugs, beetles, butterflies)
+- add more birds
+  - seagulls
+  - sparrows
+  - pigeons? (probably not, crows are better pigeons)
+  - something in a desert biome
+- add neoforge support
+- add quilt support
+- add sounds (idk where to get them from, might just not add them, will figure it out eventually)
+
+## quick todo
+
+- add Common Swallow
+- randomize flock speed at spawn
+- border spawning / mid air spawning (config option default false)
+- add config option to disable spawn biome checks for each bird type
+- add config option to disable spawn block checks for each bird type
+- update mod icon and banner
+- fix landing clipping through blocks
+- change landing animation (gradual slowdown from original speed)
+- add command to spawn a bird of a specific type
+
+## current update notes (wip)
+
+- Added "Client" badge to the mod in Mod Menu
+
+---
 
 ## 0.4.0
 
