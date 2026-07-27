@@ -29,6 +29,7 @@
 ---
 
 ## 0.4.0
+`25.07.2026`
 
 Hello once again. This is a big update, huge even. I've been working basically nonstop for a week and this is the result. I made a lot of changes to the backend, so I hope everything is working and there are no bugs or crashes. I also figured out the multiversion thing, which is cool. If you find any issues, want a new feature, or just want something to get improved, please open an issue on GitHub. I will read it all and try to implement it if I can or if it's a good idea. I still have lots of plans for this mod, but I can assure you this was probably the biggest update it will receive for a while.
 
@@ -66,7 +67,10 @@ Hello once again. This is a big update, huge even. I've been working basically n
   - Optimized lookup of the same species in the flocking logic
   - Small optimization when trying to spawn
 
+---
+
 ## v0.3.0 [26.2, 26.1.x]
+`17.07.2026`
 
 Hello again, I'm sorry for the big pause on updates. I didn't have a lot of motivation or time to continue working on this, but I managed to make yet another banger update. With the new additions I figured multiversion handling will be a lot harder than I thought, and for this reason I won't be updating below the version 26.1 for now. I will look into Stonecutter gradle addon so I can hopefully manage it better, but no promises.
 
@@ -82,13 +86,29 @@ Hello again, I'm sorry for the big pause on updates. I didn't have a lot of moti
 
 This update might still be buggy, I hope I fixed everything and made it polished enough, if anything comes up, please flood my Issues section on GitHub. I will read it all, even if it's dumb stuff.
 
-## v0.2.3 [26.1, 1.21.11]
+---
+
+## v0.2.3 [1.21.11]
+`15.04.2026`
+
+> Sorry for the late update, I could not decide if I want to keep updating the old version. However, since I made it easy for myself I can update it for a while. I will keep updating it until there are either too many merge conflicts or it's way too hard to update. For now there are no plans to support older versions since it would require me to rewrite a lot of code, but maybe in the future...
+
+**Changes:**
+- Changed the way sprites are facing the camera
+
+---
+
+## v0.2.3 [26.1]
+`29.03.2026`
 
 **Changes:**
 - Ported to Minecraft 26.1
 - Changed the way sprites are facing the camera
 
+---
+
 ## v0.2.2 [1.21.11]
+`05.02.2026`
 
 **Changes:**
 - Added "Spawning on Chunk Load" and "Ambient Spawning" config options
@@ -102,7 +122,10 @@ This update might still be buggy, I hope I fixed everything and made it polished
 - Fixed possible crashes
 - Fixed small memory leak
 
+---
+
 ## v0.2.1 [1.21.11]
+`18.01.2026`
 
 **Changes:**
 - Added "Spawn Below Sea Level" config option
@@ -112,7 +135,10 @@ This update might still be buggy, I hope I fixed everything and made it polished
 - Fixed possible memory leaks
 - Changed the log messages to be unified with the rest of the project
 
+---
+
 ## v0.2.0 [1.21.11]
+`16.01.2026`
 
 At first I thought I would release a few of small updates, gradually fixing what was broken. However since Modrinth took forever to review this mod (not blaming them though, I hope they enjoyed their break 🥰) I didn't feel like releasing the changes and they somehow built up into this massive release. Honestly it feels like a completely different mod at this point, but it's still early in development. There are still quite a lot of things I would like to fix before I start adding more bird variants.
 
@@ -141,7 +167,10 @@ At first I thought I would release a few of small updates, gradually fixing what
   - Max number of crows: 120 -> 50
   - Spawn tick delay: 100 -> 200
 
+---
+
 ## v0.1.0 [1.21.11]
+`08.01.2026`
 
 **Changes:**
 - Updated the wing flapping speed to be based on the vertical speed of the crow
@@ -150,7 +179,10 @@ At first I thought I would release a few of small updates, gradually fixing what
 - Reduced final jar file size (by not including the /docs folder)
 - Updated the mod icon
 
+---
+
 ## v0.1.0 (alpha) [1.21.11]
+`06.01.2026`
 
 The first release, yippiee!!
 
