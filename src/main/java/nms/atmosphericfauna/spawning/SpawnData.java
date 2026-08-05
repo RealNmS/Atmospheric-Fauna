@@ -27,6 +27,8 @@ public final class SpawnData {
     private final boolean spawnDuringDay;
     private final boolean spawnDuringNight;
     private boolean spawnAllowed;
+    private boolean checkBiomeTags;
+    private boolean checkSpawnBlocks;
     private final List<TagKey<Biome>> validBiomeTags;
     private final List<TagKey<Block>> validSpawnBlocks;
     private final IntSupplier availableSpots;
@@ -43,6 +45,8 @@ public final class SpawnData {
             boolean spawnDuringDay,
             boolean spawnDuringNight,
             boolean spawnAllowed,
+            boolean checkBiomeTags,
+            boolean checkSpawnBlocks,
             List<TagKey<Biome>> validBiomeTags,
             List<TagKey<Block>> validSpawnBlocks,
             IntSupplier availableSpots) {
@@ -57,6 +61,8 @@ public final class SpawnData {
         this.spawnDuringDay = spawnDuringDay;
         this.spawnDuringNight = spawnDuringNight;
         this.spawnAllowed = spawnAllowed;
+        this.checkBiomeTags = checkBiomeTags;
+        this.checkSpawnBlocks = checkSpawnBlocks;
         this.validBiomeTags = validBiomeTags;
         this.validSpawnBlocks = validSpawnBlocks;
         this.availableSpots = availableSpots;
@@ -110,6 +116,22 @@ public final class SpawnData {
         this.spawnAllowed = spawnAllowed;
     }
 
+    public boolean checkBiomeTags() {
+        return checkBiomeTags;
+    }
+
+    public void setCheckBiomeTags(boolean checkBiomeTags) {
+        this.checkBiomeTags = checkBiomeTags;
+    }
+
+    public boolean checkSpawnBlocks() {
+        return checkSpawnBlocks;
+    }
+
+    public void setCheckSpawnBlocks(boolean checkSpawnBlocks) {
+        this.checkSpawnBlocks = checkSpawnBlocks;
+    }
+
     public List<TagKey<Biome>> validBiomeTags() {
         return validBiomeTags;
     }
@@ -125,6 +147,10 @@ public final class SpawnData {
     public static void syncFromConfig() {
         CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
+        CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
+        CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
+        BLUE_JAY.setCheckBiomeTags(!ConfigHandler.disableBlueJaySpawnBiomeChecks);
+        BLUE_JAY.setCheckSpawnBlocks(!ConfigHandler.disableBlueJaySpawnBlockChecks);
     }
 
     public static SpawnData byName(String name) {
@@ -145,6 +171,8 @@ public final class SpawnData {
             AtmosphericFauna.CROW,
             30, 3, 9, 8, 15, true, true, true,
             ConfigHandler.enableCrowSpawning,
+            !ConfigHandler.disableCrowSpawnBiomeChecks,
+            !ConfigHandler.disableCrowSpawnBlockChecks,
             List.of(BiomeTags.IS_OVERWORLD),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SAND,
                     BlockTags.SNOW, BlockTags.TERRACOTTA, BlockTags.BASE_STONE_OVERWORLD),
@@ -155,6 +183,8 @@ public final class SpawnData {
             AtmosphericFauna.BLUE_JAY,
             25, 1, 2, 8, 15, false, true, false,
             ConfigHandler.enableBlueJaySpawning,
+            !ConfigHandler.disableBlueJaySpawnBiomeChecks,
+            !ConfigHandler.disableBlueJaySpawnBlockChecks,
             List.of(BiomeTags.IS_FOREST, BiomeTags.IS_JUNGLE, BiomeTags.IS_TAIGA),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD),

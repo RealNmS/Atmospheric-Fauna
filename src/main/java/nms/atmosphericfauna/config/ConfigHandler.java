@@ -32,6 +32,10 @@ public class ConfigHandler {
         public static final int MAX_ACTIVE_BLUE_JAYS = 10;
         public static final boolean ENABLE_CROW_SPAWNING = true;
         public static final boolean ENABLE_BLUE_JAY_SPAWNING = true;
+        public static final boolean DISABLE_CROW_SPAWN_BIOME_CHECKS = false;
+        public static final boolean DISABLE_CROW_SPAWN_BLOCK_CHECKS = false;
+        public static final boolean DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS = false;
+        public static final boolean DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS = false;
         public static final boolean DEBUG_TEXT_BIRDS = false;
     }
 
@@ -49,6 +53,10 @@ public class ConfigHandler {
     public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
     public static boolean enableCrowSpawning = Defaults.ENABLE_CROW_SPAWNING;
     public static boolean enableBlueJaySpawning = Defaults.ENABLE_BLUE_JAY_SPAWNING;
+    public static boolean disableCrowSpawnBiomeChecks = Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS;
+    public static boolean disableCrowSpawnBlockChecks = Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS;
+    public static boolean disableBlueJaySpawnBiomeChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS;
+    public static boolean disableBlueJaySpawnBlockChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS;
     public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
 
     public static void load() {
@@ -126,6 +134,10 @@ public class ConfigHandler {
             public Integer maxActiveBlueJays;
             public Boolean enableCrowSpawning;
             public Boolean enableBlueJaySpawning;
+            public Boolean disableCrowSpawnBiomeChecks;
+            public Boolean disableCrowSpawnBlockChecks;
+            public Boolean disableBlueJaySpawnBiomeChecks;
+            public Boolean disableBlueJaySpawnBlockChecks;
         }
 
         // Debug Category
@@ -156,6 +168,10 @@ public class ConfigHandler {
         data.birds.maxActiveBlueJays = maxActiveBlueJays;
         data.birds.enableCrowSpawning = enableCrowSpawning;
         data.birds.enableBlueJaySpawning = enableBlueJaySpawning;
+        data.birds.disableCrowSpawnBiomeChecks = disableCrowSpawnBiomeChecks;
+        data.birds.disableCrowSpawnBlockChecks = disableCrowSpawnBlockChecks;
+        data.birds.disableBlueJaySpawnBiomeChecks = disableBlueJaySpawnBiomeChecks;
+        data.birds.disableBlueJaySpawnBlockChecks = disableBlueJaySpawnBlockChecks;
 
         // Debug Category
         data.debug.debugText = debugTextSpawning;
@@ -180,6 +196,10 @@ public class ConfigHandler {
         maxActiveBlueJays = data.birds.maxActiveBlueJays;
         enableCrowSpawning = data.birds.enableCrowSpawning;
         enableBlueJaySpawning = data.birds.enableBlueJaySpawning;
+        disableCrowSpawnBiomeChecks = data.birds.disableCrowSpawnBiomeChecks;
+        disableCrowSpawnBlockChecks = data.birds.disableCrowSpawnBlockChecks;
+        disableBlueJaySpawnBiomeChecks = data.birds.disableBlueJaySpawnBiomeChecks;
+        disableBlueJaySpawnBlockChecks = data.birds.disableBlueJaySpawnBlockChecks;
 
         // Debug Category
         debugTextSpawning = data.debug.debugText;

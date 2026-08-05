@@ -230,36 +230,40 @@ public class AmbientSpawning {
             return false;
         }
 
-        // Check for valid spawn blocks
-        var stateBelow = world.getBlockState(pos.below());
-        boolean isValidBlock = false;
-        for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
-            if (stateBelow.is(tag)) {
-                isValidBlock = true;
-                break;
+        if (spawnData.checkSpawnBlocks()) {
+            // Check for valid spawn blocks
+            var stateBelow = world.getBlockState(pos.below());
+            boolean isValidBlock = false;
+            for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
+                if (stateBelow.is(tag)) {
+                    isValidBlock = true;
+                    break;
+                }
             }
-        }
-        if (!isValidBlock) {
-            if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+            if (!isValidBlock) {
+                if (debugTextSpawning) {
+                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+                }
+                return false;
             }
-            return false;
         }
 
-        // Valid biome check
-        var biomeHolder = world.getBiome(pos);
-        boolean biomeMatch = false;
-        for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
-            if (biomeHolder.is(tag)) {
-                biomeMatch = true;
-                break;
+        if (spawnData.checkBiomeTags()) {
+            // Valid biome check
+            var biomeHolder = world.getBiome(pos);
+            boolean biomeMatch = false;
+            for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
+                if (biomeHolder.is(tag)) {
+                    biomeMatch = true;
+                    break;
+                }
             }
-        }
-        if (!biomeMatch) {
-            if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome to spawn");
+            if (!biomeMatch) {
+                if (debugTextSpawning) {
+                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome to spawn");
+                }
+                return false;
             }
-            return false;
         }
 
         // Height Check

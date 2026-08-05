@@ -124,6 +124,28 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
                 .build());
 
+        crows.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_crow_spawn_biome_checks"),
+                        ConfigHandler.disableCrowSpawnBiomeChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_crow_spawn_biome_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_crow_spawn_block_checks"),
+                        ConfigHandler.disableCrowSpawnBlockChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_crow_spawn_block_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBlockChecks = newValue)
+                .build());
+
         birds.addEntry(crows.build());
 
         SubCategoryBuilder blueJays = entryBuilder
@@ -144,6 +166,28 @@ public class ModMenuConfig {
                 .setMin(0)
                 .setTooltip(Component.translatable("option.atmosphericfauna.max_active_blue_jays.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveBlueJays = newValue)
+                .build());
+
+        blueJays.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_blue_jay_spawn_biome_checks"),
+                        ConfigHandler.disableBlueJaySpawnBiomeChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_blue_jay_spawn_biome_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBiomeChecks = newValue)
+                .build());
+
+        blueJays.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_blue_jay_spawn_block_checks"),
+                        ConfigHandler.disableBlueJaySpawnBlockChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_blue_jay_spawn_block_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBlockChecks = newValue)
                 .build());
 
         birds.addEntry(blueJays.build());

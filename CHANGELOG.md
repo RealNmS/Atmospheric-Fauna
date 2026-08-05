@@ -16,8 +16,6 @@
 - add Common Swallow
 - randomize flock speed at spawn
 - border spawning / mid air spawning (config option default false)
-- add config option to disable spawn biome checks for each bird type
-- add config option to disable spawn block checks for each bird type
 - update mod icon and banner
 - update crow showcase img
 - fix landing clipping through blocks
@@ -26,6 +24,7 @@
 ## current update notes (wip)
 
 - Added "Client" badge to the mod in Mod Menu
+- Added config options to disable biome and block checks for spawning birds
 - Added new command "spawn" to spawn a bird of a specific type at the player's location
 
 ---
