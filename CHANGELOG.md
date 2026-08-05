@@ -4,6 +4,7 @@
 - add more birds
   - seagulls
   - sparrows
+  - Northern cardinal
   - pigeons? (probably not, crows are better pigeons)
   - something in a desert biome
 - add neoforge support
