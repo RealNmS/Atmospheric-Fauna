@@ -21,11 +21,11 @@
 - update crow showcase img
 - fix landing clipping through blocks
 - change landing animation (gradual slowdown from original speed)
-- add command to spawn a bird of a specific type
 
 ## current update notes (wip)
 
 - Added "Client" badge to the mod in Mod Menu
+- Added new command "spawn" to spawn a bird of a specific type at the player's location
 
 ---
 

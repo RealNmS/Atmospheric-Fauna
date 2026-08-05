@@ -127,6 +127,19 @@ public final class SpawnData {
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
     }
 
+    public static SpawnData byName(String name) {
+        for (SpawnData spawnData : ALL_SPAWNS) {
+            if (spawnData.name.equalsIgnoreCase(name)) {
+                return spawnData;
+            }
+        }
+        return null;
+    }
+
+    public static List<String> names() {
+        return ALL_SPAWNS.stream().map(SpawnData::name).toList();
+    }
+
     public static final SpawnData CROW = new SpawnData(
             "crow",
             AtmosphericFauna.CROW,
