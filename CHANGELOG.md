@@ -25,6 +25,7 @@
 - Added config option to enable midair border spawning (great for skyblock or similar), by default it is disabled
 - Added config options to disable biome and block checks for spawning birds
 - Added new command "spawn", which spawns a bird of a specific type at the player's location
+- Added config option to enable debug screen on join
 - Added "Client" badge to the mod in Mod Menu
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 

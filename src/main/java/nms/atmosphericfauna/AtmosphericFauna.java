@@ -83,6 +83,9 @@ public class AtmosphericFauna implements ClientModInitializer {
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			BaseBirdParticle.reset();
+			if (ConfigHandler.enableDebugScreenOnJoin) {
+				DebugHudOverlay.showDebug = true;
+			}
 		});
 
 		// Register all client commands

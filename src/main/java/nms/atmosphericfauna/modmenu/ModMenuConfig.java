@@ -227,6 +227,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.debugTextBirds = newValue)
                 .build());
 
+        debug.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.enable_debug_screen_on_join"),
+                        ConfigHandler.enableDebugScreenOnJoin)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_DEBUG_SCREEN_ON_JOIN)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.enable_debug_screen_on_join.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableDebugScreenOnJoin = newValue)
+                .build());
+
         return builder.build();
     }
 }

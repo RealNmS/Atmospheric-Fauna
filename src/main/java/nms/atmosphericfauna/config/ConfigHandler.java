@@ -38,6 +38,7 @@ public class ConfigHandler {
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS = false;
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS = false;
         public static final boolean DEBUG_TEXT_BIRDS = false;
+        public static final boolean ENABLE_DEBUG_SCREEN_ON_JOIN = false;
     }
 
     public static boolean enableChunkLoadSpawning = Defaults.ENABLE_CHUNK_LOAD_SPAWNING;
@@ -60,6 +61,7 @@ public class ConfigHandler {
     public static boolean disableBlueJaySpawnBiomeChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS;
     public static boolean disableBlueJaySpawnBlockChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS;
     public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
+    public static boolean enableDebugScreenOnJoin = Defaults.ENABLE_DEBUG_SCREEN_ON_JOIN;
 
     public static void load() {
         if (!CONFIG_FILE.exists()) {
@@ -149,6 +151,7 @@ public class ConfigHandler {
         public static class Debug {
             public Boolean debugText;
             public Boolean debugBirds;
+            public Boolean enableDebugScreenOnJoin;
         }
 
     }
@@ -180,6 +183,7 @@ public class ConfigHandler {
         // Debug Category
         data.debug.debugText = debugTextSpawning;
         data.debug.debugBirds = debugTextBirds;
+        data.debug.enableDebugScreenOnJoin = enableDebugScreenOnJoin;
 
         return data;
     }
@@ -209,6 +213,7 @@ public class ConfigHandler {
         // Debug Category
         debugTextSpawning = data.debug.debugText;
         debugTextBirds = data.debug.debugBirds;
+        enableDebugScreenOnJoin = data.debug.enableDebugScreenOnJoin;
 
         nms.atmosphericfauna.spawning.SpawnData.syncFromConfig();
     }
