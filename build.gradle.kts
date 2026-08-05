@@ -64,6 +64,12 @@ dependencies {
 
     // Provides JSpecify annotations to older MC versions during compilation
     compileOnly("org.jspecify:jspecify:1.0.0")
+
+    // Dev Environment Testing Mods
+    if (sc.current.parsed >= "26.1") {
+        modLocalRuntime("maven.modrinth:spark:1.10.173-fabric") 
+        modLocalRuntime("maven.modrinth:ok-zoomer:17.0.0-beta.5") 
+    }
 }
 
 loom {
