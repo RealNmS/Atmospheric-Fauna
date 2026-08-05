@@ -1,22 +1,25 @@
-## future plans
+## far future plans
 
 - add bugs (like ladybugs, beetles, butterflies)
 - add more birds
   - seagulls
   - sparrows
-  - Northern cardinal
   - pigeons? (probably not, crows are better pigeons)
-  - something in a desert biome
+  - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
 - add neoforge support
 - add quilt support
 - add sounds (idk where to get them from, might just not add them, will figure it out eventually)
+- some kind of interaction with spyglass
+- arrow, tnt, and other projectile avoidance and interaction
+- maybe even advancements if i can figure out how to do them client-side only
 
 ## quick todo
 
-- add Common Swallow
+- add Common Swallow, Northern Cardinal (either this update or next)
 - randomize flock speed at spawn
 - update mod icon and banner
-- update crow showcase img
+- update Blue Jay texture
+- update Crow and Blue Jay showcase imgs
 - fix landing clipping through blocks
 - change landing animation (gradual slowdown from original speed)
 
