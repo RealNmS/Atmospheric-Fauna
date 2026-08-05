@@ -2,18 +2,16 @@
 
 - add bugs (like ladybugs, beetles, butterflies)
 - add more birds
-  - seagulls
-  - sparrows
-  - pigeons? (probably not, crows are better pigeons)
+  - seagulls, sparrows, ...
   - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
-- add neoforge support
-- add quilt support
-- add sounds (idk where to get them from, might just not add them, will figure it out eventually)
 - some kind of interaction with spyglass
-- arrow, tnt, and other projectile avoidance and interaction
-- maybe even advancements if i can figure out how to do them client-side only
+- arrow, tnt, and other projectile interaction
+- add dying state with a new texture
 - change perching position to be more sparse and random
 - add option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
+- maybe even advancements if i can figure out how to do them client-side only
+- add neoforge and quilt support
+- add sounds (idk where to get them from, might just not add them, will figure it out eventually)
 
 ## quick todo
 
@@ -29,8 +27,8 @@
 
 - Added config option to enable midair border spawning (great for skyblock or similar), by default it is disabled
 - Added config options to disable biome and block checks for spawning birds
-- Added new command "spawn", which spawns a bird of a specific type at the player's location
 - Added config option to enable debug screen on join
+- Added new command "spawn", which spawns a bird of a specific type at the player's location
 - Added "Client" badge to the mod in Mod Menu
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 
