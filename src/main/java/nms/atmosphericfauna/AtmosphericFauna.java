@@ -64,7 +64,21 @@ public class AtmosphericFauna implements ClientModInitializer {
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
-				AmbientSpawning.runSpawnAttempt(world);
+				int originalGlobalMax = maxActiveBirds;
+				int originalCrowMax = maxActiveCrows;
+				int originalBlueJayMax = maxActiveBlueJays;
+
+				try {
+					maxActiveBirds /= 2;
+					maxActiveCrows /= 2;
+					maxActiveBlueJays /= 2;
+
+					AmbientSpawning.runSpawnAttempt(world);
+				} finally {
+					maxActiveBirds = originalGlobalMax;
+					maxActiveCrows = originalCrowMax;
+					maxActiveBlueJays = originalBlueJayMax;
+				}
 			}
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
