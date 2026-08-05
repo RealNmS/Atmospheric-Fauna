@@ -6,6 +6,8 @@
   "option.atmosphericfauna.chunk_load_spawning.tooltip": "Enables ambient fauna spawning when new chunks are loaded.",
   "option.atmosphericfauna.ambient_spawning": "Enable Ambient Spawning",
   "option.atmosphericfauna.ambient_spawning.tooltip": "Enables regular checks for spawning ambient fauna in the world.",
+  "option.atmosphericfauna.midair_border_spawning": "Enable Midair Border Spawning",
+  "option.atmosphericfauna.midair_border_spawning.tooltip": "Enables spawning of ambient fauna at the edge of render distance, even if it is midair (good for skyblock or similar).",
   "option.atmosphericfauna.spawn_range_from_player": "Spawn Range From Player",
   "option.atmosphericfauna.spawn_range_from_player.tooltip": "Sets the maximum distance from the player within which ambient fauna can spawn.",
   "option.atmosphericfauna.spawn_tick_delay": "Spawn Tick Delay",

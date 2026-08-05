@@ -63,39 +63,30 @@ public class AmbientSpawning {
                 }
                 return;
             }
-            trySpawn(world, random, selectedSpawn);
+
+            if (enableMidairBorderSpawning && random.nextBoolean()) {
+                tryMidairSpawn(world, random, selectedSpawn);
+            } else {
+                trySpawn(world, random, selectedSpawn);
+            }
         }
     }
 
-    private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
-        String particleName = spawnData.name();
+    // MARK: --- SHARED VALIDATION HELPERS ---
 
-        if (debugTextSpawning) {
-            AtmosphericFauna.LOGGER.info("[AS] Attempting to spawn " + particleName);
-        }
-
-        int availableGlobalSpots = Math.max(0,
-                BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size());
-        int availableTypedSpots = spawnData.availableSpots().getAsInt();
-        int availableSpots = Math.min(availableGlobalSpots, availableTypedSpots);
-
+    private static boolean passesBasicConditions(ClientLevel world, SpawnData spawnData, int availableSpots) {
         if (availableSpots < spawnData.minPackSize()) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER
-                        .info("[AS] Not enough spots available" + " (global: " + availableGlobalSpots + ", typed: "
-                                + availableTypedSpots + ")");
-            return;
+                AtmosphericFauna.LOGGER.info("[AS] Not enough spots available");
+            return false;
         }
 
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER
-                        .info("[AS] Not spawning due to bad weather" + " (raining: " + world.isRaining()
-                                + ", thundering: " + world.isThundering() + ")");
-            return;
+                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to bad weather");
+            return false;
         }
 
-        // Only spawn if time of day is right
         //? if <=1.21.4 {
         // boolean isDay = world.getDayTime() % 24000 < 13000;
         //?} else {
@@ -104,21 +95,143 @@ public class AmbientSpawning {
 
         if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER
-                        .info("[AS] Not spawning due to time of day" + " (isDay: " + isDay + ")");
-            return;
+                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day");
+            return false;
         }
 
-        // Gather eligible players
+        return true;
+    }
+
+    private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData,
+            boolean isMidair) {
+        if (isMidair) {
+            if (!world.isEmptyBlock(pos)) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid air block for midair spawn");
+                return false;
+            }
+        } else {
+            if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+                return false;
+            }
+
+            if (spawnData.checkSpawnBlocks()) {
+                var stateBelow = world.getBlockState(pos.below());
+                boolean isValidBlock = false;
+                for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
+                    if (stateBelow.is(tag)) {
+                        isValidBlock = true;
+                        break;
+                    }
+                }
+                if (!isValidBlock) {
+                    if (debugTextSpawning)
+                        AtmosphericFauna.LOGGER.info("[AS] Invalid block tag");
+                    return false;
+                }
+            }
+
+            if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel())) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Spawn is below sea level");
+                return false;
+            }
+        }
+
+        if (spawnData.checkBiomeTags()) {
+            var biomeHolder = world.getBiome(pos);
+            boolean biomeMatch = false;
+            for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
+                if (biomeHolder.is(tag)) {
+                    biomeMatch = true;
+                    break;
+                }
+            }
+            if (!biomeMatch) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome");
+                return false;
+            }
+        }
+
+        int lightLevel = world.getMaxLocalRawBrightness(pos);
+        boolean lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
+
+        if (!lightValid && debugTextSpawning) {
+            AtmosphericFauna.LOGGER.info("[AS] Invalid light level");
+        }
+
+        return lightValid;
+    }
+
+    // MARK: --- MIDAIR BORDER SPAWNING ---
+
+    private synchronized static void tryMidairSpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
+        int availableSpots = Math.min(
+                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size()),
+                spawnData.availableSpots().getAsInt());
+
+        if (!passesBasicConditions(world, spawnData, availableSpots))
+            return;
+
         var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
-        if (players.isEmpty()) {
-            if (debugTextSpawning)
-                AtmosphericFauna.LOGGER
-                        .info("[AS] Not spawning due to no eligible players" + " (players: " + players.size() + ")");
+        if (players.isEmpty())
             return;
-        }
 
-        // Try several candidate positions to increase robustness
+        for (int attempt = 0; attempt < attemptsPerTick; attempt++) {
+            var player = players.get(random.nextInt(players.size()));
+
+            double angle = random.nextFloat() * Math.PI * 2;
+            double dist = spawnRangeFromPlayer;
+
+            double spawnX = player.getX() + Math.cos(angle) * dist;
+            double spawnZ = player.getZ() + Math.sin(angle) * dist;
+            double spawnY = player.getY();
+
+            BlockPos spawnPos = new BlockPos((int) spawnX, (int) spawnY, (int) spawnZ);
+
+            if (isValidSpawnLocation(world, spawnPos, spawnData, true)) {
+                int maxPackSize = Math.min(spawnData.maxPackSize(), availableSpots);
+                int targetPackSize = random.nextInt(maxPackSize - spawnData.minPackSize() + 1)
+                        + spawnData.minPackSize();
+
+                double targetX = player.getX() + (random.nextFloat() - 0.5f) * 16.0;
+                double targetZ = player.getZ() + (random.nextFloat() - 0.5f) * 16.0;
+
+                double vecX = targetX - spawnX;
+                double vecZ = targetZ - spawnZ;
+
+                for (int i = 0; i < targetPackSize; i++) {
+                    world.addParticle(spawnData.particleType(),
+                            spawnX + (random.nextFloat() - 0.5f) * 3.0,
+                            spawnY,
+                            spawnZ + (random.nextFloat() - 0.5f) * 3.0,
+                            vecX, 1000.0, vecZ);
+                }
+
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned midair pack of " + spawnData.name());
+                return;
+            }
+        }
+    }
+
+    // MARK: --- NORMAL SPAWN ---
+
+    private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
+        int availableSpots = Math.min(
+                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size()),
+                spawnData.availableSpots().getAsInt());
+
+        if (!passesBasicConditions(world, spawnData, availableSpots))
+            return;
+
+        var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
+        if (players.isEmpty())
+            return;
+
         for (int attempt = 0; attempt < attemptsPerTick; attempt++) {
             var player = players.get(random.nextInt(players.size()));
             BlockPos playerPos = player.blockPosition();
@@ -133,7 +246,6 @@ public class AmbientSpawning {
             BlockPos foundCenter = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
 
             if (foundCenter != null) {
-                // Determine pack size
                 int maxPackSize = Math.min(spawnData.maxPackSize(), availableSpots);
                 int targetPackSize = random.nextInt(maxPackSize - spawnData.minPackSize() + 1)
                         + spawnData.minPackSize();
@@ -141,7 +253,6 @@ public class AmbientSpawning {
                 int failSafe = 0;
                 List<BlockPos> validSpots = new ArrayList<>();
 
-                // Try to find enough valid spots for the ENTIRE pack before spawning any
                 while (validSpots.size() < targetPackSize && failSafe < targetPackSize * 8) {
                     failSafe++;
 
@@ -151,12 +262,11 @@ public class AmbientSpawning {
                     BlockPos targetPos = foundCenter.offset(dx, 0, dz);
                     targetPos = adjustToGround(world, targetPos);
 
-                    if (!validSpots.contains(targetPos) && isValidSpawnLocation(world, targetPos, spawnData)) {
+                    if (!validSpots.contains(targetPos) && isValidSpawnLocation(world, targetPos, spawnData, false)) {
                         validSpots.add(targetPos);
                     }
                 }
 
-                // Strictly require the full pack to be accommodated
                 if (validSpots.size() == targetPackSize) {
                     for (BlockPos pos : validSpots) {
                         world.addParticle(spawnData.particleType(),
@@ -168,28 +278,19 @@ public class AmbientSpawning {
 
                     if (debugTextSpawning) {
                         AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned full pack of " + targetPackSize + " "
-                                + particleName + " at " + foundCenter.toShortString());
+                                + spawnData.name() + " at " + foundCenter.toShortString());
                     }
                     return;
-                } else {
-                    if (debugTextSpawning) {
-                        AtmosphericFauna.LOGGER.info("[AS] ABORTED: Wanted " + targetPackSize
-                                + " but only found spots for " + validSpots.size());
-                    }
+                } else if (debugTextSpawning) {
+                    AtmosphericFauna.LOGGER.info("[AS] ABORTED: Wanted " + targetPackSize + " but only found spots for "
+                            + validSpots.size());
                 }
             }
         }
-
-        if (debugTextSpawning) {
-            AtmosphericFauna.LOGGER.info("[AS] FAIL: Could not find a valid block to spawn " + particleName
-                    + " (Check light level, tags, or biome)");
-        }
     }
 
-    // MARK: --- SPAWN LOCATION HELPERS ---
+    // MARK: --- SPAWN LOCATION SEARCH HELPERS ---
 
-    // Helper to snap a position to the nearest solid ground within 3 blocks
-    // vertical
     private static BlockPos adjustToGround(ClientLevel world, BlockPos pos) {
         if (!world.isEmptyBlock(pos.below()) && world.isEmptyBlock(pos))
             return pos;
@@ -205,8 +306,6 @@ public class AmbientSpawning {
 
     private static BlockPos findValidSpawnNear(ClientLevel world, RandomSource random, int centerX, int centerZ,
             SpawnData spawnData, int radius, int samples) {
-
-        // Sample random spots
         for (int i = 0; i < samples; i++) {
             int dx = random.nextInt(radius * 2 + 1) - radius;
             int dz = random.nextInt(radius * 2 + 1) - radius;
@@ -215,75 +314,10 @@ public class AmbientSpawning {
             int sy = world.getHeight(Heightmap.Types.WORLD_SURFACE, sx, sz);
             BlockPos candidate = new BlockPos(sx, sy, sz);
 
-            if (isValidSpawnLocation(world, candidate, spawnData))
+            // Pass false for the isMidair boolean
+            if (isValidSpawnLocation(world, candidate, spawnData, false))
                 return candidate;
         }
         return null;
-    }
-
-    private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData) {
-        // Must have air above and block below
-        if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
-            if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
-            }
-            return false;
-        }
-
-        if (spawnData.checkSpawnBlocks()) {
-            // Check for valid spawn blocks
-            var stateBelow = world.getBlockState(pos.below());
-            boolean isValidBlock = false;
-            for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
-                if (stateBelow.is(tag)) {
-                    isValidBlock = true;
-                    break;
-                }
-            }
-            if (!isValidBlock) {
-                if (debugTextSpawning) {
-                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
-                }
-                return false;
-            }
-        }
-
-        if (spawnData.checkBiomeTags()) {
-            // Valid biome check
-            var biomeHolder = world.getBiome(pos);
-            boolean biomeMatch = false;
-            for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
-                if (biomeHolder.is(tag)) {
-                    biomeMatch = true;
-                    break;
-                }
-            }
-            if (!biomeMatch) {
-                if (debugTextSpawning) {
-                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome to spawn");
-                }
-                return false;
-            }
-        }
-
-        // Height Check
-        if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel())) {
-            if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid height to spawn");
-            }
-            return false;
-        }
-
-        // Light Check
-        int lightLevel = world.getMaxLocalRawBrightness(pos);
-        boolean lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
-
-        if (!lightValid) {
-            if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Could not find a valid light level to spawn");
-            }
-        }
-
-        return lightValid;
     }
 }

@@ -43,6 +43,16 @@ public class ModMenuConfig {
                 .build());
 
         spawning.addEntry(entryBuilder
+                .startBooleanToggle(Component
+                        .translatable("option.atmosphericfauna.midair_border_spawning"),
+                        ConfigHandler.enableMidairBorderSpawning)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_MIDAIR_BORDER_SPAWNING)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.midair_border_spawning.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableMidairBorderSpawning = newValue)
+                .build());
+
+        spawning.addEntry(entryBuilder
                 .startIntField(Component
                         .translatable("option.atmosphericfauna.spawn_range_from_player"),
                         ConfigHandler.spawnRangeFromPlayer)

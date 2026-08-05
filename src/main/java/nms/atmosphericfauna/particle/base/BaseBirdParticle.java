@@ -168,6 +168,22 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     @Override
     public void tick() {
+        if (this.age == 0 && this.yd >= 999.0) {
+            this.y += this.random.nextFloat() * (this.preferredFlightHeight * 2.0);
+
+            this.goalX = this.x + this.xd;
+            this.goalY = this.y + (this.random.nextFloat() - 0.5f) * 2.0;
+            this.goalZ = this.z + this.zd;
+            this.goalTimer = this.goalDurationMax * 2;
+
+            double mag = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
+            if (mag > 0.001) {
+                this.xd = (this.xd / mag) * flySpeed;
+                this.zd = (this.zd / mag) * flySpeed;
+            }
+            this.yd = (this.random.nextFloat() - 0.5f) * 0.1;
+        }
+
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;

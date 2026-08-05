@@ -20,6 +20,7 @@ public class ConfigHandler {
     public static class Defaults {
         public static final boolean ENABLE_CHUNK_LOAD_SPAWNING = true;
         public static final boolean ENABLE_AMBIENT_SPAWNING = true;
+        public static final boolean ENABLE_MIDAIR_BORDER_SPAWNING = false;
         public static final int SPAWN_RANGE_FROM_PLAYER = 96;
         public static final int SPAWN_TICK_DELAY = 200;
         public static final int ATTEMPTS_PER_TICK = 15;
@@ -41,6 +42,7 @@ public class ConfigHandler {
 
     public static boolean enableChunkLoadSpawning = Defaults.ENABLE_CHUNK_LOAD_SPAWNING;
     public static boolean enableAmbientSpawning = Defaults.ENABLE_AMBIENT_SPAWNING;
+    public static boolean enableMidairBorderSpawning = Defaults.ENABLE_MIDAIR_BORDER_SPAWNING;
     public static int spawnRangeFromPlayer = Defaults.SPAWN_RANGE_FROM_PLAYER;
     public static int spawnTickDelay = Defaults.SPAWN_TICK_DELAY;
     public static int attemptsPerTick = Defaults.ATTEMPTS_PER_TICK;
@@ -118,6 +120,7 @@ public class ConfigHandler {
         public static class Spawning {
             public Boolean enableChunkLoadSpawning;
             public Boolean enableAmbientSpawning;
+            public Boolean enableMidairBorderSpawning;
             public Integer spawnRangeFromPlayer;
             public Integer spawnTickDelay;
             public Integer attemptsPerTick;
@@ -156,6 +159,7 @@ public class ConfigHandler {
         // Spawning Category
         data.spawning.enableChunkLoadSpawning = enableChunkLoadSpawning;
         data.spawning.enableAmbientSpawning = enableAmbientSpawning;
+        data.spawning.enableMidairBorderSpawning = enableMidairBorderSpawning;
         data.spawning.spawnRangeFromPlayer = spawnRangeFromPlayer;
         data.spawning.spawnTickDelay = spawnTickDelay;
         data.spawning.attemptsPerTick = attemptsPerTick;
@@ -184,6 +188,7 @@ public class ConfigHandler {
         // Spawning Category
         enableChunkLoadSpawning = data.spawning.enableChunkLoadSpawning;
         enableAmbientSpawning = data.spawning.enableAmbientSpawning;
+        enableMidairBorderSpawning = data.spawning.enableMidairBorderSpawning;
         spawnRangeFromPlayer = data.spawning.spawnRangeFromPlayer;
         spawnTickDelay = data.spawning.spawnTickDelay;
         attemptsPerTick = data.spawning.attemptsPerTick;
