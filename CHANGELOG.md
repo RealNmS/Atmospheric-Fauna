@@ -12,6 +12,8 @@
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile avoidance and interaction
 - maybe even advancements if i can figure out how to do them client-side only
+- change perching position to be more sparse and random
+- add option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 
 ## quick todo
 
