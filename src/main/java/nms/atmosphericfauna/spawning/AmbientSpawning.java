@@ -203,6 +203,8 @@ public class AmbientSpawning {
                 double vecX = targetX - spawnX;
                 double vecZ = targetZ - spawnZ;
 
+                BaseBirdParticle.setNextFlockSpeedOffset((random.nextFloat() - 0.5f) * 0.04f);
+
                 for (int i = 0; i < targetPackSize; i++) {
                     world.addParticle(spawnData.particleType(),
                             spawnX + (random.nextFloat() - 0.5f) * 3.0,
@@ -268,6 +270,8 @@ public class AmbientSpawning {
                 }
 
                 if (validSpots.size() == targetPackSize) {
+                    BaseBirdParticle.setNextFlockSpeedOffset((random.nextFloat() - 0.5f) * 0.04f);
+
                     for (BlockPos pos : validSpots) {
                         world.addParticle(spawnData.particleType(),
                                 pos.getX() + 0.5,

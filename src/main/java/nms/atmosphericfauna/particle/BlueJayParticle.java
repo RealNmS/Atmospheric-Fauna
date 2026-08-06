@@ -31,7 +31,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.lifetime = 3800;
         this.quadSize = 0.4f;
 
-        this.flySpeed = 0.15f;
+        this.flySpeed = 0.15f + BaseBirdParticle.getNextFlockSpeedOffset();
         this.wingFlapSpeed = 3;
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;

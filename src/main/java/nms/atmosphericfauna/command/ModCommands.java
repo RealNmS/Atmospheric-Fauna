@@ -51,6 +51,8 @@ public class ModCommands {
         var player = minecraft.player;
         RandomSource random = level.getRandom();
 
+        BaseBirdParticle.setNextFlockSpeedOffset((random.nextFloat() - 0.5f) * 0.04f);
+
         for (int index = 0; index < amount; index++) {
             double offsetX = (random.nextDouble() - 0.5D) * 1.5D;
             double offsetY = 0.5D + random.nextDouble() * 0.75D;

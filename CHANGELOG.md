@@ -16,7 +16,6 @@
 ## quick todo
 
 - add Common Swallow, Northern Cardinal (either this update or next)
-- randomize flock speed at spawn
 - update mod icon and banner
 - update Blue Jay texture
 - update Crow and Blue Jay showcase imgs
@@ -31,6 +30,7 @@
 - Added new command "spawn", which spawns a bird of a specific type at the player's location
 - Added "Client" badge to the mod in Mod Menu
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
+- Changed fly speed to be slightly randomized for each flock on spawn
 
 ---
 

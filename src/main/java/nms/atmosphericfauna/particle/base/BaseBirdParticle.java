@@ -77,6 +77,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // --- VARIABLES ---
 
+    private static float nextFlockSpeedOffset = 0.0f;
     protected float flySpeed;
     protected int wingFlapSpeed;
     protected int wingFlapOffset;
@@ -149,6 +150,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     public static int getMaxActiveBirds() {
         return maxActiveBirds;
+    }
+
+    public static void setNextFlockSpeedOffset(float offset) {
+        nextFlockSpeedOffset = offset;
+    }
+
+    public static float getNextFlockSpeedOffset() {
+        return nextFlockSpeedOffset;
     }
 
     public String getBaseSpriteName() {

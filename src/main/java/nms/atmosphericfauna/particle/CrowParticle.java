@@ -31,7 +31,7 @@ public class CrowParticle extends BaseBirdParticle {
         this.lifetime = 3200;
         this.quadSize = 0.5f;
 
-        this.flySpeed = 0.20f;
+        this.flySpeed = 0.20f + BaseBirdParticle.getNextFlockSpeedOffset();
         this.wingFlapSpeed = 4;
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
         this.steerStrength = 0.0075;
