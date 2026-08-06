@@ -146,6 +146,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     public static List<BaseBirdParticle> getAllBirds() {
+        ALL_BIRDS.removeIf(p -> p.removed);
+        synchronized (SPECIES_REGISTRY) {
+            for (int i = 0; i < SPECIES_REGISTRY.size(); i++) {
+                SPECIES_REGISTRY.get(i).removeIf(p -> p.removed);
+            }
+        }
         return ALL_BIRDS;
     }
 
@@ -290,7 +296,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     int cellSize = cell.size();
                     for (int j = 0; j < cellSize; j++) {
                         BaseBirdParticle other = cell.get(j);
-                        if (other == this)
+                        if (other == this || other.removed)
                             continue;
 
                         // Fast fail bounds check (avoids Math.abs overhead)
