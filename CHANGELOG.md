@@ -18,6 +18,7 @@
 - update mod icon and banner
 - update Blue Jay texture
 - update Crow and Blue Jay showcase imgs
+- optimize clear birds command
 
 ## current update notes (wip)
 
