@@ -392,59 +392,99 @@ public abstract class BaseBirdParticle extends BaseParticle {
         currentCellKey = newKey;
     }
 
-    // Ask nearby flockmates to go land on the given perch
+    // Ask nearby flockmates to randomly scatter and land around the flock's center
     private void groupPerch(BlockPos target) {
         if (target == null)
             return;
+
+        List<BaseBirdParticle> flyingNeighbors = new ArrayList<>();
+        double cx = this.x;
+        double cz = this.z;
+
         for (BaseBirdParticle nb : getNeighbors(flockRadius)) {
             if (nb == this)
                 continue;
-
             if (nb.state == State.FLYING) {
-                BlockPos actualTarget = target;
+                flyingNeighbors.add(nb);
+                cx += nb.x;
+                cz += nb.z;
+            }
+        }
 
-                // Try to find a slightly different spot nearby
-                if (random.nextFloat() < 0.9) {
-                    int dx = random.nextInt(7) - 3;
-                    int dz = random.nextInt(7) - 3;
+        if (flyingNeighbors.isEmpty())
+            return;
 
-                    for (int dy = 3; dy >= -3; dy--) {
-                        mutablePos.set(target.getX() + dx, target.getY() + dy, target.getZ() + dz);
-                        BlockState state = level.getBlockState(mutablePos);
-                        VoxelShape colShape = state.getCollisionShape(level, mutablePos);
+        // Calculate average flock center of mass
+        cx /= (flyingNeighbors.size() + 1);
+        cz /= (flyingNeighbors.size() + 1);
 
-                        if (!colShape.isEmpty()) {
-                            mutablePos.move(Direction.UP);
+        Map<BlockPos, Integer> activeCounts = new HashMap<>();
 
-                            if (level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty()) {
-                                mutablePos.move(Direction.DOWN);
-                                actualTarget = mutablePos.immutable();
-                                break;
-                            }
+        for (BaseBirdParticle nb : flyingNeighbors) {
+            BlockPos chosenTarget = null;
+
+            for (int attempts = 0; attempts < 10; attempts++) {
+                int dx = (int) (this.random.nextGaussian() * 2.0);
+                int dz = (int) (this.random.nextGaussian() * 2.0);
+                int scanX = (int) cx + dx;
+                int scanZ = (int) cz + dz;
+                int scanY = (int) Math.floor(nb.y);
+
+                BlockPos candidate = null;
+                for (int dy = 3; dy >= -10; dy--) {
+                    mutablePos.set(scanX, scanY + dy, scanZ);
+                    BlockState state = level.getBlockState(mutablePos);
+                    VoxelShape colShape = state.getCollisionShape(level, mutablePos);
+
+                    if (!colShape.isEmpty()) {
+                        mutablePos.move(Direction.UP);
+                        if (level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty()) {
+                            mutablePos.move(Direction.DOWN);
+                            candidate = mutablePos.immutable();
+                            break;
                         }
                     }
                 }
 
-                if (actualTarget.getY() <= nb.y) {
-                    nb.landingDelay = 10 + this.random.nextInt(35);
-                    nb.landingBlockPos = actualTarget;
-
-                    BlockState targetState = level.getBlockState(actualTarget);
-                    VoxelShape visualShape = targetState.getShape(level, actualTarget);
-                    double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
-
-                    BlockPos abovePos = actualTarget.above();
-                    VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
-                    if (!aboveVisual.isEmpty()) {
-                        double aboveHeight = aboveVisual.max(Direction.Axis.Y);
-                        if (aboveHeight <= 0.5) {
-                            blockHeight += aboveHeight;
-                        }
+                if (candidate != null) {
+                    // Check if the block is too crowded
+                    int currentCount = nb.countBirdsOnPerch(candidate) + activeCounts.getOrDefault(candidate, 0);
+                    if (acceptsCrowd(currentCount)) {
+                        chosenTarget = candidate;
+                        break;
                     }
-
-                    nb.landingTargetY = actualTarget.getY() + blockHeight + nb.quadSize;
-                    setLandingOffsets(nb, visualShape);
                 }
+            }
+
+            // Fallback to the original bird's target if we couldn't find a unique spot
+            if (chosenTarget == null) {
+                int fallbackCount = nb.countBirdsOnPerch(target) + activeCounts.getOrDefault(target, 0);
+                if (acceptsCrowd(fallbackCount)) {
+                    chosenTarget = target;
+                }
+            }
+
+            if (chosenTarget != null && chosenTarget.getY() <= nb.y) {
+                activeCounts.put(chosenTarget, activeCounts.getOrDefault(chosenTarget, 0) + 1);
+
+                nb.landingDelay = 10 + this.random.nextInt(35);
+                nb.landingBlockPos = chosenTarget;
+
+                BlockState targetState = level.getBlockState(chosenTarget);
+                VoxelShape visualShape = targetState.getShape(level, chosenTarget);
+                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+
+                BlockPos abovePos = chosenTarget.above();
+                VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                if (!aboveVisual.isEmpty()) {
+                    double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                    if (aboveHeight <= 0.5) {
+                        blockHeight += aboveHeight;
+                    }
+                }
+
+                nb.landingTargetY = chosenTarget.getY() + blockHeight + nb.quadSize;
+                setLandingOffsets(nb, visualShape);
             }
         }
     }
@@ -526,6 +566,37 @@ public abstract class BaseBirdParticle extends BaseParticle {
         } else {
             bird.landingOffsetZ = centerZ - 0.5;
         }
+    }
+
+    // Determines if a block is too crowded using a diminishing probability curve
+    private boolean acceptsCrowd(int count) {
+        if (count <= 1)
+            return true;
+        if (count == 2)
+            return this.random.nextFloat() < 0.90f;
+        if (count == 3)
+            return this.random.nextFloat() < 0.70f;
+        if (count == 4)
+            return this.random.nextFloat() < 0.30f;
+        if (count == 5)
+            return this.random.nextFloat() < 0.10f;
+        if (count == 6)
+            return this.random.nextFloat() < 0.02f;
+        return this.random.nextFloat() < 0.005f;
+    }
+
+    // Counts how many nearby flockmates are targeting or sitting on a specific
+    // block
+    private int countBirdsOnPerch(BlockPos pos) {
+        int count = 0;
+        if (pos.equals(this.landingBlockPos) || pos.equals(this.perchBlockPos))
+            count++;
+        for (BaseBirdParticle b : this.cachedFlockNeighbors) {
+            if (pos.equals(b.landingBlockPos) || pos.equals(b.perchBlockPos)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // Pick a new wandering goal
@@ -952,25 +1023,27 @@ public abstract class BaseBirdParticle extends BaseParticle {
                         if (!targetState.getCollisionShape(level, target).isEmpty() &&
                                 aboveState.getCollisionShape(level, target.above()).isEmpty()) {
 
-                            setState(this, State.LANDING);
-                            this.landingBlockPos = target;
+                            if (acceptsCrowd(countBirdsOnPerch(target))) {
+                                setState(this, State.LANDING);
+                                this.landingBlockPos = target;
 
-                            VoxelShape visualShape = targetState.getShape(level, target);
-                            double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+                                VoxelShape visualShape = targetState.getShape(level, target);
+                                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
 
-                            BlockPos abovePos = target.above();
-                            VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
-                            if (!aboveVisual.isEmpty()) {
-                                double aboveHeight = aboveVisual.max(Direction.Axis.Y);
-                                if (aboveHeight <= 0.5) {
-                                    blockHeight += aboveHeight;
+                                BlockPos abovePos = target.above();
+                                VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                                if (!aboveVisual.isEmpty()) {
+                                    double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                                    if (aboveHeight <= 0.5) {
+                                        blockHeight += aboveHeight;
+                                    }
                                 }
-                            }
 
-                            this.landingTargetY = target.getY() + blockHeight + this.quadSize;
-                            setLandingOffsets(this, visualShape);
-                            groupPerch(target);
-                            return;
+                                this.landingTargetY = target.getY() + blockHeight + this.quadSize;
+                                setLandingOffsets(this, visualShape);
+                                groupPerch(target);
+                                return;
+                            }
                         }
                     }
                 }
@@ -1007,8 +1080,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (!hasNeighbor)
                     continue;
 
+                BlockPos candidate = mutablePos.set(px, checkY, pz).immutable();
+
+                if (!acceptsCrowd(countBirdsOnPerch(candidate))) {
+                    continue;
+                }
+
                 setState(this, State.LANDING);
-                this.landingBlockPos = mutablePos.set(px, checkY, pz).immutable();
+                this.landingBlockPos = candidate;
                 setLandingOffsets(this, belowState.getShape(level, mutablePos));
 
                 VoxelShape visualShape = belowState.getShape(level, mutablePos);
