@@ -7,7 +7,6 @@
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile interaction
 - add dying state with a new texture
-- change perching position to be more sparse and random
 - add option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - maybe even advancements if i can figure out how to do them client-side only
 - add neoforge and quilt support
@@ -19,8 +18,6 @@
 - update mod icon and banner
 - update Blue Jay texture
 - update Crow and Blue Jay showcase imgs
-- fix landing clipping through blocks
-- change landing animation (gradual slowdown from original speed)
 
 ## current update notes (wip)
 
@@ -29,8 +26,14 @@
 - Added config option to enable debug screen on join
 - Added new command "spawn", which spawns a bird of a specific type at the player's location
 - Added "Client" badge to the mod in Mod Menu
+- Reworked perching
+  - Improved the logic for selecting perching spots, making it more sparse and randomized
+  - Added ability to perch on fences, walls, leaves, and other blocks with a collision shape
+  - Added a check to prevent birds from perching on blocks that are too crowded
+- Changed landing to be more smooth and dynamic
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 - Changed fly speed to be slightly randomized for each flock on spawn
+- Fixed birds clipping through walls when landing
 
 ---
 
