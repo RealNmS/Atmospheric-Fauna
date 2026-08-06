@@ -443,8 +443,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     }
 
                     nb.landingTargetY = actualTarget.getY() + blockHeight + nb.quadSize;
-                    nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
-                    nb.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                    setLandingOffsets(nb, visualShape);
                 }
             }
         }
@@ -493,6 +492,40 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         setState(this, State.TAKING_OFF);
         groupTakeoff();
+    }
+
+    // Calculates a random landing spot that strictly stays inside the block's
+    // physical bounds
+    private void setLandingOffsets(BaseBirdParticle bird, VoxelShape shape) {
+        if (shape.isEmpty()) {
+            bird.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
+            bird.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+            return;
+        }
+
+        double minX = shape.min(Direction.Axis.X);
+        double maxX = shape.max(Direction.Axis.X);
+        double minZ = shape.min(Direction.Axis.Z);
+        double maxZ = shape.max(Direction.Axis.Z);
+
+        double centerX = (minX + maxX) / 2.0;
+        double centerZ = (minZ + maxZ) / 2.0;
+
+        double margin = 0.15;
+        double width = (maxX - minX) - (margin * 2);
+        double depth = (maxZ - minZ) - (margin * 2);
+
+        if (width > 0) {
+            bird.landingOffsetX = (centerX - 0.5) + (this.random.nextFloat() - 0.5) * width;
+        } else {
+            bird.landingOffsetX = centerX - 0.5;
+        }
+
+        if (depth > 0) {
+            bird.landingOffsetZ = (centerZ - 0.5) + (this.random.nextFloat() - 0.5) * depth;
+        } else {
+            bird.landingOffsetZ = centerZ - 0.5;
+        }
     }
 
     // Pick a new wandering goal
@@ -935,8 +968,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                             }
 
                             this.landingTargetY = target.getY() + blockHeight + this.quadSize;
-                            this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
-                            this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                            setLandingOffsets(this, visualShape);
                             groupPerch(target);
                             return;
                         }
@@ -977,8 +1009,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                 setState(this, State.LANDING);
                 this.landingBlockPos = mutablePos.set(px, checkY, pz).immutable();
-                this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
-                this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
+                setLandingOffsets(this, belowState.getShape(level, mutablePos));
 
                 VoxelShape visualShape = belowState.getShape(level, mutablePos);
                 double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
