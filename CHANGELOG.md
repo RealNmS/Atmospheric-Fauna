@@ -21,15 +21,18 @@
 
 ## current update notes (wip)
 
-- Added config option to enable midair border spawning (great for skyblock or similar), by default it is disabled
+- Added new spawning system "Midair Border Spawning" (great for skyblock or similar)
+  - Spawns birds in the air at the edge of render distance, making them fly into the world
+  - Can be turned on in the config screen, but is off by default
+- Added new subcommand "spawn", which spawns a bird of a specific type at the player's location
 - Added config options to disable biome and block checks for spawning birds
-- Added config option to enable debug screen on join
-- Added new command "spawn", which spawns a bird of a specific type at the player's location
+- Added config option to enable debug screen on joining a world
 - Added "Client" badge to the mod in Mod Menu
 - Reworked perching
   - Improved the logic for selecting perching spots, making it more sparse and randomized
-  - Added ability to perch on fences, walls, leaves, and other blocks with a collision shape
-  - Added a check to prevent birds from perching on blocks that are too crowded
+  - Added ability to perch on top of fences, walls, leaves, and other blocks with collision
+  - Added ability to perch inside of blocks without collision (like flowers, grass, etc.)
+  - Added gradualy diminishing chance to perch on the same block as other birds based on the amount
 - Changed landing to be more smooth and dynamic
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 - Changed fly speed to be slightly randomized for each flock on spawn
