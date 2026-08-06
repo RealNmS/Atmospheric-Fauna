@@ -433,6 +433,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     VoxelShape collisionShape = targetState.getCollisionShape(level, actualTarget);
                     double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
 
+                    BlockPos abovePos = actualTarget.above();
+                    VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                    if (!aboveVisual.isEmpty()) {
+                        double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                        if (aboveHeight <= 0.5) {
+                            blockHeight += aboveHeight;
+                        }
+                    }
+
                     nb.landingTargetY = actualTarget.getY() + blockHeight + nb.quadSize;
                     nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
                     nb.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -916,6 +925,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
                             VoxelShape collisionShape = targetState.getCollisionShape(level, target);
                             double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
 
+                            BlockPos abovePos = target.above();
+                            VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                            if (!aboveVisual.isEmpty()) {
+                                double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                                if (aboveHeight <= 0.5) {
+                                    blockHeight += aboveHeight;
+                                }
+                            }
+
                             this.landingTargetY = target.getY() + blockHeight + this.quadSize;
                             this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
                             this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -963,6 +981,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
 
                 double blockHeight = belowCollision.max(Direction.Axis.Y);
+
+                BlockPos abovePos = this.landingBlockPos.above();
+                VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                if (!aboveVisual.isEmpty()) {
+                    double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                    if (aboveHeight <= 0.5) {
+                        blockHeight += aboveHeight;
+                    }
+                }
+
                 this.landingTargetY = checkY + blockHeight + this.quadSize;
                 break;
             }
