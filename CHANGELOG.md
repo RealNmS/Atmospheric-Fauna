@@ -1,26 +1,27 @@
-## far future plans
+### far future plans
 
-- add bugs (like ladybugs, beetles, butterflies)
-- add more birds
-  - seagulls, sparrows, ...
+- bugs (like ladybugs, beetles, butterflies)
+- more birds
+  - seagull, sparrow, hawk, kingfisher, owl, ...
   - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile interaction
-- add dying state with a new texture
-- add option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
-- maybe even advancements if i can figure out how to do them client-side only
-- add neoforge and quilt support
-- add sounds (idk where to get them from, might just not add them, will figure it out eventually)
+- dying state with a new texture
+- option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
+- advancements if i can figure out how to do them client-side only
+- neoforge and quilt support (this won't happen ever, but I want to keep it in mind just in case)
+- sounds (idk where to get them from, might just not add them, will figure it out eventually)
 
-## quick todo
+### quick todo
 
-- add Common Swallow, Northern Cardinal (either this update or next)
+- add Common Swallow, Northern Cardinal
 - update mod icon and banner
 - update Blue Jay texture
+- rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
 - optimize clear birds command
 
-## current update notes (wip)
+## current update notes *(wip)*
 
 - Added new spawning system "Midair Border Spawning" (great for skyblock or similar)
   - Spawns birds in the air at the edge of render distance, making them fly into the world
@@ -38,11 +39,11 @@
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 - Changed fly speed to be slightly randomized for each flock on spawn
 - Fixed birds clipping through walls when landing
-- Fixed clearing cache
+- Fixed birds flocking with removed birds when particle limit was reached
 
 ---
 
-## v0.4.0 `25.07.2026`
+## v0.4.0 [1.21 - 26.2] `25.07.2026`
 
 Hello once again. This is a big update, huge even. I've been working basically nonstop for a week and this is the result. I made a lot of changes to the backend, so I hope everything is working and there are no bugs or crashes. I also figured out the multiversion thing, which is cool. If you find any issues, want a new feature, or just want something to get improved, please open an issue on GitHub. I will read it all and try to implement it if I can or if it's a good idea. I still have lots of plans for this mod, but I can assure you this was probably the biggest update it will receive for a while.
 
@@ -82,7 +83,7 @@ Hello once again. This is a big update, huge even. I've been working basically n
 
 ---
 
-## v0.3.0 [26.2, 26.1.x] `17.07.2026`
+## v0.3.0 [26.1 - 26.2] `17.07.2026`
 
 Hello again, I'm sorry for the big pause on updates. I didn't have a lot of motivation or time to continue working on this, but I managed to make yet another banger update. With the new additions I figured multiversion handling will be a lot harder than I thought, and for this reason I won't be updating below the version 26.1 for now. I will look into Stonecutter gradle addon so I can hopefully manage it better, but no promises.
 
