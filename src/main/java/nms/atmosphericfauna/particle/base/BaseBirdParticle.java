@@ -411,16 +411,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     for (int dy = 3; dy >= -3; dy--) {
                         mutablePos.set(target.getX() + dx, target.getY() + dy, target.getZ() + dz);
                         BlockState state = level.getBlockState(mutablePos);
+                        VoxelShape colShape = state.getCollisionShape(level, mutablePos);
 
-                        if (!state.isAir()) {
+                        if (!colShape.isEmpty()) {
                             mutablePos.move(Direction.UP);
-                            if (level.getBlockState(mutablePos).isAir()) {
-                                mutablePos.move(Direction.DOWN);
 
-                                if (!state.getCollisionShape(level, mutablePos).isEmpty()) {
-                                    actualTarget = mutablePos.immutable();
-                                    break;
-                                }
+                            if (level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty()) {
+                                mutablePos.move(Direction.DOWN);
+                                actualTarget = mutablePos.immutable();
+                                break;
                             }
                         }
                     }
@@ -431,8 +430,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     nb.landingBlockPos = actualTarget;
 
                     BlockState targetState = level.getBlockState(actualTarget);
-                    VoxelShape visualShape = targetState.getShape(level, actualTarget);
-                    double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+                    VoxelShape collisionShape = targetState.getCollisionShape(level, actualTarget);
+                    double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
 
                     nb.landingTargetY = actualTarget.getY() + blockHeight + nb.quadSize;
                     nb.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -905,13 +904,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
                     BlockPos target = nb.perchBlockPos;
                     if (target.getY() <= this.y) {
-                        if (!level.getBlockState(target).isAir() && level.getBlockState(target.above()).isAir()) {
+                        BlockState targetState = level.getBlockState(target);
+                        BlockState aboveState = level.getBlockState(target.above());
+
+                        if (!targetState.getCollisionShape(level, target).isEmpty() &&
+                                aboveState.getCollisionShape(level, target.above()).isEmpty()) {
+
                             setState(this, State.LANDING);
                             this.landingBlockPos = target;
 
-                            BlockState targetState = level.getBlockState(target);
-                            VoxelShape visualShape = targetState.getShape(level, target);
-                            double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+                            VoxelShape collisionShape = targetState.getCollisionShape(level, target);
+                            double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
 
                             this.landingTargetY = target.getY() + blockHeight + this.quadSize;
                             this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -933,17 +936,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 mutablePos.set(px, checkY, pz);
 
                 BlockState belowState = level.getBlockState(mutablePos);
-                if (belowState.isAir())
+                VoxelShape belowCollision = belowState.getCollisionShape(level, mutablePos);
+
+                if (belowCollision.isEmpty())
                     continue;
 
                 mutablePos.move(Direction.UP);
-                if (!level.getBlockState(mutablePos).isAir())
+                BlockState aboveState = level.getBlockState(mutablePos);
+                if (!aboveState.getCollisionShape(level, mutablePos).isEmpty())
                     continue;
 
                 mutablePos.move(Direction.DOWN);
-
-                if (belowState.getCollisionShape(level, mutablePos).isEmpty())
-                    continue;
 
                 // Neighbor check reusing mutablePos entirely
                 boolean hasNeighbor = !level.isEmptyBlock(mutablePos.set(px, checkY, pz - 1)) ||
@@ -959,8 +962,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
                 this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
 
-                VoxelShape visualShape = belowState.getShape(level, mutablePos);
-                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+                double blockHeight = belowCollision.max(Direction.Axis.Y);
                 this.landingTargetY = checkY + blockHeight + this.quadSize;
                 break;
             }
@@ -1056,7 +1058,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // Snap if close and slow
         if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) <= 0.01 && horizSpeed < 0.06) {
-            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
+            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos)
+                    .getCollisionShape(level, this.landingBlockPos).isEmpty()) {
                 this.setPos(targetX, this.landingTargetY, targetZ);
                 this.xd = 0;
                 this.zd = 0;
@@ -1074,7 +1077,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         // Finalize if we reach the landing Y and are reasonably close horizontally
         if (this.y <= this.landingTargetY + 0.05 && horizDist < 0.6) {
-            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos).isAir()) {
+            if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos)
+                    .getCollisionShape(level, this.landingBlockPos).isEmpty()) {
                 this.setPos(targetX, this.landingTargetY, targetZ);
                 this.xd = 0;
                 this.zd = 0;
@@ -1105,7 +1109,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.animator.updateSprite(1 + (int) (this.random.nextFloat() * 2), true);
         }
 
-        if (this.perchBlockPos != null && level.getBlockState(this.perchBlockPos).isAir()) {
+        if (this.perchBlockPos != null
+                && level.getBlockState(this.perchBlockPos).getCollisionShape(level, this.perchBlockPos).isEmpty()) {
             performTakeoff(null);
             return;
         }
