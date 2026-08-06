@@ -430,8 +430,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     nb.landingBlockPos = actualTarget;
 
                     BlockState targetState = level.getBlockState(actualTarget);
-                    VoxelShape collisionShape = targetState.getCollisionShape(level, actualTarget);
-                    double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
+                    VoxelShape visualShape = targetState.getShape(level, actualTarget);
+                    double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
 
                     BlockPos abovePos = actualTarget.above();
                     VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
@@ -922,8 +922,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                             setState(this, State.LANDING);
                             this.landingBlockPos = target;
 
-                            VoxelShape collisionShape = targetState.getCollisionShape(level, target);
-                            double blockHeight = collisionShape.isEmpty() ? 1.0 : collisionShape.max(Direction.Axis.Y);
+                            VoxelShape visualShape = targetState.getShape(level, target);
+                            double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
 
                             BlockPos abovePos = target.above();
                             VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
@@ -980,7 +980,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
                 this.landingOffsetZ = (this.random.nextFloat() - 0.5f) * 0.8;
 
-                double blockHeight = belowCollision.max(Direction.Axis.Y);
+                VoxelShape visualShape = belowState.getShape(level, mutablePos);
+                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
 
                 BlockPos abovePos = this.landingBlockPos.above();
                 VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
