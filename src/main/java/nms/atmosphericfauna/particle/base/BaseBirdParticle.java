@@ -1068,56 +1068,69 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double targetX = this.landingBlockPos.getX() + 0.5 + this.landingOffsetX;
         double targetZ = this.landingBlockPos.getZ() + 0.5 + this.landingOffsetZ;
 
-        // Gentle horizontal damping so steering is stable
-        this.xd *= 0.98;
-        this.zd *= 0.98;
+        double dx = targetX - this.x;
+        double dy = this.landingTargetY - this.y;
+        double dz = targetZ - this.z;
+        double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        double horizDist = Math.sqrt(dx * dx + dz * dz);
 
-        // Estimate time to land
-        double verticalDist = Math.max(0.0, this.y - this.landingTargetY);
-        double timeToLand;
-        if (this.yd < -0.001) {
-            timeToLand = verticalDist / -this.yd;
-            if (timeToLand < 0.1)
-                timeToLand = 0.1;
-        } else {
-            timeToLand = Math.max(0.5, verticalDist / 0.06);
+        // Block Avoidance Check - If the path to the perch is suddenly obstructed,
+        // gracefully abort!
+        double lookX = this.x + this.xd * lookAheadMultiplier;
+        double lookY = this.y + this.yd * lookAheadMultiplier;
+        double lookZ = this.z + this.zd * lookAheadMultiplier;
+
+        if (env.isBlocked(lookX, lookY, lookZ)) {
+            setState(this, State.FLYING);
+            this.goalX = this.x + this.xd * 10.0;
+            this.goalY = this.y + 3.0 + this.random.nextFloat() * 2.0; // Swoop back up into the sky
+            this.goalZ = this.z + this.zd * 10.0;
+            this.landingTargetY = Double.NaN;
+            this.landingBlockPos = null;
+            return;
         }
 
-        double desiredXd = (targetX - this.x) / timeToLand;
-        double desiredZd = (targetZ - this.z) / timeToLand;
+        // Smooth Arrival Steering Behavior
+        if (dist > 0.001) {
+            // Map the remaining distance to a speed multiplier (starts slowing down 4
+            // blocks away)
+            double speedScale = Math.min(1.0, dist / 4.0);
+            double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
-        double maxLandingSpeed = 0.07;
-        double desiredHoriz = Math.sqrt(desiredXd * desiredXd + desiredZd * desiredZd);
-        if (desiredHoriz > maxLandingSpeed) {
-            double s = maxLandingSpeed / desiredHoriz;
-            desiredXd *= s;
-            desiredZd *= s;
+            double desiredXd = (dx / dist) * currentFlySpeed;
+            double desiredYd = (dy / dist) * currentFlySpeed;
+            double desiredZd = (dz / dist) * currentFlySpeed;
+
+            double steerX = desiredXd - this.xd;
+            double steerY = desiredYd - this.yd;
+            double steerZ = desiredZd - this.zd;
+
+            // Use a slightly stronger steer factor during landing so they don't overshoot
+            // and orbit
+            double currentSteerStrength = this.steerStrength * 2.8;
+            double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
+
+            if (steerMag > currentSteerStrength) {
+                steerX = (steerX / steerMag) * currentSteerStrength;
+                steerY = (steerY / steerMag) * currentSteerStrength;
+                steerZ = (steerZ / steerMag) * currentSteerStrength;
+            }
+
+            this.xd += steerX;
+            this.yd += steerY;
+            this.zd += steerZ;
         }
 
-        double steerFactor = 0.25;
-        this.xd += (desiredXd - this.xd) * steerFactor;
-        this.zd += (desiredZd - this.zd) * steerFactor;
-
-        // Prevent clipping below the target height
-        if (this.y <= this.landingTargetY) {
+        // Prevent clipping through the landing block from above
+        if (this.y <= this.landingTargetY && this.yd < 0) {
             this.yd = 0;
             this.y = this.landingTargetY;
-        } else {
-            double descent = Math.min(0.20, Math.max(0.06, verticalDist * 0.03));
-            if (this.y - descent < this.landingTargetY) {
-                this.yd = -(this.y - this.landingTargetY);
-            } else {
-                this.yd = -descent;
-            }
         }
 
-        double dx = targetX - this.x;
-        double dz = targetZ - this.z;
-        double horizDist = Math.sqrt(dx * dx + dz * dz);
         double horizSpeed = Math.sqrt(this.xd * this.xd + this.zd * this.zd);
 
         // Snap if close and slow
-        if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) <= 0.01 && horizSpeed < 0.06) {
+        if (horizDist < 0.35 && Math.abs(this.y - this.landingTargetY) <= 0.1 && horizSpeed < 0.06) {
             if (this.landingBlockPos != null && !level.getBlockState(this.landingBlockPos)
                     .getCollisionShape(level, this.landingBlockPos).isEmpty()) {
                 this.setPos(targetX, this.landingTargetY, targetZ);
