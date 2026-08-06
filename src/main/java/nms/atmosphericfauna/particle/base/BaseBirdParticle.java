@@ -145,6 +145,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
         super.remove();
     }
 
+    public void killSilently() {
+        super.remove();
+    }
+
+    public static int clearAllParticles() {
+        int count = ALL_BIRDS.size();
+        for (BaseBirdParticle bird : ALL_BIRDS) {
+            bird.killSilently();
+        }
+        reset();
+        return count;
+    }
+
     public static List<BaseBirdParticle> getAllBirds() {
         ALL_BIRDS.removeIf(p -> p.removed);
         synchronized (SPECIES_REGISTRY) {

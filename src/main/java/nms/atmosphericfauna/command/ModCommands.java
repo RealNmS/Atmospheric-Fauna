@@ -19,8 +19,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ModCommands {
     //? if <=1.21.4 {
@@ -159,20 +157,13 @@ public class ModCommands {
     //                              return 1;
     //                          }))
     //                  .then(ClientCommandManager.literal("clearBirds")
-    //                          .executes(context -> {
-    //                              List<BaseBirdParticle> birds = new ArrayList<>(BaseBirdParticle.getAllBirds());
-    //                              int removed = 0;
-    //                              for (BaseBirdParticle bird : birds) {
-    //                                  if (bird == null) {
-    //                                      continue;
-    //                                  }
-    //                                  bird.remove();
-    //                                  removed++;
-    //                              }
-    //                              String message = "Removed " + removed + " bird particle" + (removed == 1 ? "" : "s") + ".";
-    //                              context.getSource().sendFeedback(Component.literal(message));
-    //                              return 1;
-    //                          }))
+    //                        .executes(context -> {
+    //                          int removed = BaseBirdParticle.clearAllParticles();
+    //                          
+    //                          String message = "Removed " + removed + " bird particle" + (removed == 1 ? "" : "s") + ".";
+    //                          context.getSource().sendFeedback(Component.literal(message));
+    //                          return 1;
+    //                      }))
     //                  .then(spawnCommand));
     //      });
     //?} else {
@@ -266,15 +257,8 @@ public class ModCommands {
                             }))
                     .then(ClientCommands.literal("clearBirds")
                             .executes(context -> {
-                                List<BaseBirdParticle> birds = new ArrayList<>(BaseBirdParticle.getAllBirds());
-                                int removed = 0;
-                                for (BaseBirdParticle bird : birds) {
-                                    if (bird == null) {
-                                        continue;
-                                    }
-                                    bird.remove();
-                                    removed++;
-                                }
+                                int removed = BaseBirdParticle.clearAllParticles();
+
                                 String message = "Removed " + removed + " bird particle" + (removed == 1 ? "" : "s") + ".";
                                 context.getSource().sendFeedback(Component.literal(message));
                                 return 1;

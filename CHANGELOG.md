@@ -19,7 +19,6 @@
 - update Blue Jay texture
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
-- optimize clear birds command
 
 ## current update notes *(wip)*
 
@@ -40,6 +39,7 @@
 - Changed fly speed to be slightly randomized for each flock on spawn
 - Fixed birds clipping through walls when landing
 - Fixed birds flocking with removed birds when particle limit was reached
+- Optimized clearBirds command to remove all birds at once instead of one by one
 
 ---
 
