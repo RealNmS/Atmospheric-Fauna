@@ -14,11 +14,11 @@
 
 ### quick todo
 
-- add Common Swallow, Northern Cardinal
+- add Northern Cardinal
 - update mod icon and banner
-- update Blue Jay texture
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
+- sprite flipping when perched (cache last direction when landing)
 
 ## current update notes *(wip)*
 
