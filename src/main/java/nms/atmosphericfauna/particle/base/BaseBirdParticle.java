@@ -81,6 +81,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // --- VARIABLES ---
 
+    protected int tickOffset;
     private static float nextFlockSpeedOffset = 0.0f;
     protected float flySpeed;
     protected int wingFlapSpeed;
@@ -118,6 +119,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
         super(level, x, y, z, sprite);
         this.animator = new BirdAnimator(this);
         this.env = new EnvironmentScanner(level);
+        this.tickOffset = this.random.nextInt(100);
+        this.groundScanTimer = this.random.nextInt(10);
+        this.neighborCacheTimer = this.random.nextInt(20);
         if (this.removed)
             return;
         ALL_BIRDS.add(this);
@@ -220,6 +224,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.yo = this.y;
         this.zo = this.z;
 
+        updateGridPosition();
+
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
@@ -261,14 +267,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 int frame = this.animator.getCurrentFrame();
                 this.animator.updateSprite(frame == 1 ? 2 : 1, false);
             }
-            if (this.age % 3 == 0) {
+            if ((this.age + this.tickOffset) % 3 == 0) {
                 this.animator.updateFacingDirection(false, this.x, this.z, this.xd, this.zd);
             }
         }
 
         // debug stuff
         if (debugTextBirds) {
-            if (this.age % 10 == 0) {
+            if ((this.age + this.tickOffset) % 10 == 0) {
                 AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
                         " | Height: "
                         + String.format("%.2f", this.y));
@@ -284,8 +290,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     // Returns all other bird particles within radius
     private List<BaseBirdParticle> getNeighbors(double radius) {
-        updateGridPosition();
-
         double rsq = radius * radius;
         reusableNeighborList.clear();
 
@@ -328,6 +332,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                         if (ddx * ddx + ddy * ddy + ddz * ddz <= rsq) {
                             reusableNeighborList.add(other);
+
+                            /*
+                             * Huge fps boost, but causes issues with flocking behavior if the flock is
+                             * too large
+                             * if (reusableNeighborList.size() >= 99) {
+                             * return reusableNeighborList;
+                             * }
+                             */
                         }
                     }
                 }
