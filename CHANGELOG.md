@@ -22,6 +22,7 @@
 
 ## current update notes *(wip)*
 
+- Updated Blue Jay textures
 - Added new spawning system "Midair Border Spawning" (great for skyblock or similar)
   - Spawns birds in the air at the edge of render distance, making them fly into the world
   - Can be turned on in the config screen, but is off by default
