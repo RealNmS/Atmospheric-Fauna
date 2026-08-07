@@ -33,6 +33,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected int perchTimer = 0;
     protected int perchedTimer = 0;
+    protected int peckTimer = 0;
     protected int landingCooldown = random.nextInt(600);
     protected int flockCooldown = 0;
     protected Double landingTargetY = Double.NaN;
@@ -1296,8 +1297,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.zd = 0;
         this.yd = 0;
 
-        if (this.random.nextFloat() < 0.05f) {
-            this.animator.updateSprite(1 + (int) (this.random.nextFloat() * 2), true);
+        if (this.peckTimer > 0) {
+            this.peckTimer--;
+            if (this.peckTimer == 0) {
+                this.animator.updateSprite(1, true);
+            }
+        } else if (this.random.nextFloat() < 0.01f) {
+            this.animator.updateSprite(2, true);
+            this.peckTimer = 10 + this.random.nextInt(11);
         }
 
         if (this.perchBlockPos != null

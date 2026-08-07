@@ -35,6 +35,7 @@
   - Added ability to perch inside of blocks without collision (like flowers, grass, etc.)
   - Added gradualy diminishing chance to perch on the same block as other birds based on the amount
 - Changed landing to be more smooth and dynamic
+- Changed pecking animation to be more realistic and less random
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 - Changed fly speed to be slightly randomized for each flock on spawn
 - Changed flying above void, making birds less prone to flying straight down
