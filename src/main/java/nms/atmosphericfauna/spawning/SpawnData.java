@@ -146,15 +146,15 @@ public final class SpawnData {
     }
 
     public static void syncFromConfig() {
-        CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
-        COMMON_SWIFT.setSpawnAllowed(ConfigHandler.enableCommonSwiftSpawning);
-        CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
-        CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
         BLUE_JAY.setCheckBiomeTags(!ConfigHandler.disableBlueJaySpawnBiomeChecks);
         BLUE_JAY.setCheckSpawnBlocks(!ConfigHandler.disableBlueJaySpawnBlockChecks);
+        COMMON_SWIFT.setSpawnAllowed(ConfigHandler.enableCommonSwiftSpawning);
         COMMON_SWIFT.setCheckBiomeTags(!ConfigHandler.disableCommonSwiftSpawnBiomeChecks);
         COMMON_SWIFT.setCheckSpawnBlocks(!ConfigHandler.disableCommonSwiftSpawnBlockChecks);
+        CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
+        CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
+        CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
     }
 
     public static SpawnData byName(String name) {
@@ -170,18 +170,6 @@ public final class SpawnData {
         return ALL_SPAWNS.stream().map(SpawnData::name).toList();
     }
 
-    public static final SpawnData CROW = new SpawnData(
-            "crow",
-            AtmosphericFauna.CROW,
-            30, 3, 9, 8, 15, true, true, true,
-            ConfigHandler.enableCrowSpawning,
-            !ConfigHandler.disableCrowSpawnBiomeChecks,
-            !ConfigHandler.disableCrowSpawnBlockChecks,
-            List.of(BiomeTags.IS_OVERWORLD),
-            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SAND,
-                    BlockTags.SNOW, BlockTags.TERRACOTTA, BlockTags.BASE_STONE_OVERWORLD),
-            () -> Math.max(0, CrowParticle.getMaxActiveBirds() - CrowParticle.getCount()));
-
     public static final SpawnData BLUE_JAY = new SpawnData(
             "blue_jay",
             AtmosphericFauna.BLUE_JAY,
@@ -190,8 +178,8 @@ public final class SpawnData {
             !ConfigHandler.disableBlueJaySpawnBiomeChecks,
             !ConfigHandler.disableBlueJaySpawnBlockChecks,
             List.of(BiomeTags.IS_FOREST, BiomeTags.IS_JUNGLE, BiomeTags.IS_TAIGA),
-            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SNOW,
-                    BlockTags.BASE_STONE_OVERWORLD),
+            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
+                    BlockTags.LOGS, BlockTags.SNOW),
             () -> Math.max(0, BlueJayParticle.getMaxActiveBirds() - BlueJayParticle.getCount()));
 
     public static final SpawnData COMMON_SWIFT = new SpawnData(
@@ -207,9 +195,22 @@ public final class SpawnData {
                     BlockTags.LOGS),
             () -> Math.max(0, CommonSwiftParticle.getMaxActiveBirds() - CommonSwiftParticle.getCount()));
 
+    public static final SpawnData CROW = new SpawnData(
+            "crow",
+            AtmosphericFauna.CROW,
+            30, 3, 9, 8, 15, true, true, true,
+            ConfigHandler.enableCrowSpawning,
+            !ConfigHandler.disableCrowSpawnBiomeChecks,
+            !ConfigHandler.disableCrowSpawnBlockChecks,
+            List.of(BiomeTags.IS_OVERWORLD),
+            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
+                    BlockTags.LOGS, BlockTags.SAND,
+                    BlockTags.SNOW, BlockTags.TERRACOTTA),
+            () -> Math.max(0, CrowParticle.getMaxActiveBirds() - CrowParticle.getCount()));
+
     public static final List<SpawnData> ALL_SPAWNS = List.of(
-            CROW,
             BLUE_JAY,
-            COMMON_SWIFT
+            COMMON_SWIFT,
+            CROW
     );
 }

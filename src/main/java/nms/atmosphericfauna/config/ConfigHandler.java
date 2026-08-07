@@ -26,21 +26,25 @@ public class ConfigHandler {
         public static final int ATTEMPTS_PER_TICK = 15;
         public static final int SEARCH_RADIUS = 12;
         public static final boolean SPAWN_BELOW_SEA_LEVEL = false;
-        public static final boolean DEBUG_TEXT_SPAWNING = false;
 
         public static final int MAX_ACTIVE_BIRDS = 100;
-        public static final int MAX_ACTIVE_CROWS = 50;
-        public static final int MAX_ACTIVE_BLUE_JAYS = 10;
-        public static final int MAX_ACTIVE_COMMON_SWIFTS = 12;
-        public static final boolean ENABLE_CROW_SPAWNING = true;
+        // Blue Jay
         public static final boolean ENABLE_BLUE_JAY_SPAWNING = true;
-        public static final boolean ENABLE_COMMON_SWIFT_SPAWNING = true;
-        public static final boolean DISABLE_CROW_SPAWN_BIOME_CHECKS = false;
-        public static final boolean DISABLE_CROW_SPAWN_BLOCK_CHECKS = false;
+        public static final int MAX_ACTIVE_BLUE_JAYS = 10;
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS = false;
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS = false;
+        // Common Swift
+        public static final boolean ENABLE_COMMON_SWIFT_SPAWNING = true;
+        public static final int MAX_ACTIVE_COMMON_SWIFTS = 12;
         public static final boolean DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS = false;
         public static final boolean DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS = false;
+        // Crow
+        public static final boolean ENABLE_CROW_SPAWNING = true;
+        public static final int MAX_ACTIVE_CROWS = 50;
+        public static final boolean DISABLE_CROW_SPAWN_BIOME_CHECKS = false;
+        public static final boolean DISABLE_CROW_SPAWN_BLOCK_CHECKS = false;
+
+        public static final boolean DEBUG_TEXT_SPAWNING = false;
         public static final boolean DEBUG_TEXT_BIRDS = false;
         public static final boolean ENABLE_DEBUG_SCREEN_ON_JOIN = false;
     }
@@ -53,21 +57,25 @@ public class ConfigHandler {
     public static int attemptsPerTick = Defaults.ATTEMPTS_PER_TICK;
     public static int searchRadius = Defaults.SEARCH_RADIUS;
     public static boolean spawnBelowSeaLevel = Defaults.SPAWN_BELOW_SEA_LEVEL;
-    public static boolean debugTextSpawning = Defaults.DEBUG_TEXT_SPAWNING;
 
     public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
-    public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
-    public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
-    public static int maxActiveCommonSwifts = Defaults.MAX_ACTIVE_COMMON_SWIFTS;
-    public static boolean enableCrowSpawning = Defaults.ENABLE_CROW_SPAWNING;
+    // Blue Jay
     public static boolean enableBlueJaySpawning = Defaults.ENABLE_BLUE_JAY_SPAWNING;
-    public static boolean enableCommonSwiftSpawning = Defaults.ENABLE_COMMON_SWIFT_SPAWNING;
-    public static boolean disableCrowSpawnBiomeChecks = Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS;
-    public static boolean disableCrowSpawnBlockChecks = Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS;
+    public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
     public static boolean disableBlueJaySpawnBiomeChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS;
     public static boolean disableBlueJaySpawnBlockChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS;
+    // Common Swift
+    public static boolean enableCommonSwiftSpawning = Defaults.ENABLE_COMMON_SWIFT_SPAWNING;
+    public static int maxActiveCommonSwifts = Defaults.MAX_ACTIVE_COMMON_SWIFTS;
     public static boolean disableCommonSwiftSpawnBiomeChecks = Defaults.DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS;
     public static boolean disableCommonSwiftSpawnBlockChecks = Defaults.DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS;
+    // Crow
+    public static boolean enableCrowSpawning = Defaults.ENABLE_CROW_SPAWNING;
+    public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
+    public static boolean disableCrowSpawnBiomeChecks = Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS;
+    public static boolean disableCrowSpawnBlockChecks = Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS;
+
+    public static boolean debugTextSpawning = Defaults.DEBUG_TEXT_SPAWNING;
     public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
     public static boolean enableDebugScreenOnJoin = Defaults.ENABLE_DEBUG_SCREEN_ON_JOIN;
 
@@ -143,18 +151,21 @@ public class ConfigHandler {
 
         public static class Birds {
             public Integer maxActiveBirds;
-            public Integer maxActiveCrows;
-            public Integer maxActiveBlueJays;
-            public Integer maxActiveCommonSwifts;
-            public Boolean enableCrowSpawning;
+            // Blue Jay
             public Boolean enableBlueJaySpawning;
-            public Boolean enableCommonSwiftSpawning;
-            public Boolean disableCrowSpawnBiomeChecks;
-            public Boolean disableCrowSpawnBlockChecks;
+            public Integer maxActiveBlueJays;
             public Boolean disableBlueJaySpawnBiomeChecks;
             public Boolean disableBlueJaySpawnBlockChecks;
+            // Common Swift
+            public Boolean enableCommonSwiftSpawning;
+            public Integer maxActiveCommonSwifts;
             public Boolean disableCommonSwiftSpawnBiomeChecks;
             public Boolean disableCommonSwiftSpawnBlockChecks;
+            // Crow
+            public Boolean enableCrowSpawning;
+            public Integer maxActiveCrows;
+            public Boolean disableCrowSpawnBiomeChecks;
+            public Boolean disableCrowSpawnBlockChecks;
         }
 
         // Debug Category
@@ -183,18 +194,21 @@ public class ConfigHandler {
 
         // Birds Category
         data.birds.maxActiveBirds = maxActiveBirds;
-        data.birds.maxActiveCrows = maxActiveCrows;
-        data.birds.maxActiveBlueJays = maxActiveBlueJays;
-        data.birds.maxActiveCommonSwifts = maxActiveCommonSwifts;
-        data.birds.enableCrowSpawning = enableCrowSpawning;
+        // Blue Jay
         data.birds.enableBlueJaySpawning = enableBlueJaySpawning;
-        data.birds.enableCommonSwiftSpawning = enableCommonSwiftSpawning;
-        data.birds.disableCrowSpawnBiomeChecks = disableCrowSpawnBiomeChecks;
-        data.birds.disableCrowSpawnBlockChecks = disableCrowSpawnBlockChecks;
+        data.birds.maxActiveBlueJays = maxActiveBlueJays;
         data.birds.disableBlueJaySpawnBiomeChecks = disableBlueJaySpawnBiomeChecks;
         data.birds.disableBlueJaySpawnBlockChecks = disableBlueJaySpawnBlockChecks;
+        // Common Swift
+        data.birds.enableCommonSwiftSpawning = enableCommonSwiftSpawning;
+        data.birds.maxActiveCommonSwifts = maxActiveCommonSwifts;
         data.birds.disableCommonSwiftSpawnBiomeChecks = disableCommonSwiftSpawnBiomeChecks;
         data.birds.disableCommonSwiftSpawnBlockChecks = disableCommonSwiftSpawnBlockChecks;
+        // Crow
+        data.birds.enableCrowSpawning = enableCrowSpawning;
+        data.birds.maxActiveCrows = maxActiveCrows;
+        data.birds.disableCrowSpawnBiomeChecks = disableCrowSpawnBiomeChecks;
+        data.birds.disableCrowSpawnBlockChecks = disableCrowSpawnBlockChecks;
 
         // Debug Category
         data.debug.debugText = debugTextSpawning;
@@ -217,18 +231,21 @@ public class ConfigHandler {
 
         // Birds Category
         maxActiveBirds = data.birds.maxActiveBirds;
-        maxActiveCrows = data.birds.maxActiveCrows;
-        maxActiveBlueJays = data.birds.maxActiveBlueJays;
-        maxActiveCommonSwifts = data.birds.maxActiveCommonSwifts;
-        enableCrowSpawning = data.birds.enableCrowSpawning;
+        // Blue Jay
         enableBlueJaySpawning = data.birds.enableBlueJaySpawning;
-        enableCommonSwiftSpawning = data.birds.enableCommonSwiftSpawning;
-        disableCrowSpawnBiomeChecks = data.birds.disableCrowSpawnBiomeChecks;
-        disableCrowSpawnBlockChecks = data.birds.disableCrowSpawnBlockChecks;
+        maxActiveBlueJays = data.birds.maxActiveBlueJays;
         disableBlueJaySpawnBiomeChecks = data.birds.disableBlueJaySpawnBiomeChecks;
         disableBlueJaySpawnBlockChecks = data.birds.disableBlueJaySpawnBlockChecks;
+        // Common Swift
+        enableCommonSwiftSpawning = data.birds.enableCommonSwiftSpawning;
+        maxActiveCommonSwifts = data.birds.maxActiveCommonSwifts;
         disableCommonSwiftSpawnBiomeChecks = data.birds.disableCommonSwiftSpawnBiomeChecks;
         disableCommonSwiftSpawnBlockChecks = data.birds.disableCommonSwiftSpawnBlockChecks;
+        // Crow
+        enableCrowSpawning = data.birds.enableCrowSpawning;
+        maxActiveCrows = data.birds.maxActiveCrows;
+        disableCrowSpawnBiomeChecks = data.birds.disableCrowSpawnBiomeChecks;
+        disableCrowSpawnBlockChecks = data.birds.disableCrowSpawnBlockChecks;
 
         // Debug Category
         debugTextSpawning = data.debug.debugText;

@@ -114,50 +114,6 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveBirds = newValue)
                 .build());
 
-        SubCategoryBuilder crows = entryBuilder
-                .startSubCategory(Component.translatable("subcategory.atmosphericfauna.crows"));
-
-        crows.add(entryBuilder
-                .startBooleanToggle(Component.translatable("option.atmosphericfauna.enable_crow_spawning"),
-                        ConfigHandler.enableCrowSpawning)
-                .setDefaultValue(ConfigHandler.Defaults.ENABLE_CROW_SPAWNING)
-                .setTooltip(Component.translatable("option.atmosphericfauna.enable_crow_spawning.tooltip"))
-                .setSaveConsumer(newValue -> ConfigHandler.enableCrowSpawning = newValue)
-                .build());
-
-        crows.add(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
-                        ConfigHandler.maxActiveCrows)
-                .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_CROWS)
-                .setMin(0)
-                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
-                .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
-                .build());
-
-        crows.add(entryBuilder
-                .startBooleanToggle(
-                        Component.translatable(
-                                "option.atmosphericfauna.disable_crow_spawn_biome_checks"),
-                        ConfigHandler.disableCrowSpawnBiomeChecks)
-                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS)
-                .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_crow_spawn_biome_checks.tooltip"))
-                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
-                .build());
-
-        crows.add(entryBuilder
-                .startBooleanToggle(
-                        Component.translatable(
-                                "option.atmosphericfauna.disable_crow_spawn_block_checks"),
-                        ConfigHandler.disableCrowSpawnBlockChecks)
-                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS)
-                .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_crow_spawn_block_checks.tooltip"))
-                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBlockChecks = newValue)
-                .build());
-
-        birds.addEntry(crows.build());
-
         SubCategoryBuilder blueJays = entryBuilder
                 .startSubCategory(Component.translatable("subcategory.atmosphericfauna.blue_jays"));
 
@@ -247,6 +203,50 @@ public class ModMenuConfig {
                 .build());
 
         birds.addEntry(commonSwifts.build());
+
+        SubCategoryBuilder crows = entryBuilder
+                .startSubCategory(Component.translatable("subcategory.atmosphericfauna.crows"));
+
+        crows.add(entryBuilder
+                .startBooleanToggle(Component.translatable("option.atmosphericfauna.enable_crow_spawning"),
+                        ConfigHandler.enableCrowSpawning)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_CROW_SPAWNING)
+                .setTooltip(Component.translatable("option.atmosphericfauna.enable_crow_spawning.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableCrowSpawning = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
+                        ConfigHandler.maxActiveCrows)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_CROWS)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_crow_spawn_biome_checks"),
+                        ConfigHandler.disableCrowSpawnBiomeChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_crow_spawn_biome_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_crow_spawn_block_checks"),
+                        ConfigHandler.disableCrowSpawnBlockChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_crow_spawn_block_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBlockChecks = newValue)
+                .build());
+
+        birds.addEntry(crows.build());
 
         // MARK: --- DEBUG ---
 
