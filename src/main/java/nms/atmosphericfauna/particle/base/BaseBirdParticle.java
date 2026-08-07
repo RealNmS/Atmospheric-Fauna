@@ -641,12 +641,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        double ground = env.sampleGroundHeight(this.x, this.y, this.z);
+        double ground = this.cachedGroundHeight;
+        boolean isVoid = ground <= env.getLevelMinY() + 1.0;
+
         double absoluteCeiling = (env.getLevelMinY() + level.getHeight()) - 5.0;
-        double targetHeight = Math.min(ground + preferredFlightHeight, absoluteCeiling);
+        double targetHeight = isVoid ? this.y : Math.min(ground + preferredFlightHeight, absoluteCeiling);
         double ny;
 
-        if (this.y <= ground + minFlightHeight + 0.5) {
+        if (isVoid) {
+            ny = this.y + (this.random.nextFloat() - 0.5f) * 15.0;
+        } else if (this.y <= ground + minFlightHeight + 0.5) {
             ny = this.y + 2.5 + this.random.nextFloat() * 2.5;
         } else if (this.y >= absoluteCeiling - 1.0) {
             ny = this.y - 2.0 - this.random.nextFloat() * 3.0;
@@ -665,7 +669,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             ny = Math.max(ny, ground + minFlightHeight);
         }
 
-        ny = Math.max(env.getLevelMinY() + 1.0, Math.min(absoluteCeiling, ny));
+        double safeFloor = isVoid ? env.getLevelMinY() + 10.0 : env.getLevelMinY() + 1.0;
+        ny = Math.max(safeFloor, Math.min(absoluteCeiling, ny));
 
         // Flock Bias
         List<BaseBirdParticle> neighbors = this.cachedFlockNeighbors;
