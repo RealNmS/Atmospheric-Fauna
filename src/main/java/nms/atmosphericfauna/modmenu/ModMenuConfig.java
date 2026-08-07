@@ -202,6 +202,52 @@ public class ModMenuConfig {
 
         birds.addEntry(blueJays.build());
 
+        SubCategoryBuilder commonSwifts = entryBuilder
+                .startSubCategory(Component.translatable("subcategory.atmosphericfauna.common_swifts"));
+
+        commonSwifts.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.enable_common_swift_spawning"),
+                        ConfigHandler.enableCommonSwiftSpawning)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_COMMON_SWIFT_SPAWNING)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.enable_common_swift_spawning.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableCommonSwiftSpawning = newValue)
+                .build());
+
+        commonSwifts.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.max_active_common_swifts"),
+                        ConfigHandler.maxActiveCommonSwifts)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_COMMON_SWIFTS)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_common_swifts.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxActiveCommonSwifts = newValue)
+                .build());
+
+        commonSwifts.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_common_swift_spawn_biome_checks"),
+                        ConfigHandler.disableCommonSwiftSpawnBiomeChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_common_swift_spawn_biome_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBiomeChecks = newValue)
+                .build());
+
+        commonSwifts.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_common_swift_spawn_block_checks"),
+                        ConfigHandler.disableCommonSwiftSpawnBlockChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_common_swift_spawn_block_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBlockChecks = newValue)
+                .build());
+
+        birds.addEntry(commonSwifts.build());
+
         // MARK: --- DEBUG ---
 
         ConfigCategory debug = builder

@@ -3,6 +3,7 @@ package nms.atmosphericfauna.spawning;
 import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.BlueJayParticle;
+import nms.atmosphericfauna.particle.CommonSwiftParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 
 import net.minecraft.core.particles.SimpleParticleType;
@@ -147,10 +148,13 @@ public final class SpawnData {
     public static void syncFromConfig() {
         CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
+        COMMON_SWIFT.setSpawnAllowed(ConfigHandler.enableCommonSwiftSpawning);
         CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
         CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
         BLUE_JAY.setCheckBiomeTags(!ConfigHandler.disableBlueJaySpawnBiomeChecks);
         BLUE_JAY.setCheckSpawnBlocks(!ConfigHandler.disableBlueJaySpawnBlockChecks);
+        COMMON_SWIFT.setCheckBiomeTags(!ConfigHandler.disableCommonSwiftSpawnBiomeChecks);
+        COMMON_SWIFT.setCheckSpawnBlocks(!ConfigHandler.disableCommonSwiftSpawnBlockChecks);
     }
 
     public static SpawnData byName(String name) {
@@ -190,9 +194,22 @@ public final class SpawnData {
                     BlockTags.BASE_STONE_OVERWORLD),
             () -> Math.max(0, BlueJayParticle.getMaxActiveBirds() - BlueJayParticle.getCount()));
 
+    public static final SpawnData COMMON_SWIFT = new SpawnData(
+            "common_swift",
+            AtmosphericFauna.COMMON_SWIFT,
+            20, 4, 12, 8, 15, false, true, false,
+            ConfigHandler.enableCommonSwiftSpawning,
+            !ConfigHandler.disableCommonSwiftSpawnBiomeChecks,
+            !ConfigHandler.disableCommonSwiftSpawnBlockChecks,
+            List.of(BiomeTags.IS_MOUNTAIN, BiomeTags.IS_HILL, BiomeTags.IS_SAVANNA, BiomeTags.IS_BADLANDS,
+                    BiomeTags.IS_RIVER),
+            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
+                    BlockTags.LOGS),
+            () -> Math.max(0, CommonSwiftParticle.getMaxActiveBirds() - CommonSwiftParticle.getCount()));
+
     public static final List<SpawnData> ALL_SPAWNS = List.of(
             CROW,
-            BLUE_JAY
-    // Future bird types can be added here
+            BLUE_JAY,
+            COMMON_SWIFT
     );
 }

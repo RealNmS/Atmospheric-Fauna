@@ -22,6 +22,7 @@
 
 ## current update notes *(wip)*
 
+- Added new bird "Common Swift"
 - Updated Blue Jay textures
 - Added new spawning system "Midair Border Spawning" (great for skyblock or similar)
   - Spawns birds in the air at the edge of render distance, making them fly into the world

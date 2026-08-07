@@ -5,6 +5,7 @@ import nms.atmosphericfauna.gui.DebugHudOverlay;
 import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
+import nms.atmosphericfauna.particle.CommonSwiftParticle;
 import nms.atmosphericfauna.spawning.AmbientSpawning;
 import nms.atmosphericfauna.command.ModCommands;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
@@ -32,6 +33,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 
 	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
 	public static final SimpleParticleType BLUE_JAY = FabricParticleTypes.simple(true);
+	public static final SimpleParticleType COMMON_SWIFT = FabricParticleTypes.simple(true);
 	private static int chunkLoadCount = 0;
 
 	@Override
@@ -45,14 +47,20 @@ public class AtmosphericFauna implements ClientModInitializer {
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "crow"), CROW);
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "blue_jay"),
 				BLUE_JAY);
+		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "common_swift"),
+				COMMON_SWIFT);
 
 		// Register particle factories
 		//? if <=1.21.11 {
 		/*ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.COMMON_SWIFT,
+				CommonSwiftParticle.Factory::new);
 		*//*?} else {*/
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.CROW, CrowParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.COMMON_SWIFT,
+				CommonSwiftParticle.Factory::new);
 		//?}
 
 		// Ambient spawning
@@ -67,17 +75,19 @@ public class AtmosphericFauna implements ClientModInitializer {
 				int originalGlobalMax = maxActiveBirds;
 				int originalCrowMax = maxActiveCrows;
 				int originalBlueJayMax = maxActiveBlueJays;
-
+				int originalCommonSwiftMax = maxActiveCommonSwifts;
 				try {
 					maxActiveBirds /= 2;
 					maxActiveCrows /= 2;
 					maxActiveBlueJays /= 2;
+					maxActiveCommonSwifts /= 2;
 
 					AmbientSpawning.runSpawnAttempt(world);
 				} finally {
 					maxActiveBirds = originalGlobalMax;
 					maxActiveCrows = originalCrowMax;
 					maxActiveBlueJays = originalBlueJayMax;
+					maxActiveCommonSwifts = originalCommonSwiftMax;
 				}
 			}
 		});
