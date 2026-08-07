@@ -37,9 +37,11 @@
 - Changed landing to be more smooth and dynamic
 - Changed Chunk Load Spawning to spawn only half of max birds per species, instead of the full amount
 - Changed fly speed to be slightly randomized for each flock on spawn
+- Changed flying above void, making birds less prone to flying straight down
 - Fixed birds clipping through walls when landing
 - Fixed birds flocking with removed birds when particle limit was reached
 - Optimized clearBirds command to remove all birds at once instead of one by one
+- Optimized ground scanning to be less frequent (every 10 ticks instead of every tick)
 
 ---
 

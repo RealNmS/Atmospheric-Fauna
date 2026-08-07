@@ -46,6 +46,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected int takeoffTime = 0;
     protected double lastDistSqToGoal = -1.0;
     protected int stuckTicks = 0;
+    protected double cachedGroundHeight = Double.NaN;
+    protected int groundScanTimer = 0;
     protected double heightAdherence = 0.0015; // How strongly the bird pulls back to its target height
     protected double heightTolerance = 8.0; // How far (in blocks) they can drift before they start caring
 
@@ -727,9 +729,17 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        double groundY = env.sampleGroundHeight(this.x, this.y, this.z);
+        if (this.groundScanTimer-- <= 0 || Double.isNaN(this.cachedGroundHeight)) {
+            this.cachedGroundHeight = env.sampleGroundHeight(this.x, this.y, this.z);
+            this.groundScanTimer = 10;
+        }
+
+        double groundY = this.cachedGroundHeight;
+        boolean isVoid = groundY <= env.getLevelMinY() + 1.0;
+
         double absoluteCeiling = (env.getLevelMinY() + level.getHeight()) - 5.0;
-        double targetHeight = Math.min(groundY + preferredFlightHeight, absoluteCeiling);
+
+        double targetHeight = isVoid ? this.y : Math.min(groundY + preferredFlightHeight, absoluteCeiling);
 
         handleStuckDetection();
 
@@ -741,9 +751,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         applyFlockingBehavior(groundY);
 
-        if (this.y <= groundY + minFlightHeight + 0.3) {
+        if (!isVoid && this.y <= groundY + minFlightHeight + 0.3) {
             this.goalY = Math.max(this.goalY, this.y + takeoffClimb + this.random.nextFloat() * 1.5);
             this.goalTimer = Math.max(this.goalTimer, 20);
+        }
+
+        if (isVoid && this.y <= env.getLevelMinY() + 5.0) {
+            this.goalY = Math.max(this.goalY, this.y + 10.0 + this.random.nextFloat() * 5.0);
+            this.goalTimer = Math.max(this.goalTimer, 40);
         }
 
         if (this.y >= absoluteCeiling - 0.5) {
