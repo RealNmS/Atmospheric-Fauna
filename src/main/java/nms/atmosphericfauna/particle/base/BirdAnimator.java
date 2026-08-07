@@ -11,6 +11,10 @@ public class BirdAnimator {
         this.bird = bird;
     }
 
+    public boolean isFacingRight() {
+        return this.facingRight;
+    }
+
     public void updateSprite(int frame, boolean isPerched) {
         if (bird.getBaseSpriteName() == null) {
             return;
@@ -18,7 +22,7 @@ public class BirdAnimator {
 
         StringBuilder builder = new StringBuilder(bird.getBaseSpriteName());
         builder.append(isPerched ? "_perched" : "_flying");
-        if (this.facingRight) builder.append("_r");
+
         builder.append("_").append(frame);
 
         this.spriteName = builder.toString();
@@ -26,7 +30,6 @@ public class BirdAnimator {
         bird.applySprite(this.spriteName); 
     }
 
-    // FIX: Require the physics data to be passed in, rather than reaching for it
     public void updateFacingDirection(boolean isPerched, double x, double z, double xd, double zd) {
         this.facingRight = shouldFaceRightRelativeToCamera(x, z, xd, zd);
         updateSprite(getCurrentFrame(), isPerched);
@@ -42,7 +45,6 @@ public class BirdAnimator {
         return 1;
     }
 
-    // FIX: Using the passed arguments instead of bird.x and bird.z
     private boolean shouldFaceRightRelativeToCamera(double x, double z, double xd, double zd) {
         double horizSpeedSq = xd * xd + zd * zd;
         if (horizSpeedSq <= 0.0001) return this.facingRight;

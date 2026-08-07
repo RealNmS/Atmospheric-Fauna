@@ -195,6 +195,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.setSprite(BaseParticle.getSprite(name));
     }
 
+    @Override
+    protected float getU0() {
+        return this.animator.isFacingRight() ? super.getU1() : super.getU0();
+    }
+
+    @Override
+    protected float getU1() {
+        return this.animator.isFacingRight() ? super.getU0() : super.getU1();
+    }
+
     private static void setState(BaseBirdParticle bird, State newState) {
         bird.state = newState;
         bird.animator.updateSprite(1, newState == State.PERCHED);
