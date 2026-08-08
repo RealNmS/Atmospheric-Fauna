@@ -8,8 +8,11 @@
 - arrow, tnt, and other projectile interaction
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
+- random events (flying in circles above the player for example)
+- server-side support (least likely to happen lol)
 - advancements if i can figure out how to do them client-side only
-- neoforge and quilt support (this won't happen ever, but I want to keep it in mind just in case)
+- neoforge support (might rely just on synitra connector, but at least try to make the config work on there)
+- quilt support (this won't happen ever, but I want to keep it in mind just in case)
 - sounds (idk where to get them from, might just not add them, will figure it out eventually)
 
 ### quick todo
@@ -18,6 +21,11 @@
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
 - sprite flipping when perched (cache last direction when landing)
+- fix common swift texture
+- fix blue jay texture
+- simplify translation file
+- check if height check counts in water
+- fix the birds flying up bug finally
 
 ## current update notes *(wip)*
 
