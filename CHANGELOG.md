@@ -14,7 +14,6 @@
 
 ### quick todo
 
-- add Northern Cardinal
 - update mod icon and banner
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
@@ -22,6 +21,7 @@
 
 ## current update notes *(wip)*
 
+- Added new bird "Northern Cardinal"
 - Added new bird "Common Swift"
 - Updated Blue Jay textures
 - Added new spawning system "Midair Border Spawning" (great for skyblock or similar)

@@ -248,6 +248,54 @@ public class ModMenuConfig {
 
         birds.addEntry(crows.build());
 
+        SubCategoryBuilder northernCardinals = entryBuilder
+                .startSubCategory(Component.translatable("subcategory.atmosphericfauna.northern_cardinals"));
+
+        northernCardinals.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.enable_northern_cardinal_spawning"),
+                        ConfigHandler.enableNorthernCardinalSpawning)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_NORTHERN_CARDINAL_SPAWNING)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.enable_northern_cardinal_spawning.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableNorthernCardinalSpawning = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.max_active_northern_cardinals"),
+                        ConfigHandler.maxActiveNorthernCardinals)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_NORTHERN_CARDINALS)
+                .setMin(0)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.max_active_northern_cardinals.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxActiveNorthernCardinals = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_northern_cardinal_spawn_biome_checks"),
+                        ConfigHandler.disableNorthernCardinalSpawnBiomeChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_northern_cardinal_spawn_biome_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBiomeChecks = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable(
+                                "option.atmosphericfauna.disable_northern_cardinal_spawn_block_checks"),
+                        ConfigHandler.disableNorthernCardinalSpawnBlockChecks)
+                .setDefaultValue(ConfigHandler.Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.disable_northern_cardinal_spawn_block_checks.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBlockChecks = newValue)
+                .build());
+
+        birds.addEntry(northernCardinals.build());
+
         // MARK: --- DEBUG ---
 
         ConfigCategory debug = builder

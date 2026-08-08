@@ -43,6 +43,11 @@ public class ConfigHandler {
         public static final int MAX_ACTIVE_CROWS = 50;
         public static final boolean DISABLE_CROW_SPAWN_BIOME_CHECKS = false;
         public static final boolean DISABLE_CROW_SPAWN_BLOCK_CHECKS = false;
+        // Northern Cardinal
+        public static final boolean ENABLE_NORTHERN_CARDINAL_SPAWNING = true;
+        public static final int MAX_ACTIVE_NORTHERN_CARDINALS = 10;
+        public static final boolean DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS = false;
+        public static final boolean DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS = false;
 
         public static final boolean DEBUG_TEXT_SPAWNING = false;
         public static final boolean DEBUG_TEXT_BIRDS = false;
@@ -74,6 +79,11 @@ public class ConfigHandler {
     public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
     public static boolean disableCrowSpawnBiomeChecks = Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS;
     public static boolean disableCrowSpawnBlockChecks = Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS;
+    // Northern Cardinal
+    public static boolean enableNorthernCardinalSpawning = Defaults.ENABLE_NORTHERN_CARDINAL_SPAWNING;
+    public static int maxActiveNorthernCardinals = Defaults.MAX_ACTIVE_NORTHERN_CARDINALS;
+    public static boolean disableNorthernCardinalSpawnBiomeChecks = Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS;
+    public static boolean disableNorthernCardinalSpawnBlockChecks = Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS;
 
     public static boolean debugTextSpawning = Defaults.DEBUG_TEXT_SPAWNING;
     public static boolean debugTextBirds = Defaults.DEBUG_TEXT_BIRDS;
@@ -166,6 +176,11 @@ public class ConfigHandler {
             public Integer maxActiveCrows;
             public Boolean disableCrowSpawnBiomeChecks;
             public Boolean disableCrowSpawnBlockChecks;
+            // Northern Cardinal
+            public Boolean enableNorthernCardinalSpawning;
+            public Integer maxActiveNorthernCardinals;
+            public Boolean disableNorthernCardinalSpawnBiomeChecks;
+            public Boolean disableNorthernCardinalSpawnBlockChecks;
         }
 
         // Debug Category
@@ -209,6 +224,11 @@ public class ConfigHandler {
         data.birds.maxActiveCrows = maxActiveCrows;
         data.birds.disableCrowSpawnBiomeChecks = disableCrowSpawnBiomeChecks;
         data.birds.disableCrowSpawnBlockChecks = disableCrowSpawnBlockChecks;
+        // Northern Cardinal
+        data.birds.enableNorthernCardinalSpawning = enableNorthernCardinalSpawning;
+        data.birds.maxActiveNorthernCardinals = maxActiveNorthernCardinals;
+        data.birds.disableNorthernCardinalSpawnBiomeChecks = disableNorthernCardinalSpawnBiomeChecks;
+        data.birds.disableNorthernCardinalSpawnBlockChecks = disableNorthernCardinalSpawnBlockChecks;
 
         // Debug Category
         data.debug.debugText = debugTextSpawning;
@@ -246,6 +266,11 @@ public class ConfigHandler {
         maxActiveCrows = data.birds.maxActiveCrows;
         disableCrowSpawnBiomeChecks = data.birds.disableCrowSpawnBiomeChecks;
         disableCrowSpawnBlockChecks = data.birds.disableCrowSpawnBlockChecks;
+        // Northern Cardinal
+        enableNorthernCardinalSpawning = data.birds.enableNorthernCardinalSpawning;
+        maxActiveNorthernCardinals = data.birds.maxActiveNorthernCardinals;
+        disableNorthernCardinalSpawnBiomeChecks = data.birds.disableNorthernCardinalSpawnBiomeChecks;
+        disableNorthernCardinalSpawnBlockChecks = data.birds.disableNorthernCardinalSpawnBlockChecks;
 
         // Debug Category
         debugTextSpawning = data.debug.debugText;

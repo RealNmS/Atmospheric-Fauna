@@ -1,0 +1,113 @@
+package nms.atmosphericfauna.particle;
+
+import nms.atmosphericfauna.particle.base.BaseBirdParticle;
+import static nms.atmosphericfauna.config.ConfigHandler.*;
+
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class NorthernCardinalParticle extends BaseBirdParticle {
+
+    private static final List<BaseBirdParticle> NORTHERN_CARDINALS = Collections.synchronizedList(new ArrayList<>());
+    static {
+        BaseBirdParticle.SPECIES_REGISTRY.add(NORTHERN_CARDINALS);
+    }
+
+    // --- CONSTRUCTOR ---
+
+    protected NorthernCardinalParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet,
+            double velocityX, double velocityY, double velocityZ) {
+        super(level, x, y, z, getSprite("northern_cardinal_flying_1"));
+        if (this.removed)
+            return;
+        this.baseSpriteName = "northern_cardinal";
+        this.spriteName = "northern_cardinal_flying_1";
+
+        this.lifetime = 3500;
+        this.quadSize = 0.35f; // Slightly smaller and rounder than a Blue Jay
+
+        // Cardinals are short-burst flutterers, not long-distance cruisers
+        this.flySpeed = 0.12f + BaseBirdParticle.getNextFlockSpeedOffset(); 
+        this.wingFlapSpeed = 2; // Fast, fluttery wingbeats
+        this.wingFlapOffset = random.nextInt(wingFlapSpeed);
+        this.steerStrength = 0.009; 
+        
+        // They prefer low-hanging branches and bushes
+        this.minFlightHeight = 1.0;
+        this.preferredFlightHeight = 2.0 + (this.random.nextDouble() * 6.0); // Stays relatively low
+        if (this.random.nextFloat() < 0.05f) {
+            this.preferredFlightHeight += 3.0 + this.random.nextDouble() * 5.0; 
+        }
+        
+        this.heightTolerance = 1.5;
+        this.heightAdherence = 0.008; // Strongly prefers its set height
+        this.maxVerticalSpeed = 0.25;
+        this.verticalSteerFactor = 1.1;
+        this.takeoffClimb = 1.8;
+        
+        // Flocking dynamics: Usually seen in pairs or small family units
+        this.flockRadius = 8.0; 
+        this.cohesionStrength = 0.003;
+        this.alignmentStrength = 0.002; // Relaxed alignment (they just want to be near each other)
+        this.separationDistance = 1.5;
+        this.separationStrength = 0.04;
+        this.flockGoalBias = 0.35; 
+        this.maxFlockSize = 3; // Capped small for a "mate/family" feel
+        this.fliesOverOcean = false;
+
+        this.scareRadius = 10.0;
+        this.scareTakeoffSpeed = 0.35;
+
+        // Cardinals love to sit, sing, and hang out on fences for long periods
+        this.perchingChance = 0.008; // Very high perching chance!
+        this.perchingTime = 1200; // Will sit comfortably for quite a while
+        this.perchingDistance = 8; 
+
+        this.goalRadius = 30.0; // Shorter flights between resting spots
+        this.goalDurationMin = 50;
+        this.goalDurationMax = 110; 
+        this.lookAheadMultiplier = 4.0; 
+
+        this.xd = velocityX + (this.random.nextFloat() - 0.5f) * 0.1;
+        this.zd = velocityZ + (this.random.nextFloat() - 0.5f) * 0.1;
+        this.yd = velocityY + 0.05;
+    }
+
+    // --- HELPER METHODS ---
+
+    @Override
+    protected List<BaseBirdParticle> getSpeciesList() {
+        return NORTHERN_CARDINALS;
+    }
+
+    @Override
+    public int getSpeciesMaxCount() {
+        return maxActiveNorthernCardinals;
+    }
+
+    public static int getCount() {
+        return NORTHERN_CARDINALS.size();
+    }
+
+    public static int getMaxActiveBirds() {
+        return maxActiveNorthernCardinals;
+    }
+
+    // --- FACTORY ---
+
+    public static final class Factory extends FaunaFactory {
+        public Factory(SpriteSet spriteSet) {
+            super(spriteSet);
+        }
+
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
+                double velocityX, double velocityY, double velocityZ) {
+            return new NorthernCardinalParticle(level, x, y, z, this.sprite, velocityX, velocityY, velocityZ);
+        }
+    }
+}

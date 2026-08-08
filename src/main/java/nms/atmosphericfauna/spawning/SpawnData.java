@@ -5,7 +5,7 @@ import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.particle.CommonSwiftParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
-
+import nms.atmosphericfauna.particle.NorthernCardinalParticle;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -208,9 +208,22 @@ public final class SpawnData {
                     BlockTags.SNOW, BlockTags.TERRACOTTA),
             () -> Math.max(0, CrowParticle.getMaxActiveBirds() - CrowParticle.getCount()));
 
+    public static final SpawnData NORTHERN_CARDINAL = new SpawnData(
+            "northern_cardinal",
+            AtmosphericFauna.NORTHERN_CARDINAL,
+            30, 1, 3, 8, 15, false, true, false,
+            ConfigHandler.enableNorthernCardinalSpawning,
+            !ConfigHandler.disableNorthernCardinalSpawnBiomeChecks,
+            !ConfigHandler.disableNorthernCardinalSpawnBlockChecks,
+            List.of(BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA, BiomeTags.IS_JUNGLE),
+            List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SNOW,
+                    BlockTags.BASE_STONE_OVERWORLD),
+            () -> Math.max(0, NorthernCardinalParticle.getMaxActiveBirds() - NorthernCardinalParticle.getCount()));
+
     public static final List<SpawnData> ALL_SPAWNS = List.of(
             BLUE_JAY,
             COMMON_SWIFT,
-            CROW
+            CROW,
+            NORTHERN_CARDINAL
     );
 }
