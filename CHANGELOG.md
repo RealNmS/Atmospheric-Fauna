@@ -20,7 +20,6 @@
 - update mod icon and banner
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
-- sprite flipping when perched (cache last direction when landing)
 - fix common swift texture
 - fix blue jay texture
 - simplify translation file
@@ -51,6 +50,7 @@
 - Fixed birds clipping through walls when landing
 - Fixed birds flocking with removed birds when particle limit was reached
 - Fixed a bug making birds fly infinitely to the sky (for a second time)
+- Fixed birds not facing the right direction when perched
 - Optimized clearBirds command to remove all birds at once instead of one by one
 - Optimized ground scanning to be less frequent (every 10 ticks instead of every tick)
 

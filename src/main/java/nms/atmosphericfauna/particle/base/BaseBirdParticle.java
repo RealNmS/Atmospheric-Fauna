@@ -48,6 +48,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected double lastDistSqToGoal = -1.0;
     protected int stuckTicks = 0;
     protected double cachedGroundHeight = Double.NaN;
+    protected double cachedDirX = 1.0;
+    protected double cachedDirZ = 0.0;
     protected int groundScanTimer = 0;
     protected double heightAdherence = 0.0015; // How strongly the bird pulls back to its target height
     protected double heightTolerance = 8.0; // How far (in blocks) they can drift before they start caring
@@ -236,6 +238,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         updateGridPosition();
 
+        if (Math.abs(this.xd) > 0.001 || Math.abs(this.zd) > 0.001) {
+            this.cachedDirX = this.xd;
+            this.cachedDirZ = this.zd;
+        }
+
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
@@ -270,15 +277,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         // Update sprite animation
-        if (state != State.DYING && state != State.PERCHED && this.baseSpriteName != null) {
-            int flapAdjustment = (int) (this.yd * 10);
-            int effectiveFlapSpeed = Math.max(1, this.wingFlapSpeed - flapAdjustment);
-            if ((this.age - this.wingFlapOffset) % effectiveFlapSpeed == 0) {
-                int frame = this.animator.getCurrentFrame();
-                this.animator.updateSprite(frame == 1 ? 2 : 1, false);
+        if (state != State.DYING && this.baseSpriteName != null) {
+            if (state != State.PERCHED) {
+                int flapAdjustment = (int) (this.yd * 10);
+                int effectiveFlapSpeed = Math.max(1, this.wingFlapSpeed - flapAdjustment);
+                if ((this.age - this.wingFlapOffset) % effectiveFlapSpeed == 0) {
+                    int frame = this.animator.getCurrentFrame();
+                    this.animator.updateSprite(frame == 1 ? 2 : 1, false);
+                }
             }
+
             if ((this.age + this.tickOffset) % 3 == 0) {
-                this.animator.updateFacingDirection(false, this.x, this.z, this.xd, this.zd);
+                this.animator.updateFacingDirection(state == State.PERCHED, this.x, this.z, this.cachedDirX,
+                        this.cachedDirZ);
             }
         }
 
