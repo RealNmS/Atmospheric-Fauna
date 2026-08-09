@@ -24,7 +24,6 @@
 - fix common swift texture
 - fix blue jay texture
 - simplify translation file
-- fix all birds in a big flock not perching together (probably the grid partitioning is the issue)
 
 ## current update notes *(wip)*
 

@@ -442,23 +442,36 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return;
 
         List<BaseBirdParticle> flyingNeighbors = new ArrayList<>();
-        double cx = this.x;
-        double cz = this.z;
 
-        for (BaseBirdParticle nb : getNeighbors(flockRadius)) {
-            if (nb == this)
-                continue;
-            if (nb.state == State.FLYING) {
-                flyingNeighbors.add(nb);
-                cx += nb.x;
-                cz += nb.z;
+        java.util.Set<BaseBirdParticle> visited = new java.util.HashSet<>();
+        java.util.List<BaseBirdParticle> queue = new java.util.ArrayList<>();
+
+        visited.add(this);
+        queue.add(this);
+
+        int head = 0;
+        while (head < queue.size()) {
+            BaseBirdParticle current = queue.get(head++);
+
+            for (BaseBirdParticle nb : current.cachedFlockNeighbors) {
+                if (nb != null && !nb.removed && nb.state == State.FLYING && visited.add(nb)) {
+                    flyingNeighbors.add(nb);
+                    queue.add(nb);
+                }
             }
         }
 
         if (flyingNeighbors.isEmpty())
             return;
 
-        // Calculate average flock center of mass
+        double cx = this.x;
+        double cz = this.z;
+
+        for (BaseBirdParticle nb : flyingNeighbors) {
+            cx += nb.x;
+            cz += nb.z;
+        }
+
         cx /= (flyingNeighbors.size() + 1);
         cz /= (flyingNeighbors.size() + 1);
 
