@@ -848,8 +848,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (neighbors.isEmpty())
             return;
 
-        // Hoist loop-invariants out of the inner loop so the JIT doesn't
-        // re-read fields on every iteration.
         double sepDist = separationDistance;
         double sepDistSq = sepDist * sepDist;
         double invSepDist = 1.0 / sepDist;
@@ -883,13 +881,19 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double dz = thisZ - nb.z;
             double d2 = dx * dx + dy * dy + dz * dz;
 
-            if (d2 <= sepDistSq && d2 > 0.0001) {
-                double d = Math.sqrt(d2);
-                double invD = 1.0 / d;
-                double factor = (sepDist - d) * invSepDist;
-                sepX += dx * invD * factor;
-                sepY += dy * invD * factor;
-                sepZ += dz * invD * factor;
+            if (d2 <= sepDistSq) {
+                if (d2 > 0.0) {
+                    double d = Math.sqrt(d2);
+                    double invD = 1.0 / d;
+                    double factor = (sepDist - d) * invSepDist;
+                    sepX += dx * invD * factor;
+                    sepY += dy * invD * factor;
+                    sepZ += dz * invD * factor;
+                } else {
+                    double angle = this.random.nextFloat() * Math.PI * 2;
+                    sepX += Math.cos(angle);
+                    sepZ += Math.sin(angle);
+                }
             }
 
             if (!isScattering && nb.flockCooldown == 0) {

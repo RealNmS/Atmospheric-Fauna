@@ -25,7 +25,8 @@
 - fix blue jay texture
 - simplify translation file
 - check if height check counts in water
-- fix the birds flying up bug finally
+- fix birds cancelling perch for no reason
+- fix all birds in a big flock not perching together (probably the grid partitioning is the issue)
 
 ## current update notes *(wip)*
 
@@ -52,6 +53,7 @@
 - Changed sprite flipping to be simpler, removing separate flipped sprites
 - Fixed birds clipping through walls when landing
 - Fixed birds flocking with removed birds when particle limit was reached
+- Fixed a bug making birds fly infinitely to the sky (for a second time)
 - Optimized clearBirds command to remove all birds at once instead of one by one
 - Optimized ground scanning to be less frequent (every 10 ticks instead of every tick)
 
