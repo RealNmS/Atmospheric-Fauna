@@ -24,8 +24,6 @@
 - fix common swift texture
 - fix blue jay texture
 - simplify translation file
-- check if height check counts in water
-- fix birds cancelling perch for no reason
 - fix all birds in a big flock not perching together (probably the grid partitioning is the issue)
 
 ## current update notes *(wip)*

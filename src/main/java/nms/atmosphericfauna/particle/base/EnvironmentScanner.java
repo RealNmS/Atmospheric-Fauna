@@ -23,7 +23,16 @@ public class EnvironmentScanner {
     //?}
 
     public boolean isBlocked(double px, double py, double pz) {
+        return isBlocked(px, py, pz, null);
+    }
+
+    public boolean isBlocked(double px, double py, double pz, BlockPos exemptPos) {
         pos.set(px, py, pz);
+
+        if (exemptPos != null && pos.equals(exemptPos)) {
+            return false;
+        }
+
         BlockState state = level.getBlockState(pos);
 
         if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
@@ -31,6 +40,35 @@ public class EnvironmentScanner {
         }
 
         return !state.getCollisionShape(level, pos).isEmpty();
+    }
+
+    public boolean hasLineOfSight(double x1, double y1, double z1, double x2, double y2, double z2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double dz = z2 - z1;
+        double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+        if (dist <= 0.001)
+            return true;
+
+        int steps = (int) Math.ceil(dist * 2.0);
+        double stepX = dx / steps;
+        double stepY = dy / steps;
+        double stepZ = dz / steps;
+
+        double cx = x1;
+        double cy = y1;
+        double cz = z1;
+
+        for (int i = 0; i < steps; i++) {
+            cx += stepX;
+            cy += stepY;
+            cz += stepZ;
+            if (isBlocked(cx, cy, cz, null)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isOceanBiome(double px, double pz) {

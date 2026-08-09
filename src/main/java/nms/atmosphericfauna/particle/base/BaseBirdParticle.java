@@ -491,11 +491,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 }
 
                 if (candidate != null) {
-                    // Check if the block is too crowded
-                    int currentCount = nb.countBirdsOnPerch(candidate) + activeCounts.getOrDefault(candidate, 0);
-                    if (acceptsCrowd(currentCount)) {
-                        chosenTarget = candidate;
-                        break;
+                    // Check if the block is too crowded and has line of sight
+                    if (env.hasLineOfSight(nb.x, nb.y, nb.z, candidate.getX() + 0.5, candidate.getY() + 1.0,
+                            candidate.getZ() + 0.5)) {
+                        int currentCount = nb.countBirdsOnPerch(candidate) + activeCounts.getOrDefault(candidate, 0);
+                        if (acceptsCrowd(currentCount)) {
+                            chosenTarget = candidate;
+                            break;
+                        }
                     }
                 }
             }
@@ -1152,6 +1155,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     continue;
                 }
 
+                if (!env.hasLineOfSight(this.x, this.y, this.z, candidate.getX() + 0.5, checkY + 1.0,
+                        candidate.getZ() + 0.5)) {
+                    continue;
+                }
+
                 setState(this, State.LANDING);
                 this.landingBlockPos = candidate;
                 setLandingOffsets(this, belowState.getShape(level, mutablePos));
@@ -1219,26 +1227,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
         double horizDist = Math.sqrt(dx * dx + dz * dz);
 
-        // Block Avoidance Check - If the path to the perch is suddenly obstructed,
-        // gracefully abort!
         double lookX = this.x + this.xd * lookAheadMultiplier;
         double lookY = this.y + this.yd * lookAheadMultiplier;
         double lookZ = this.z + this.zd * lookAheadMultiplier;
 
-        if (env.isBlocked(lookX, lookY, lookZ)) {
-            setState(this, State.FLYING);
-            this.goalX = this.x + this.xd * 10.0;
-            this.goalY = this.y + 3.0 + this.random.nextFloat() * 2.0; // Swoop back up into the sky
-            this.goalZ = this.z + this.zd * 10.0;
-            this.landingTargetY = Double.NaN;
-            this.landingBlockPos = null;
-            return;
-        }
-
-        // Smooth Arrival Steering Behavior
-        if (dist > 0.001) {
-            // Map the remaining distance to a speed multiplier (starts slowing down 4
-            // blocks away)
+        // Check if there is an obstacle
+        if (env.isBlocked(lookX, lookY, lookZ, this.landingBlockPos)) {
+            this.yd = 0.15 + this.random.nextFloat() * 0.1;
+            this.xd *= 0.7;
+            this.zd *= 0.7;
+        } else if (dist > 0.001) {
             double speedScale = Math.min(1.0, dist / 4.0);
             double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
@@ -1250,8 +1248,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double steerY = desiredYd - this.yd;
             double steerZ = desiredZd - this.zd;
 
-            // Use a slightly stronger steer factor during landing so they don't overshoot
-            // and orbit
             double currentSteerStrength = this.steerStrength * 2.8;
             double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
 
