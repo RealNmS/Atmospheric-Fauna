@@ -55,9 +55,9 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 
 ## Installation
 
-Just make sure you have the latest version of [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api) installed. For installation on **NeoForge** I recommend using [Sinytra Connector](https://modrinth.com/mod/connector), which is compatible with this mod.
+Just make sure you have the latest version of [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api) installed. For the best experience I recommend using this alongside with [Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
 
-For the best experience I recommend using this alongside with [Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
+For installation on **NeoForge** I recommend using [Sinytra Connector](https://modrinth.com/mod/connector), which is compatible with this mod. To edit the config file, you should use [Connector Extras](https://modrinth.com/mod/connector-extras) and [Cloth Config (NeoForge)](https://modrinth.com/mod/cloth-config).
 
 The mod is completely **client-side**, so you don't need to install it on the server. As of now, there is no server-side functionality.
 
