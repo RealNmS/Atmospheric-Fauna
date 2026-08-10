@@ -29,46 +29,39 @@ public class NorthernCardinalParticle extends BaseBirdParticle {
         this.spriteName = "northern_cardinal_flying_1";
 
         this.lifetime = 3500;
-        this.quadSize = 0.35f; // Slightly smaller and rounder than a Blue Jay
+        this.quadSize = 0.35f;
 
-        // Cardinals are short-burst flutterers, not long-distance cruisers
         this.flySpeed = 0.12f + BaseBirdParticle.getNextFlockSpeedOffset(); 
-        this.wingFlapSpeed = 2; // Fast, fluttery wingbeats
+        this.wingFlapSpeed = 2;
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
-        this.steerStrength = 0.009; 
-        
-        // They prefer low-hanging branches and bushes
+        this.steerStrength = 0.009;
         this.minFlightHeight = 1.0;
-        this.preferredFlightHeight = 2.0 + (this.random.nextDouble() * 6.0); // Stays relatively low
+        this.preferredFlightHeight = 2.0 + (this.random.nextDouble() * 6.0);
         if (this.random.nextFloat() < 0.05f) {
             this.preferredFlightHeight += 3.0 + this.random.nextDouble() * 5.0; 
         }
-        
         this.heightTolerance = 1.5;
-        this.heightAdherence = 0.008; // Strongly prefers its set height
+        this.heightAdherence = 0.008;
         this.maxVerticalSpeed = 0.25;
         this.verticalSteerFactor = 1.1;
         this.takeoffClimb = 1.8;
-        
-        // Flocking dynamics: Usually seen in pairs or small family units
         this.flockRadius = 8.0; 
         this.cohesionStrength = 0.003;
-        this.alignmentStrength = 0.002; // Relaxed alignment (they just want to be near each other)
+        this.alignmentStrength = 0.002;
         this.separationDistance = 1.5;
         this.separationStrength = 0.04;
         this.flockGoalBias = 0.35; 
-        this.maxFlockSize = 3; // Capped small for a "mate/family" feel
+        this.maxFlockSize = 3;
         this.fliesOverOcean = false;
 
         this.scareRadius = 10.0;
         this.scareTakeoffSpeed = 0.35;
 
-        // Cardinals love to sit, sing, and hang out on fences for long periods
-        this.perchingChance = 0.008; // Very high perching chance!
-        this.perchingTime = 1200; // Will sit comfortably for quite a while
+        this.perchingChance = 0.008;
+        this.perchingTime = 1200;
         this.perchingDistance = 8; 
 
-        this.goalRadius = 30.0; // Shorter flights between resting spots
+        this.goalRadius = 30.0;
         this.goalDurationMin = 50;
         this.goalDurationMax = 110; 
         this.lookAheadMultiplier = 4.0; 
