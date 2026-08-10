@@ -21,7 +21,6 @@
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
 - fix common swift texture
-- fix blue jay texture
 
 ## current update notes *(wip)*
 
