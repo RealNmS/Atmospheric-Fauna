@@ -118,41 +118,41 @@ public class ModMenuConfig {
                 .startSubCategory(Component.translatable("subcategory.atmosphericfauna.blue_jays"));
 
         blueJays.add(entryBuilder
-                .startBooleanToggle(Component.translatable("option.atmosphericfauna.enable_blue_jay_spawning"),
+                .startBooleanToggle(Component.translatable("option.atmosphericfauna.species.enable_spawning"),
                         ConfigHandler.enableBlueJaySpawning)
                 .setDefaultValue(ConfigHandler.Defaults.ENABLE_BLUE_JAY_SPAWNING)
-                .setTooltip(Component.translatable("option.atmosphericfauna.enable_blue_jay_spawning.tooltip"))
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.enable_spawning.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.enableBlueJaySpawning = newValue)
                 .build());
 
         blueJays.add(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.max_active_blue_jays"),
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_active"),
                         ConfigHandler.maxActiveBlueJays)
                 .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_BLUE_JAYS)
                 .setMin(0)
-                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_blue_jays.tooltip"))
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_active.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveBlueJays = newValue)
                 .build());
 
         blueJays.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_blue_jay_spawn_biome_checks"),
+                                "option.atmosphericfauna.species.ignore_biome_checks"),
                         ConfigHandler.disableBlueJaySpawnBiomeChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_blue_jay_spawn_biome_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBiomeChecks = newValue)
                 .build());
 
         blueJays.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_blue_jay_spawn_block_checks"),
+                                "option.atmosphericfauna.species.ignore_block_checks"),
                         ConfigHandler.disableBlueJaySpawnBlockChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_blue_jay_spawn_block_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBlockChecks = newValue)
                 .build());
 
@@ -163,42 +163,42 @@ public class ModMenuConfig {
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
-                        Component.translatable("option.atmosphericfauna.enable_common_swift_spawning"),
+                        Component.translatable("option.atmosphericfauna.species.enable_spawning"),
                         ConfigHandler.enableCommonSwiftSpawning)
                 .setDefaultValue(ConfigHandler.Defaults.ENABLE_COMMON_SWIFT_SPAWNING)
                 .setTooltip(Component
-                        .translatable("option.atmosphericfauna.enable_common_swift_spawning.tooltip"))
+                        .translatable("option.atmosphericfauna.species.enable_spawning.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.enableCommonSwiftSpawning = newValue)
                 .build());
 
         commonSwifts.add(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.max_active_common_swifts"),
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_active"),
                         ConfigHandler.maxActiveCommonSwifts)
                 .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_COMMON_SWIFTS)
                 .setMin(0)
-                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_common_swifts.tooltip"))
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_active.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveCommonSwifts = newValue)
                 .build());
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_common_swift_spawn_biome_checks"),
+                                "option.atmosphericfauna.species.ignore_biome_checks"),
                         ConfigHandler.disableCommonSwiftSpawnBiomeChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_common_swift_spawn_biome_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBiomeChecks = newValue)
                 .build());
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_common_swift_spawn_block_checks"),
+                                "option.atmosphericfauna.species.ignore_block_checks"),
                         ConfigHandler.disableCommonSwiftSpawnBlockChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_common_swift_spawn_block_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBlockChecks = newValue)
                 .build());
 
@@ -208,41 +208,41 @@ public class ModMenuConfig {
                 .startSubCategory(Component.translatable("subcategory.atmosphericfauna.crows"));
 
         crows.add(entryBuilder
-                .startBooleanToggle(Component.translatable("option.atmosphericfauna.enable_crow_spawning"),
+                .startBooleanToggle(Component.translatable("option.atmosphericfauna.species.enable_spawning"),
                         ConfigHandler.enableCrowSpawning)
                 .setDefaultValue(ConfigHandler.Defaults.ENABLE_CROW_SPAWNING)
-                .setTooltip(Component.translatable("option.atmosphericfauna.enable_crow_spawning.tooltip"))
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.enable_spawning.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.enableCrowSpawning = newValue)
                 .build());
 
         crows.add(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.max_active_crows"),
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_active"),
                         ConfigHandler.maxActiveCrows)
                 .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_CROWS)
                 .setMin(0)
-                .setTooltip(Component.translatable("option.atmosphericfauna.max_active_crows.tooltip"))
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_active.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
                 .build());
 
         crows.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_crow_spawn_biome_checks"),
+                                "option.atmosphericfauna.species.ignore_biome_checks"),
                         ConfigHandler.disableCrowSpawnBiomeChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_crow_spawn_biome_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
                 .build());
 
         crows.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_crow_spawn_block_checks"),
+                                "option.atmosphericfauna.species.ignore_block_checks"),
                         ConfigHandler.disableCrowSpawnBlockChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_crow_spawn_block_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBlockChecks = newValue)
                 .build());
 
@@ -254,43 +254,43 @@ public class ModMenuConfig {
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.enable_northern_cardinal_spawning"),
+                                "option.atmosphericfauna.species.enable_spawning"),
                         ConfigHandler.enableNorthernCardinalSpawning)
                 .setDefaultValue(ConfigHandler.Defaults.ENABLE_NORTHERN_CARDINAL_SPAWNING)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.enable_northern_cardinal_spawning.tooltip"))
+                        "option.atmosphericfauna.species.enable_spawning.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.enableNorthernCardinalSpawning = newValue)
                 .build());
 
         northernCardinals.add(entryBuilder
-                .startIntField(Component.translatable("option.atmosphericfauna.max_active_northern_cardinals"),
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_active"),
                         ConfigHandler.maxActiveNorthernCardinals)
                 .setDefaultValue(ConfigHandler.Defaults.MAX_ACTIVE_NORTHERN_CARDINALS)
                 .setMin(0)
                 .setTooltip(Component
-                        .translatable("option.atmosphericfauna.max_active_northern_cardinals.tooltip"))
+                        .translatable("option.atmosphericfauna.species.max_active.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveNorthernCardinals = newValue)
                 .build());
 
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_northern_cardinal_spawn_biome_checks"),
+                                "option.atmosphericfauna.species.ignore_biome_checks"),
                         ConfigHandler.disableNorthernCardinalSpawnBiomeChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_northern_cardinal_spawn_biome_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBiomeChecks = newValue)
                 .build());
 
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
-                                "option.atmosphericfauna.disable_northern_cardinal_spawn_block_checks"),
+                                "option.atmosphericfauna.species.ignore_block_checks"),
                         ConfigHandler.disableNorthernCardinalSpawnBlockChecks)
                 .setDefaultValue(ConfigHandler.Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS)
                 .setTooltip(Component.translatable(
-                        "option.atmosphericfauna.disable_northern_cardinal_spawn_block_checks.tooltip"))
+                        "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBlockChecks = newValue)
                 .build());
 

@@ -22,7 +22,6 @@
 - update Crow and Blue Jay showcase imgs
 - fix common swift texture
 - fix blue jay texture
-- simplify translation file
 
 ## current update notes *(wip)*
 
@@ -47,6 +46,7 @@
 - Changed fly speed to be slightly randomized for each flock on spawn
 - Changed flying above void, making birds less prone to flying straight down
 - Changed sprite flipping to be simpler, removing separate flipped sprites
+- Changed most of the config option texts to be more clear and understandable
 - Fixed birds clipping through walls when landing
 - Fixed birds flocking with removed birds when particle limit was reached
 - Fixed a bug making birds fly infinitely to the sky (for a second time)
