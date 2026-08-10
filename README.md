@@ -1,7 +1,8 @@
 ![Atmospheric Fauna Logo](src/main/resources/assets/docs/banner_logo.gif)
 
-Minecraft mod that adds birds and other fauna making your world feel alive. Hugely inspired by the amazing mod [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters).
+Minecraft mod that adds birds and other fauna making your world feel alive. Very customizable, cozy and focused on vanilla-like feeling.
 
+<p align="center">
 <a href="https://linktr.ee/onlynms">
     <img alt="Linktree" src="https://img.shields.io/badge/linktree-39E09B?style=for-the-badge&logo=linktree&logoColor=white">
 </a>
@@ -21,6 +22,7 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 <a href="https://www.curseforge.com/minecraft/mc-mods/atmospheric-fauna">
     <img alt="CurseForge Downloads" src="https://img.shields.io/curseforge/dt/1427513?style=for-the-badge&color=F16436&label=CurseForge&logo=curseforge">
 </a>
+</p>
 
 ---
 
@@ -31,9 +33,9 @@ Minecraft mod that adds birds and other fauna making your world feel alive. Huge
 
 ## Description
 
-**Atmospheric Fauna** is a **Fabric** mod which I created just to fix the lonely atmosphere of Minecraft. I decided to add _(inspired by [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters))_ particle based birds that can fly around and interact with the world. The birds will all spawn in different biomes and have different behaviors. Some will like to be alone and some will like to be in flocks. Some will be scared of players and some will be curious. I want the mod to feel alive and dynamic, so the birds will react to the environment and the player in different ways while trying my best to maintain reasonable performance.
+**Atmospheric Fauna** is a **Fabric** mod which I created just to fix the lonely atmosphere of Minecraft. I decided to add _(hugely inspired by the amazing mod [Cosy Critters & Creepy Crawlies](https://modrinth.com/mod/cosy-critters))_ particle based birds that can fly around and interact with the world. The birds will all spawn in different biomes and have different behaviors. Some will like to be alone and some will like to be in flocks. Some will be scared of players and some will be curious. I want the mod to feel alive and dynamic, so the birds will react to the environment and the player in different ways while trying my best to maintain reasonable performance.
 
-My plan right now is to build a solid foundation for the mod, so I can easily add as many birds in the future as I want. So far I've used crows as a base bird for testing, but later on I plan on adding lots of different birds with unique characteristics. I'm also using this as a way to learn about modding and coding in Java, because it's something I've wanted to learn for a long time (might learn some pixel art as well).
+My plan right now is to build a solid foundation for the mod, so I can easily add as many birds in the future as I want. If you are interested in seeing what my future plans are, check out the [CHANGELOG](https://github.com/RealNmS/Atmospheric-Fauna/blob/main/CHANGELOG.md). I'm also using this as a way to learn about modding and coding in Java, because it's something I've wanted to learn for a long time (might learn some pixel art as well).
 
 ---
 
