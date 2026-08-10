@@ -20,7 +20,6 @@
 - update mod icon and banner
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
-- fix common swift texture
 
 ## current update notes *(wip)*
 
