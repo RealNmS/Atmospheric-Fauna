@@ -67,8 +67,10 @@ dependencies {
 
     // Dev Environment Testing Mods
     if (sc.current.version == "26.1") {
-        modLocalRuntime("maven.modrinth:spark:1.10.173-fabric") 
-        modLocalRuntime("maven.modrinth:ok-zoomer:17.0.0-beta.5") 
+        modLocalRuntime("maven.modrinth:spark:1.10.173-fabric")
+        modLocalRuntime("maven.modrinth:ok-zoomer:17.0.0-beta.5")
+        modLocalRuntime("maven.modrinth:sodium:mc26.1.1-0.8.9-fabric")
+        modLocalRuntime("maven.modrinth:iris:1.10.9+26.1-fabric")
     }
 }
 
