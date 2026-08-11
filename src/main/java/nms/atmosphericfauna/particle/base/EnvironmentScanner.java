@@ -3,6 +3,7 @@ package nms.atmosphericfauna.particle.base;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
@@ -35,7 +36,7 @@ public class EnvironmentScanner {
 
         BlockState state = level.getBlockState(pos);
 
-        if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
+        if (state.isAir() || state.is(BlockTags.LEAVES)) {
             return false;
         }
 
