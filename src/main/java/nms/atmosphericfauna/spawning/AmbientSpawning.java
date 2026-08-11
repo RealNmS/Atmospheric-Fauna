@@ -112,7 +112,11 @@ public class AmbientSpawning {
                 return false;
             }
         } else {
-            if (!world.isEmptyBlock(pos) || !world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
+            var stateAtPos = world.getBlockState(pos);
+            if (!stateAtPos.getFluidState().isEmpty()
+                    || !stateAtPos.getCollisionShape(world, pos).isEmpty()
+                    || !world.isEmptyBlock(pos.above())
+                    || world.isEmptyBlock(pos.below())) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
                 return false;
