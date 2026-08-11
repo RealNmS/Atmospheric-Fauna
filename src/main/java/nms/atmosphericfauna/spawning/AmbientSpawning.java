@@ -249,8 +249,8 @@ public class AmbientSpawning {
 
             if (foundCenter != null) {
                 int maxPackSize = Math.min(spawnData.maxPackSize(), availableSpots);
-                int targetPackSize = random.nextInt(maxPackSize - spawnData.minPackSize() + 1)
-                        + spawnData.minPackSize();
+                int range = Math.max(1, maxPackSize - spawnData.minPackSize() + 1);
+                int targetPackSize = random.nextInt(range) + spawnData.minPackSize();
 
                 int failSafe = 0;
                 List<BlockPos> validSpots = new ArrayList<>();
