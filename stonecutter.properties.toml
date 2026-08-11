@@ -1,4 +1,5 @@
 # See https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
+# Last Stonecutter Update: Commit 60 (https://codeberg.org/stonecutter/template-fabric)
 mod.id = "atmospheric-fauna"
 mod.name = "Atmospheric Fauna"
 mod.group = "nms.atmosphericfauna"
