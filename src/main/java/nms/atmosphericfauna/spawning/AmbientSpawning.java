@@ -190,7 +190,7 @@ public class AmbientSpawning {
             double spawnZ = player.getZ() + Math.sin(angle) * dist;
             double spawnY = player.getY();
 
-            BlockPos spawnPos = new BlockPos((int) spawnX, (int) spawnY, (int) spawnZ);
+            BlockPos spawnPos = BlockPos.containing(spawnX, spawnY, spawnZ);
 
             if (isValidSpawnLocation(world, spawnPos, spawnData, true)) {
                 int maxPackSize = Math.min(spawnData.maxPackSize(), availableSpots);
@@ -242,8 +242,8 @@ public class AmbientSpawning {
             double minDist = spawnRangeFromPlayer / 2.0;
             double distance = minDist + random.nextFloat() * (spawnRangeFromPlayer - minDist);
 
-            int baseX = playerPos.getX() + (int) (Math.cos(angle) * distance);
-            int baseZ = playerPos.getZ() + (int) (Math.sin(angle) * distance);
+            int baseX = playerPos.getX() + (int) Math.floor(Math.cos(angle) * distance);
+            int baseZ = playerPos.getZ() + (int) Math.floor(Math.sin(angle) * distance);
 
             BlockPos foundCenter = findValidSpawnNear(world, random, baseX, baseZ, spawnData, searchRadius, 12);
 
