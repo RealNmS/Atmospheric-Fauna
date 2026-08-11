@@ -72,7 +72,7 @@ public class EnvironmentScanner {
     }
 
     public boolean isOceanBiome(double px, double pz) {
-        pos.set(px, 62, pz);
+        pos.set(px, level.getSeaLevel(), pz);
         return level.getBiome(pos).is(BiomeTags.IS_OCEAN);
     }
 
