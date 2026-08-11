@@ -35,7 +35,8 @@ public class AmbientSpawning {
             return;
         }
 
-        if (BaseBirdParticle.getAllBirds().size() >= BaseBirdParticle.getMaxActiveBirds()) {
+        int currentBirdCount = BaseBirdParticle.getAllBirds().size();
+        if (currentBirdCount >= BaseBirdParticle.getMaxActiveBirds()) {
             if (debugTextSpawning) {
                 AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Global bird limit ("
                         + BaseBirdParticle.getMaxActiveBirds() + ") reached.");
@@ -65,9 +66,9 @@ public class AmbientSpawning {
             }
 
             if (enableMidairBorderSpawning && random.nextBoolean()) {
-                tryMidairSpawn(world, random, selectedSpawn);
+                tryMidairSpawn(world, random, selectedSpawn, currentBirdCount);
             } else {
-                trySpawn(world, random, selectedSpawn);
+                trySpawn(world, random, selectedSpawn, currentBirdCount);
             }
         }
     }
@@ -168,9 +169,10 @@ public class AmbientSpawning {
 
     // MARK: --- MIDAIR BORDER SPAWNING ---
 
-    private synchronized static void tryMidairSpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
+    private synchronized static void tryMidairSpawn(ClientLevel world, RandomSource random, SpawnData spawnData,
+            int currentBirdCount) {
         int availableSpots = Math.min(
-                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size()),
+                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - currentBirdCount),
                 spawnData.availableSpots().getAsInt());
 
         if (!passesBasicConditions(world, spawnData, availableSpots))
@@ -222,9 +224,10 @@ public class AmbientSpawning {
 
     // MARK: --- NORMAL SPAWN ---
 
-    private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData) {
+    private synchronized static void trySpawn(ClientLevel world, RandomSource random, SpawnData spawnData,
+            int currentBirdCount) {
         int availableSpots = Math.min(
-                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - BaseBirdParticle.getAllBirds().size()),
+                Math.max(0, BaseBirdParticle.getMaxActiveBirds() - currentBirdCount),
                 spawnData.availableSpots().getAsInt());
 
         if (!passesBasicConditions(world, spawnData, availableSpots))
