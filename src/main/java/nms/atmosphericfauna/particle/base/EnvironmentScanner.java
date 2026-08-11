@@ -39,6 +39,10 @@ public class EnvironmentScanner {
             return false;
         }
 
+        if (!state.getFluidState().isEmpty()) {
+            return true;
+        }
+
         return !state.getCollisionShape(level, pos).isEmpty();
     }
 
