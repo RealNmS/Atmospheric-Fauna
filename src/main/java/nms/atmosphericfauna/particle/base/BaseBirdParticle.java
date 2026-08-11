@@ -1311,6 +1311,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;
+            this.landingOffsetX = 0.0;
+            this.landingOffsetZ = 0.0;
             return;
         }
 
