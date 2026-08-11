@@ -111,7 +111,7 @@ public class AmbientSpawning {
                 return false;
             }
         } else {
-            if (!world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
+            if (!world.isEmptyBlock(pos) || !world.isEmptyBlock(pos.above()) || world.isEmptyBlock(pos.below())) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
                 return false;
