@@ -12,10 +12,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 
 public abstract class BaseBirdParticle extends BaseParticle {
@@ -293,7 +295,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        // debug stuff
+        // Debug
         if (debugTextBirds) {
             if ((this.age + this.tickOffset) % 10 == 0) {
                 AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
@@ -384,7 +386,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private void registerInGrid() {
         if (inGrid)
             return;
-        // Defer if flockRadius hasn't been set by the subclass yet.
         if (this.flockRadius <= 0.0)
             return;
         SpatialGrid grid = getOrCreateGrid();
@@ -453,9 +454,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
             return;
 
         List<BaseBirdParticle> flyingNeighbors = new ArrayList<>();
-
-        java.util.Set<BaseBirdParticle> visited = new java.util.HashSet<>();
-        java.util.List<BaseBirdParticle> queue = new java.util.ArrayList<>();
+        Set<BaseBirdParticle> visited = new HashSet<>();
+        List<BaseBirdParticle> queue = new ArrayList<>();
 
         visited.add(this);
         queue.add(this);
@@ -607,8 +607,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         groupTakeoff();
     }
 
-    // Calculates a random landing spot that strictly stays inside the block's
-    // physical bounds
+    // Calculates a random landing spot
     private void setLandingOffsets(BaseBirdParticle bird, VoxelShape shape) {
         if (shape.isEmpty()) {
             bird.landingOffsetX = (this.random.nextFloat() - 0.5f) * 0.8;
@@ -679,7 +678,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double nx = Math.cos(angle) * randRadius + this.xd * 5.0 * (this.random.nextFloat() - 0.5f);
         double nz = Math.sin(angle) * randRadius + this.zd * 5.0 * (this.random.nextFloat() - 0.5f);
 
-        // Water avoidance loop
+        // Ocean avoidance
         if (!this.fliesOverOcean) {
             int attempts = 0;
             while (env.isOceanBiome(this.x + nx, this.z + nz) && attempts < 15) {
@@ -969,7 +968,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.goalX = thisX + Math.cos(angleAway) * (goalRadius * 1.5);
                 this.goalY = Math.max(groundY + minFlightHeight, thisY + (this.random.nextFloat() - 0.2f) * 10.0);
                 this.goalZ = thisZ + Math.sin(angleAway) * (goalRadius * 1.5);
-                this.goalTimer = 80; // Hard commit to this escape route
+                this.goalTimer = 80;
             } else {
                 // Normal Alignment and Cohesion
                 double aliX = (avx - this.xd) * (alignmentStrength * 1.6);
