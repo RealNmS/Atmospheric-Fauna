@@ -32,6 +32,7 @@
 - Added new subcommand "spawn", which spawns a bird of a specific type at the player's location
 - Added config options to disable biome and block checks for spawning birds
 - Added config option to enable debug screen on joining a world
+- Added config option to disable spawning around players in Spectator mode
 - Added "Client" badge to the mod in Mod Menu
 - Reworked perching
   - Improved the logic for selecting perching spots, making it more sparse and randomized

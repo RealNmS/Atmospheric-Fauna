@@ -26,6 +26,7 @@ public class ConfigHandler {
         public static final int ATTEMPTS_PER_TICK = 15;
         public static final int SEARCH_RADIUS = 12;
         public static final boolean SPAWN_BELOW_SEA_LEVEL = false;
+        public static final boolean SPAWN_AROUND_SPECTATORS = true;
 
         public static final int MAX_ACTIVE_BIRDS = 100;
         // Blue Jay
@@ -62,6 +63,7 @@ public class ConfigHandler {
     public static int attemptsPerTick = Defaults.ATTEMPTS_PER_TICK;
     public static int searchRadius = Defaults.SEARCH_RADIUS;
     public static boolean spawnBelowSeaLevel = Defaults.SPAWN_BELOW_SEA_LEVEL;
+    public static boolean spawnAroundSpectators = Defaults.SPAWN_AROUND_SPECTATORS;
 
     public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
     // Blue Jay
@@ -154,6 +156,7 @@ public class ConfigHandler {
             public Integer attemptsPerTick;
             public Integer searchRadius;
             public Boolean spawnBelowSeaLevel;
+            public Boolean spawnAroundSpectators;
         }
 
         // Birds Category
@@ -206,6 +209,7 @@ public class ConfigHandler {
         data.spawning.attemptsPerTick = attemptsPerTick;
         data.spawning.searchRadius = searchRadius;
         data.spawning.spawnBelowSeaLevel = spawnBelowSeaLevel;
+        data.spawning.spawnAroundSpectators = spawnAroundSpectators;
 
         // Birds Category
         data.birds.maxActiveBirds = maxActiveBirds;
@@ -248,6 +252,7 @@ public class ConfigHandler {
         attemptsPerTick = data.spawning.attemptsPerTick;
         searchRadius = data.spawning.searchRadius;
         spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
+        spawnAroundSpectators = data.spawning.spawnAroundSpectators;
 
         // Birds Category
         maxActiveBirds = data.birds.maxActiveBirds;

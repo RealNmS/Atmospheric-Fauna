@@ -176,7 +176,7 @@ public class AmbientSpawning {
         if (!passesBasicConditions(world, spawnData, availableSpots))
             return;
 
-        var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
+        var players = world.players().stream().filter(p -> spawnAroundSpectators || !p.isSpectator()).toList();
         if (players.isEmpty())
             return;
 
@@ -230,7 +230,7 @@ public class AmbientSpawning {
         if (!passesBasicConditions(world, spawnData, availableSpots))
             return;
 
-        var players = world.players().stream().filter(p -> !p.isSpectator()).toList();
+        var players = world.players().stream().filter(p -> spawnAroundSpectators || !p.isSpectator()).toList();
         if (players.isEmpty())
             return;
 

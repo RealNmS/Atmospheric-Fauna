@@ -100,6 +100,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.spawnBelowSeaLevel = newValue)
                 .build());
 
+        spawning.addEntry(entryBuilder
+                .startBooleanToggle(Component
+                        .translatable("option.atmosphericfauna.spawn_around_spectators"),
+                        ConfigHandler.spawnAroundSpectators)
+                .setDefaultValue(ConfigHandler.Defaults.SPAWN_AROUND_SPECTATORS)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.spawn_around_spectators.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.spawnAroundSpectators = newValue)
+                .build());
+
         // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder
