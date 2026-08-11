@@ -506,7 +506,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                     if (!colShape.isEmpty()) {
                         mutablePos.move(Direction.UP);
-                        if (level.getBlockState(mutablePos).getCollisionShape(level, mutablePos).isEmpty()) {
+                        BlockState aboveState = level.getBlockState(mutablePos);
+                        if (aboveState.getCollisionShape(level, mutablePos).isEmpty()
+                                && aboveState.getFluidState().isEmpty()) {
                             mutablePos.move(Direction.DOWN);
                             candidate = mutablePos.immutable();
                             break;

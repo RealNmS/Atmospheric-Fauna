@@ -49,6 +49,7 @@
 - Fixed birds flocking with removed birds when particle limit was reached
 - Fixed a bug making birds fly infinitely to the sky (for a second time)
 - Fixed birds not facing the right direction when perched
+- Fixed birds perching under water
 - Optimized clearBirds command to remove all birds at once instead of one by one
 - Optimized ground scanning to be less frequent (every 10 ticks instead of every tick)
 
