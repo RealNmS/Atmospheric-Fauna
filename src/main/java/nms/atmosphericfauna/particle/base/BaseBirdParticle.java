@@ -1187,9 +1187,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                 setState(this, State.LANDING);
                 this.landingBlockPos = candidate;
-                setLandingOffsets(this, belowState.getShape(level, mutablePos));
-
                 VoxelShape visualShape = belowState.getShape(level, mutablePos);
+                setLandingOffsets(this, visualShape);
                 double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
 
                 BlockPos abovePos = this.landingBlockPos.above();
