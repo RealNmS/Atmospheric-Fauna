@@ -1461,7 +1461,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     private void tickDying() {
         this.yd -= 0.02;
-        if (this.y < -64 || this.age > this.lifetime + 240) {
+        if (this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime + 240) {
             if (debugTextBirds) {
                 AtmosphericFauna.LOGGER
                         .info("Bird particle removed due to age or falling out of world: " + this.baseSpriteName);
