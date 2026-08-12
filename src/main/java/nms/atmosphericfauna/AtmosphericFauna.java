@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +38,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 	public static final SimpleParticleType CROW = FabricParticleTypes.simple(true);
 	public static final SimpleParticleType NORTHERN_CARDINAL = FabricParticleTypes.simple(true);
 	private static int chunkLoadCount = 0;
+    private static ClientLevel lastLevel = null;
 
 	@Override
 	public void onInitializeClient() {
@@ -76,6 +78,12 @@ public class AtmosphericFauna implements ClientModInitializer {
 		*//*?} else {*/
 		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
 		//?}
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.level != lastLevel) {
+                BaseBirdParticle.reset();
+                lastLevel = client.level;
+            }
+        });
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
@@ -101,8 +109,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 				}
 			}
 		});
-		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-			BaseBirdParticle.reset();
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (ConfigHandler.enableDebugScreenOnJoin) {
 				DebugHudOverlay.showDebug = true;
 			}
