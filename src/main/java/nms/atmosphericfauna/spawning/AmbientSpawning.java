@@ -7,6 +7,7 @@ import static nms.atmosphericfauna.config.ConfigHandler.*;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.biome.Biome;
@@ -157,6 +158,13 @@ public class AmbientSpawning {
             if (!biomeMatch) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome");
+                return false;
+            }
+        } else {
+            if (!world.getBiome(pos).is(BiomeTags.IS_OVERWORLD)) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER
+                            .info("[AS] Aborted: Ignored biome checks, but dimension is not the Overworld");
                 return false;
             }
         }
