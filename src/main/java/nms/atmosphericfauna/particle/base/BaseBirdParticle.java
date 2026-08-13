@@ -562,14 +562,54 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
-    // Ask nearby perched flockmates to take off with this bird
+    // Ask nearby flockmates to take off with this bird, abort landings, or keep
+    // flying
     private void groupTakeoff() {
-        for (BaseBirdParticle nb : getNeighbors(flockRadius)) {
+        List<BaseBirdParticle> connectedFlock = new ArrayList<>();
+        Set<BaseBirdParticle> visited = new HashSet<>();
+        List<BaseBirdParticle> queue = new ArrayList<>();
+
+        visited.add(this);
+        queue.add(this);
+
+        int head = 0;
+        while (head < queue.size()) {
+            BaseBirdParticle current = queue.get(head++);
+            for (BaseBirdParticle nb : current.cachedFlockNeighbors) {
+                if (nb != null && !nb.removed && visited.add(nb)) {
+                    connectedFlock.add(nb);
+                    queue.add(nb);
+                }
+            }
+        }
+
+        for (BaseBirdParticle nb : connectedFlock) {
             if (nb == this)
                 continue;
+
             if (nb.state == State.PERCHED) {
                 if (nb.perchTimer > 30) {
                     nb.perchTimer = 5 + this.random.nextInt(25);
+                }
+            } else if (nb.state == State.LANDING) {
+                setState(nb, State.FLYING);
+                nb.landingBlockPos = null;
+                nb.landingTargetY = Double.NaN;
+                nb.landingOffsetX = 0.0;
+                nb.landingOffsetZ = 0.0;
+                nb.landingDelay = 0;
+                nb.landingCooldown = 200 + this.random.nextInt(400);
+
+                nb.goalX = nb.x + nb.xd * 10.0;
+                nb.goalY = nb.y + 3.0 + nb.random.nextFloat() * 2.0;
+                nb.goalZ = nb.z + nb.zd * 10.0;
+                nb.goalTimer = 20 + nb.random.nextInt(20);
+            } else if (nb.state == State.FLYING) {
+                if (nb.landingCooldown < 150) {
+                    nb.landingCooldown = 200 + this.random.nextInt(400);
+                }
+                if (nb.goalTimer > 20) {
+                    nb.goalTimer = nb.random.nextInt(10);
                 }
             }
         }

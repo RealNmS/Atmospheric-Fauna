@@ -29,6 +29,7 @@
 ## current update notes *(wip)*
 
 - Improved stuck detection when landing
+- Improved group takeoff logic
 - Fixed birds being able to perch onto a block below another block
 
 ---
