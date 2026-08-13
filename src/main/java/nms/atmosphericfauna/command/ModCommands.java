@@ -42,10 +42,6 @@ public class ModCommands {
             return 0;
         }
 
-        if (!minecraft.player.getAbilities().instabuild) {
-            return 0;
-        }
-
         var player = minecraft.player;
         RandomSource random = level.getRandom();
 
@@ -88,9 +84,6 @@ public class ModCommands {
     //                                      } else if (minecraft.player == null || minecraft.level == null) {
     //                                          context.getSource().sendFeedback(Component.literal(
     //                                                  "You must be in a world to spawn birds."));
-    //                                      } else if (!minecraft.player.getAbilities().instabuild) {
-    //                                          context.getSource().sendFeedback(Component.literal(
-    //                                                  "You must be in creative mode to use this command."));
     //                                      }
     //                                      return 0;
     //                                  }
@@ -113,9 +106,6 @@ public class ModCommands {
     //                              } else if (minecraft.player == null || minecraft.level == null) {
     //                                  context.getSource().sendFeedback(Component.literal(
     //                                          "You must be in a world to spawn birds."));
-    //                              } else if (!minecraft.player.getAbilities().instabuild) {
-    //                                  context.getSource().sendFeedback(Component.literal(
-    //                                          "You must be in creative mode to use this command."));
     //                              }
     //                              return 0;
     //                          }
@@ -186,9 +176,6 @@ public class ModCommands {
                                         } else if (minecraft.player == null || minecraft.level == null) {
                                             context.getSource().sendFeedback(Component.literal(
                                                     "You must be in a world to spawn birds."));
-                                        } else if (!minecraft.player.getAbilities().instabuild) {
-                                            context.getSource().sendFeedback(Component.literal(
-                                                    "You must be in creative mode to use this command."));
                                         }
                                         return 0;
                                     }
@@ -204,19 +191,16 @@ public class ModCommands {
                                     int amount = spawnBirds(birdName, 1, minecraft);
 
                                     if (amount <= 0) {
-                                    SpawnData spawnData = findSpawnData(birdName);
-                                    if (spawnData == null) {
-                                        context.getSource().sendFeedback(Component.literal(
-                                            "Unknown bird type '" + birdName + "'. Available birds: "
-                                                + String.join(", ", SpawnData.names()) + "."));
-                                    } else if (minecraft.player == null || minecraft.level == null) {
-                                        context.getSource().sendFeedback(Component.literal(
-                                            "You must be in a world to spawn birds."));
-                                    } else if (!minecraft.player.getAbilities().instabuild) {
-                                        context.getSource().sendFeedback(Component.literal(
-                                            "You must be in creative mode to use this command."));
-                                    }
-                                    return 0;
+                                        SpawnData spawnData = findSpawnData(birdName);
+                                        if (spawnData == null) {
+                                            context.getSource().sendFeedback(Component.literal(
+                                                "Unknown bird type '" + birdName + "'. Available birds: "
+                                                    + String.join(", ", SpawnData.names()) + "."));
+                                        } else if (minecraft.player == null || minecraft.level == null) {
+                                            context.getSource().sendFeedback(Component.literal(
+                                                "You must be in a world to spawn birds."));
+                                        }
+                                        return 0;
                                     }
 
                                     context.getSource().sendFeedback(Component.literal(

@@ -24,12 +24,12 @@
 - rework chunk load half spawning to be future proof
 - Weather-responsive behavior
 - higher perching chance above specific blocks (like fences, leaves, etc.)
-- fix spawn command creative limitation
 
 ## current update notes *(wip)*
 
 - Improved stuck detection when landing
 - Improved group takeoff logic
+- Removed creative mode check for "spawn" command
 - Fixed birds being able to perch onto a block below another block
 
 ---
