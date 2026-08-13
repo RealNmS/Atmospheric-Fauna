@@ -41,12 +41,17 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 
 ## Birds
 
+### Blue Jays
+![Selection of photos: Blue Jays](src/main/resources/assets/docs/selection_blue_jay.jpg)
+
+### Common Swifts
+![Selection of photos: Common Swifts](src/main/resources/assets/docs/selection_common_swift.jpg)
+
 ### Crows
 ![Selection of photos: Crows](src/main/resources/assets/docs/selection_crow.jpg)
 
-
-### Blue Jays
-![Selection of photos: Blue Jays](src/main/resources/assets/docs/selection_blue_jay.jpg)
+### Northern Cardinals
+![Selection of photos: Northern Cardinals](src/main/resources/assets/docs/selection_northern_cardinal.jpg)
 
 > _More birds will be added in the future!_
 
