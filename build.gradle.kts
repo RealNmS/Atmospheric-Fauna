@@ -103,6 +103,7 @@ java {
 tasks {
     processResources {
         exclude("assets/docs/**")
+        exclude("assets/sources/**")
         
         fun MutableMap<String, String>.register(key: String, property: String) {
             val value: String = sc.properties[property]
