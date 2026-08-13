@@ -22,11 +22,11 @@
 - update Crow and Blue Jay showcase imgs
 - try to remove JSpecify annotations dependency
 - rework chunk load half spawning to be future proof
-- Weather-responsive behavior
 
 ## current update notes *(wip)*
 
 - Added higher chance to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
+- Added higher chance to perch when it's bad weather (rain, snow, thunder)
 - Improved stuck detection when landing
 - Improved group takeoff logic
 - Removed creative mode check for "spawn" command

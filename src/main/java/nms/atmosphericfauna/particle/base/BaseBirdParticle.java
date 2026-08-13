@@ -1146,7 +1146,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         int effectiveFlockSize = this.cachedFlockNeighbors.size() + 1;
 
         if (landingCooldown == 0) {
-            double baseChance = this.perchingChance / effectiveFlockSize;
+            double weatherMultiplier = (this.level.isRaining() || this.level.isThundering()) ? 4.0 : 1.0;
+            double baseChance = (this.perchingChance * weatherMultiplier) / effectiveFlockSize;
             float roll = this.random.nextFloat();
 
             if (roll < baseChance * 2.0) {
