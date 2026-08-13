@@ -511,8 +511,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
                                 && aboveState.getFluidState().isEmpty()) {
                             mutablePos.move(Direction.DOWN);
                             candidate = mutablePos.immutable();
-                            break;
                         }
+                        break;
                     }
                 }
 
@@ -1160,29 +1160,29 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                 mutablePos.move(Direction.UP);
                 BlockState aboveState = level.getBlockState(mutablePos);
-                if (!aboveState.getCollisionShape(level, mutablePos).isEmpty())
-                    continue;
+
+                if (!aboveState.getCollisionShape(level, mutablePos).isEmpty() || !aboveState.getFluidState().isEmpty())
+                    break;
 
                 mutablePos.move(Direction.DOWN);
 
-                // Neighbor check reusing mutablePos entirely
                 boolean hasNeighbor = !level.isEmptyBlock(mutablePos.set(px, checkY, pz - 1)) ||
                         !level.isEmptyBlock(mutablePos.set(px, checkY, pz + 1)) ||
                         !level.isEmptyBlock(mutablePos.set(px - 1, checkY, pz)) ||
                         !level.isEmptyBlock(mutablePos.set(px + 1, checkY, pz));
 
                 if (!hasNeighbor)
-                    continue;
+                    break;
 
                 BlockPos candidate = mutablePos.set(px, checkY, pz).immutable();
 
                 if (!acceptsCrowd(countBirdsOnPerch(candidate))) {
-                    continue;
+                    break;
                 }
 
                 if (!env.hasLineOfSight(this.x, this.y, this.z, candidate.getX() + 0.5, checkY + 1.0,
                         candidate.getZ() + 0.5)) {
-                    continue;
+                    break;
                 }
 
                 setState(this, State.LANDING);
@@ -1260,30 +1260,41 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.yd = 0.15 + this.random.nextFloat() * 0.1;
             this.xd *= 0.7;
             this.zd *= 0.7;
-        } else if (dist > 0.001) {
-            double speedScale = Math.min(1.0, dist / 4.0);
-            double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
-            double desiredXd = (dx / dist) * currentFlySpeed;
-            double desiredYd = (dy / dist) * currentFlySpeed;
-            double desiredZd = (dz / dist) * currentFlySpeed;
-
-            double steerX = desiredXd - this.xd;
-            double steerY = desiredYd - this.yd;
-            double steerZ = desiredZd - this.zd;
-
-            double currentSteerStrength = this.steerStrength * 2.8;
-            double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
-
-            if (steerMag > currentSteerStrength) {
-                steerX = (steerX / steerMag) * currentSteerStrength;
-                steerY = (steerY / steerMag) * currentSteerStrength;
-                steerZ = (steerZ / steerMag) * currentSteerStrength;
+            if (this.stuckTicks++ > 40) {
+                setState(this, State.FLYING);
+                this.landingTargetY = Double.NaN;
+                this.landingBlockPos = null;
+                this.stuckTicks = 0;
+                return;
             }
+        } else {
+            this.stuckTicks = 0;
+            if (dist > 0.001) {
+                double speedScale = Math.min(1.0, dist / 4.0);
+                double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
-            this.xd += steerX;
-            this.yd += steerY;
-            this.zd += steerZ;
+                double desiredXd = (dx / dist) * currentFlySpeed;
+                double desiredYd = (dy / dist) * currentFlySpeed;
+                double desiredZd = (dz / dist) * currentFlySpeed;
+
+                double steerX = desiredXd - this.xd;
+                double steerY = desiredYd - this.yd;
+                double steerZ = desiredZd - this.zd;
+
+                double currentSteerStrength = this.steerStrength * 2.8;
+                double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
+
+                if (steerMag > currentSteerStrength) {
+                    steerX = (steerX / steerMag) * currentSteerStrength;
+                    steerY = (steerY / steerMag) * currentSteerStrength;
+                    steerZ = (steerZ / steerMag) * currentSteerStrength;
+                }
+
+                this.xd += steerX;
+                this.yd += steerY;
+                this.zd += steerZ;
+            }
         }
 
         // Prevent clipping through the landing block from above

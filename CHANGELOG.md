@@ -28,7 +28,8 @@
 
 ## current update notes *(wip)*
 
-- nothin yet
+- Improved stuck detection when landing
+- Fixed birds being able to perch onto a block below another block
 
 ---
 
