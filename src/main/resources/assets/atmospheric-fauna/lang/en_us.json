@@ -18,7 +18,7 @@
   "option.atmosphericfauna.search_radius.tooltip": "Sets the radius around the chosen spawn point to search for a valid spawn position.",
   "option.atmosphericfauna.spawn_below_sea_level": "Spawn Below Sea Level",
   "option.atmosphericfauna.spawn_below_sea_level.tooltip": "Determines whether ambient fauna can spawn below sea level.",
-  "option.atmosphericfauna.spawn_around_spectators": "Spawn Around Spectators",
+  "option.atmosphericfauna.spawn_around_spectators": "Spawn Around Spectator",
   "option.atmosphericfauna.spawn_around_spectators.tooltip": "Allows ambient fauna to spawn around players in Spectator mode.",
   "category.atmosphericfauna.birds": "Birds",
   "option.atmosphericfauna.max_active_birds": "Global Maximum Active Birds",
