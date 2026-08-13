@@ -17,11 +17,22 @@
 
 ### quick todo
 
-- update mod icon and banner
+- update banner
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
+- try to remove JSpecify annotations dependency
+- rework chunk load half spawning to be future proof
+- Weather-responsive behavior
+- higher perching chance above specific blocks (like fences, leaves, etc.)
+- fix spawn command creative limitation
 
 ## current update notes *(wip)*
+
+- nothin yet
+
+---
+
+## v0.5.0 [1.21 - 26.2] `13.08.2026`
 
 - Added new bird "Northern Cardinal"
 - Added new bird "Common Swift"
@@ -50,14 +61,12 @@
 - Fixed birds flocking with removed birds when particle limit was reached
 - Fixed a bug making birds fly infinitely to the sky (for a second time)
 - Fixed birds not facing the right direction when perched
-- Fixed birds perching under water
+- Fixed birds being able to perch under water
 - Fixed birds flying into water (and other fluids)
 - Fixed birds not being cleared from memory properly when changing dimensions
 - Optimized clearBirds command to remove all birds at once instead of one by one
 - Optimized ground scanning to be less frequent (every 10 ticks instead of every tick)
 - and a lot of other small optimizations and fixes
-
----
 
 ## v0.4.0 [1.21 - 26.2] `25.07.2026`
 
