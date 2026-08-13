@@ -34,6 +34,8 @@
 
 ## v0.5.0 [1.21 - 26.2] `13.08.2026`
 
+It seems I am unable to release small updates. It's still not as big as the last one, but is still packed with features and a lot of fixes. Once again, if you find any bugs or have any suggestions, please open an issue on GitHub.
+
 - Added new bird "Northern Cardinal"
 - Added new bird "Common Swift"
 - Updated Blue Jay textures
