@@ -23,10 +23,10 @@
 - try to remove JSpecify annotations dependency
 - rework chunk load half spawning to be future proof
 - Weather-responsive behavior
-- higher perching chance above specific blocks (like fences, leaves, etc.)
 
 ## current update notes *(wip)*
 
+- Added higher chance to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
 - Improved stuck detection when landing
 - Improved group takeoff logic
 - Removed creative mode check for "spawn" command

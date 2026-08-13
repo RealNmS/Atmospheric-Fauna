@@ -1144,108 +1144,135 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // Perching Scan
     private void scanForPerch() {
         int effectiveFlockSize = this.cachedFlockNeighbors.size() + 1;
-        if (landingCooldown == 0 && this.random.nextFloat() < (this.perchingChance / effectiveFlockSize)) {
 
-            // Check if flockmates have a good spot
-            for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
-                if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
-                    BlockPos target = nb.perchBlockPos;
-                    if (target.getY() <= this.y) {
-                        BlockState targetState = level.getBlockState(target);
-                        BlockState aboveState = level.getBlockState(target.above());
+        if (landingCooldown == 0) {
+            double baseChance = this.perchingChance / effectiveFlockSize;
+            float roll = this.random.nextFloat();
 
-                        if (!targetState.getCollisionShape(level, target).isEmpty() &&
-                                aboveState.getCollisionShape(level, target.above()).isEmpty()) {
+            if (roll < baseChance * 2.0) {
+                if (roll < baseChance) {
+                    for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
+                        if (nb.state == State.PERCHED && nb.perchBlockPos != null) {
+                            BlockPos target = nb.perchBlockPos;
+                            if (target.getY() <= this.y) {
+                                BlockState targetState = level.getBlockState(target);
+                                BlockState aboveState = level.getBlockState(target.above());
 
-                            if (acceptsCrowd(countBirdsOnPerch(target))) {
-                                setState(this, State.LANDING);
-                                this.landingBlockPos = target;
+                                if (!targetState.getCollisionShape(level, target).isEmpty() &&
+                                        aboveState.getCollisionShape(level, target.above()).isEmpty() &&
+                                        aboveState.getFluidState().isEmpty()) {
 
-                                VoxelShape visualShape = targetState.getShape(level, target);
-                                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+                                    if (acceptsCrowd(countBirdsOnPerch(target))) {
+                                        setState(this, State.LANDING);
+                                        this.landingBlockPos = target;
 
-                                BlockPos abovePos = target.above();
-                                VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
-                                if (!aboveVisual.isEmpty()) {
-                                    double aboveHeight = aboveVisual.max(Direction.Axis.Y);
-                                    if (aboveHeight <= 0.5) {
-                                        blockHeight += aboveHeight;
+                                        VoxelShape visualShape = targetState.getShape(level, target);
+                                        double blockHeight = visualShape.isEmpty() ? 1.0
+                                                : visualShape.max(Direction.Axis.Y);
+
+                                        BlockPos abovePos = target.above();
+                                        VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level,
+                                                abovePos);
+                                        if (!aboveVisual.isEmpty()) {
+                                            double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                                            if (aboveHeight <= 0.5) {
+                                                blockHeight += aboveHeight;
+                                            }
+                                        }
+
+                                        this.landingTargetY = target.getY() + blockHeight + this.quadSize;
+                                        setLandingOffsets(this, visualShape);
+                                        groupPerch(target);
+                                        return;
                                     }
                                 }
-
-                                this.landingTargetY = target.getY() + blockHeight + this.quadSize;
-                                setLandingOffsets(this, visualShape);
-                                groupPerch(target);
-                                return;
                             }
                         }
                     }
                 }
-            }
 
-            int px = (int) Math.floor(this.x);
-            int py = (int) Math.floor(this.y);
-            int pz = (int) Math.floor(this.z);
+                int px = (int) Math.floor(this.x);
+                int py = (int) Math.floor(this.y);
+                int pz = (int) Math.floor(this.z);
 
-            // Scan directly below the bird
-            for (int i = 1; i <= this.perchingDistance; i++) {
-                int checkY = py - i;
-                mutablePos.set(px, checkY, pz);
+                for (int i = 1; i <= this.perchingDistance; i++) {
+                    int checkY = py - i;
+                    mutablePos.set(px, checkY, pz);
 
-                BlockState belowState = level.getBlockState(mutablePos);
-                VoxelShape belowCollision = belowState.getCollisionShape(level, mutablePos);
+                    BlockState belowState = level.getBlockState(mutablePos);
+                    VoxelShape belowCollision = belowState.getCollisionShape(level, mutablePos);
 
-                if (belowCollision.isEmpty())
-                    continue;
+                    if (belowCollision.isEmpty())
+                        continue;
 
-                mutablePos.move(Direction.UP);
-                BlockState aboveState = level.getBlockState(mutablePos);
+                    mutablePos.move(Direction.UP);
+                    BlockState aboveState = level.getBlockState(mutablePos);
 
-                if (!aboveState.getCollisionShape(level, mutablePos).isEmpty() || !aboveState.getFluidState().isEmpty())
-                    break;
+                    if (!aboveState.getCollisionShape(level, mutablePos).isEmpty()
+                            || !aboveState.getFluidState().isEmpty())
+                        break;
 
-                mutablePos.move(Direction.DOWN);
+                    mutablePos.move(Direction.DOWN);
 
-                boolean hasNeighbor = !level.isEmptyBlock(mutablePos.set(px, checkY, pz - 1)) ||
-                        !level.isEmptyBlock(mutablePos.set(px, checkY, pz + 1)) ||
-                        !level.isEmptyBlock(mutablePos.set(px - 1, checkY, pz)) ||
-                        !level.isEmptyBlock(mutablePos.set(px + 1, checkY, pz));
+                    boolean hasNeighbor = !level.isEmptyBlock(mutablePos.set(px, checkY, pz - 1)) ||
+                            !level.isEmptyBlock(mutablePos.set(px, checkY, pz + 1)) ||
+                            !level.isEmptyBlock(mutablePos.set(px - 1, checkY, pz)) ||
+                            !level.isEmptyBlock(mutablePos.set(px + 1, checkY, pz));
 
-                if (!hasNeighbor)
-                    break;
+                    if (!hasNeighbor)
+                        break;
 
-                BlockPos candidate = mutablePos.set(px, checkY, pz).immutable();
+                    BlockPos candidate = mutablePos.set(px, checkY, pz).immutable();
 
-                if (!acceptsCrowd(countBirdsOnPerch(candidate))) {
-                    break;
-                }
-
-                if (!env.hasLineOfSight(this.x, this.y, this.z, candidate.getX() + 0.5, checkY + 1.0,
-                        candidate.getZ() + 0.5)) {
-                    break;
-                }
-
-                setState(this, State.LANDING);
-                this.landingBlockPos = candidate;
-                VoxelShape visualShape = belowState.getShape(level, mutablePos);
-                setLandingOffsets(this, visualShape);
-                double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
-
-                BlockPos abovePos = this.landingBlockPos.above();
-                VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
-                if (!aboveVisual.isEmpty()) {
-                    double aboveHeight = aboveVisual.max(Direction.Axis.Y);
-                    if (aboveHeight <= 0.5) {
-                        blockHeight += aboveHeight;
+                    if (!acceptsCrowd(countBirdsOnPerch(candidate))) {
+                        break;
                     }
+
+                    if (!env.hasLineOfSight(this.x, this.y, this.z, candidate.getX() + 0.5, checkY + 1.0,
+                            candidate.getZ() + 0.5)) {
+                        break;
+                    }
+
+                    boolean isInteresting = false;
+                    if (belowState.is(net.minecraft.tags.BlockTags.LEAVES)) {
+                        isInteresting = true;
+                    } else {
+                        double minX = belowCollision.min(Direction.Axis.X);
+                        double maxX = belowCollision.max(Direction.Axis.X);
+                        double minZ = belowCollision.min(Direction.Axis.Z);
+                        double maxZ = belowCollision.max(Direction.Axis.Z);
+
+                        if (minX > 0.0 || maxX < 1.0 || minZ > 0.0 || maxZ < 1.0) {
+                            isInteresting = true;
+                        }
+                    }
+
+                    if (!isInteresting && roll >= baseChance) {
+                        break;
+                    }
+
+                    setState(this, State.LANDING);
+                    this.landingBlockPos = candidate;
+                    VoxelShape visualShape = belowState.getShape(level, mutablePos);
+                    setLandingOffsets(this, visualShape);
+                    double blockHeight = visualShape.isEmpty() ? 1.0 : visualShape.max(Direction.Axis.Y);
+
+                    BlockPos abovePos = this.landingBlockPos.above();
+                    VoxelShape aboveVisual = level.getBlockState(abovePos).getShape(level, abovePos);
+                    if (!aboveVisual.isEmpty()) {
+                        double aboveHeight = aboveVisual.max(Direction.Axis.Y);
+                        if (aboveHeight <= 0.5) {
+                            blockHeight += aboveHeight;
+                        }
+                    }
+
+                    this.landingTargetY = checkY + blockHeight + this.quadSize;
+                    break;
                 }
 
-                this.landingTargetY = checkY + blockHeight + this.quadSize;
-                break;
-            }
-
-            if (this.state == State.LANDING && this.landingBlockPos != null) {
-                groupPerch(this.landingBlockPos);
+                if (this.state == State.LANDING && this.landingBlockPos != null) {
+                    groupPerch(this.landingBlockPos);
+                }
             }
         }
     }
