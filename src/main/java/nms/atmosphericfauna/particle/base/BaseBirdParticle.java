@@ -499,7 +499,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 int scanY = (int) Math.floor(nb.y);
 
                 BlockPos candidate = null;
-                for (int dy = 3; dy >= -10; dy--) {
+                for (int dy = 0; dy >= -10; dy--) {
                     mutablePos.set(scanX, scanY + dy, scanZ);
                     BlockState state = level.getBlockState(mutablePos);
                     VoxelShape colShape = state.getCollisionShape(level, mutablePos);
@@ -542,6 +542,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                 nb.landingDelay = 10 + this.random.nextInt(35);
                 nb.landingBlockPos = chosenTarget;
+                nb.stuckTicks = 0;
 
                 BlockState targetState = level.getBlockState(chosenTarget);
                 VoxelShape visualShape = targetState.getShape(level, chosenTarget);
@@ -1165,6 +1166,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
                                     if (acceptsCrowd(countBirdsOnPerch(target))) {
                                         setState(this, State.LANDING);
+                                        this.stuckTicks = 0;
                                         this.landingBlockPos = target;
 
                                         VoxelShape visualShape = targetState.getShape(level, target);
@@ -1253,6 +1255,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     }
 
                     setState(this, State.LANDING);
+                    this.stuckTicks = 0;
                     this.landingBlockPos = candidate;
                     VoxelShape visualShape = belowState.getShape(level, mutablePos);
                     setLandingOffsets(this, visualShape);
@@ -1307,6 +1310,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.landingBlockPos = null;
             this.landingOffsetX = 0.0;
             this.landingOffsetZ = 0.0;
+            this.stuckTicks = 0;
             return;
         }
 
@@ -1323,46 +1327,43 @@ public abstract class BaseBirdParticle extends BaseParticle {
         double lookY = this.y + this.yd * lookAheadMultiplier;
         double lookZ = this.z + this.zd * lookAheadMultiplier;
 
+        if (this.stuckTicks++ > 100) {
+            setState(this, State.FLYING);
+            this.landingTargetY = Double.NaN;
+            this.landingBlockPos = null;
+            this.stuckTicks = 0;
+            return;
+        }
+
         // Check if there is an obstacle
         if (env.isBlocked(lookX, lookY, lookZ, this.landingBlockPos)) {
             this.yd = 0.15 + this.random.nextFloat() * 0.1;
             this.xd *= 0.7;
             this.zd *= 0.7;
+        } else if (dist > 0.001) {
+            double speedScale = Math.min(1.0, dist / 4.0);
+            double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
-            if (this.stuckTicks++ > 40) {
-                setState(this, State.FLYING);
-                this.landingTargetY = Double.NaN;
-                this.landingBlockPos = null;
-                this.stuckTicks = 0;
-                return;
+            double desiredXd = (dx / dist) * currentFlySpeed;
+            double desiredYd = (dy / dist) * currentFlySpeed;
+            double desiredZd = (dz / dist) * currentFlySpeed;
+
+            double steerX = desiredXd - this.xd;
+            double steerY = desiredYd - this.yd;
+            double steerZ = desiredZd - this.zd;
+
+            double currentSteerStrength = this.steerStrength * 2.8;
+            double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
+
+            if (steerMag > currentSteerStrength) {
+                steerX = (steerX / steerMag) * currentSteerStrength;
+                steerY = (steerY / steerMag) * currentSteerStrength;
+                steerZ = (steerZ / steerMag) * currentSteerStrength;
             }
-        } else {
-            this.stuckTicks = 0;
-            if (dist > 0.001) {
-                double speedScale = Math.min(1.0, dist / 4.0);
-                double currentFlySpeed = Math.max(0.04, this.flySpeed * speedScale);
 
-                double desiredXd = (dx / dist) * currentFlySpeed;
-                double desiredYd = (dy / dist) * currentFlySpeed;
-                double desiredZd = (dz / dist) * currentFlySpeed;
-
-                double steerX = desiredXd - this.xd;
-                double steerY = desiredYd - this.yd;
-                double steerZ = desiredZd - this.zd;
-
-                double currentSteerStrength = this.steerStrength * 2.8;
-                double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
-
-                if (steerMag > currentSteerStrength) {
-                    steerX = (steerX / steerMag) * currentSteerStrength;
-                    steerY = (steerY / steerMag) * currentSteerStrength;
-                    steerZ = (steerZ / steerMag) * currentSteerStrength;
-                }
-
-                this.xd += steerX;
-                this.yd += steerY;
-                this.zd += steerZ;
-            }
+            this.xd += steerX;
+            this.yd += steerY;
+            this.zd += steerZ;
         }
 
         // Prevent clipping through the landing block from above
@@ -1384,8 +1385,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 setState(this, State.PERCHED);
                 this.perchTimer = this.perchingTime + (int) (this.random.nextFloat() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
+                this.stuckTicks = 0;
             } else {
                 setState(this, State.FLYING);
+                this.stuckTicks = 0;
             }
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;
@@ -1405,8 +1408,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 setState(this, State.PERCHED);
                 this.perchTimer = this.perchingTime + (int) (this.random.nextFloat() * this.perchingTime);
                 this.perchBlockPos = this.landingBlockPos;
+                this.stuckTicks = 0;
             } else {
                 setState(this, State.FLYING);
+                this.stuckTicks = 0;
             }
             this.landingTargetY = Double.NaN;
             this.landingBlockPos = null;

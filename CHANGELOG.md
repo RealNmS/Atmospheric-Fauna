@@ -31,6 +31,7 @@
 - Improved group takeoff logic
 - Removed creative mode check for "spawn" command
 - Fixed birds being able to perch onto a block below another block
+- Fixed stuck detection when landing
 
 ---
 
