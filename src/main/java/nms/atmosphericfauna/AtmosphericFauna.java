@@ -28,6 +28,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AtmosphericFauna implements ClientModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";
@@ -84,31 +87,33 @@ public class AtmosphericFauna implements ClientModInitializer {
                 lastLevel = client.level;
             }
         });
+
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
-				int originalGlobalMax = maxActiveBirds;
-				int originalBlueJayMax = maxActiveBlueJays;
-				int originalCommonSwiftMax = maxActiveCommonSwifts;
-				int originalCrowMax = maxActiveCrows;
-				int originalNorthernCardinalMax = maxActiveNorthernCardinals;
+                Map<Field, Integer> originalValues = new HashMap<>();
 				try {
-					maxActiveBirds /= 2;
-					maxActiveBlueJays /= 2;
-					maxActiveCommonSwifts /= 2;
-					maxActiveCrows /= 2;
-					maxActiveNorthernCardinals /= 2;
-
+                    for (Field field : ConfigHandler.class.getDeclaredFields()) {
+                        if (field.getType() == int.class && field.getName().startsWith("maxActive")) {
+                            originalValues.put(field, field.getInt(null));
+                            field.setInt(null, field.getInt(null) / 2);
+                        }
+                    }
 					AmbientSpawning.runSpawnAttempt(world);
+                } catch (Exception e) {
+                    AtmosphericFauna.LOGGER.error("Failed to dynamically adjust bird caps for chunk load spawning", e);
 				} finally {
-					maxActiveBirds = originalGlobalMax;
-					maxActiveBlueJays = originalBlueJayMax;
-					maxActiveCommonSwifts = originalCommonSwiftMax;
-					maxActiveCrows = originalCrowMax;
-					maxActiveNorthernCardinals = originalNorthernCardinalMax;
+                    for (Map.Entry<Field, Integer> entry : originalValues.entrySet()) {
+                        try {
+                            entry.getKey().setInt(null, entry.getValue());
+                        } catch (Exception e) {
+                            AtmosphericFauna.LOGGER.error("Failed to restore bird caps", e);
+                        }
+                    }
 				}
 			}
 		});
+
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (ConfigHandler.enableDebugScreenOnJoin) {
 				DebugHudOverlay.showDebug = true;

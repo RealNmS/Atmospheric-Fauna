@@ -21,17 +21,17 @@
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
 - try to remove JSpecify annotations dependency
-- rework chunk load half spawning to be future proof
 
 ## current update notes *(wip)*
 
-- Added higher chance to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
-- Added higher chance to perch when it's bad weather (rain, snow, thunder)
+- Added 2x chance multiplier to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
+- Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
 - Improved stuck detection when landing
-- Improved group takeoff logic
+- Improved group takeoff logic to include other birds that are either landing or already flying
 - Removed creative mode check for "spawn" command
 - Fixed birds being able to perch onto a block below another block
 - Fixed stuck detection when landing
+- Optimized backend logic when spawning on chunk load
 
 ---
 
