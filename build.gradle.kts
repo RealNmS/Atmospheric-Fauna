@@ -62,9 +62,6 @@ dependencies {
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
     modLocalRuntime("me.shedaniel.cloth:cloth-config-fabric:${property("deps.cloth_config")}")
 
-    // Provides JSpecify annotations to older MC versions during compilation
-    compileOnly("org.jspecify:jspecify:1.0.0")
-
     // Dev Environment Testing Mods
     if (sc.current.version == "26.1") {
         modLocalRuntime("maven.modrinth:spark:1.10.173-fabric")

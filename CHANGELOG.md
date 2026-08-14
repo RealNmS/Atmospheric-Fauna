@@ -20,7 +20,6 @@
 - update banner
 - rework Crow texture, making it unified with the Blue Jay texture style
 - update Crow and Blue Jay showcase imgs
-- try to remove JSpecify annotations dependency
 
 ## current update notes *(wip)*
 
@@ -29,6 +28,7 @@
 - Improved stuck detection when landing
 - Improved group takeoff logic to include other birds that are either landing or already flying
 - Removed creative mode check for "spawn" command
+- Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
 - Fixed stuck detection when landing
 - Optimized backend logic when spawning on chunk load

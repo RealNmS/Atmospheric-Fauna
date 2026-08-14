@@ -22,8 +22,6 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 //?}
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 //? if <=1.21.8 {
 //  public abstract class BaseParticle extends TextureSheetParticle
@@ -52,23 +50,23 @@ public abstract class BaseParticle extends SingleQuadParticle
     //?}
     //? if >1.21.8 {
     @Override
-    protected @NonNull Layer getLayer() {
+    protected Layer getLayer() {
         return Layer.OPAQUE;
     }
     //?}
 
     //? if <=1.21.8 {
-    //  public static ResourceLocation getId(@NonNull String path) {
+    // public static ResourceLocation getId(String path) {
     //      return ResourceLocation.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
-    //  }
+    // }
     //?}
     //? if >1.21.8 {
-    public static Identifier getId(@NonNull String path) {
+    public static Identifier getId(String path) {
         return Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
     }
     //?}
 
-    public static TextureAtlasSprite getSprite(@NonNull String path) {
+    public static TextureAtlasSprite getSprite(String path) {
     //? if <=1.21.8 {
     //      AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
     //      if (texture instanceof TextureAtlas atlas) {
@@ -91,7 +89,7 @@ public abstract class BaseParticle extends SingleQuadParticle
         public abstract Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y,
                 double z, double velocityX, double velocityY, double velocityZ);
 
-        public @Nullable Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y,
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y,
                 double z, double velocityX, double velocityY, double velocityZ, RandomSource randomSource) {
             return createParticle(type, level, x, y, z, velocityX, velocityY, velocityZ);
         }
