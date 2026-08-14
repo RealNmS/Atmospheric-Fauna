@@ -4,24 +4,28 @@
 - more birds
   - seagull, sparrow, hawk, kingfisher, owl, ...
   - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
-- some kind of interaction with spyglass
-- arrow, tnt, and other projectile interaction
-- dying state with a new texture
-- option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - random events (flying in circles above the player for example)
 - server-side support (least likely to happen lol)
 - advancements if i can figure out how to do them client-side only
-- neoforge support (might rely just on synitra connector, but at least try to make the config work on there)
+- neoforge support (might rely just on synitra connector)
 - quilt support (this won't happen ever, but I want to keep it in mind just in case)
 - sounds (idk where to get them from, might just not add them, will figure it out eventually)
 
 ### quick todo
 
+*v0.6.0 (The "Interactions" Update)*
+- some kind of interaction with spyglass
+- arrow, tnt, and other projectile interaction
+- sneaking halves the scare distance
+- dying state with a new texture
+- option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
+*v0.5.1*
+- rework Crow texture, making it unified with the new texture style
 - update banner
-- rework Crow texture, making it unified with the Blue Jay texture style
-- update Crow and Blue Jay showcase imgs
+- rework all of showcase images
+- update wiki with images
 
-## current update notes *(wip)*
+## current update notes *(wip v0.5.1)*
 
 - Added 2x chance multiplier to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
 - Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
