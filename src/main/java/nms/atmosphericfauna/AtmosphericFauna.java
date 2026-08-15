@@ -47,11 +47,9 @@ public class AtmosphericFauna implements ClientModInitializer {
 	public void onInitializeClient() {
         LOGGER.info("Atmospheric Fauna is initializing...");
 
-		// Load configuration
         LOGGER.debug("loading configuration...");
 		ConfigHandler.load();
 
-		// Register particle types
         LOGGER.debug("registering particle types...");
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "blue_jay"),
 				BLUE_JAY);
@@ -61,7 +59,6 @@ public class AtmosphericFauna implements ClientModInitializer {
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "northern_cardinal"),
 				NORTHERN_CARDINAL);
 
-		// Register particle factories
         LOGGER.debug("registering particle factories...");
 		//? if <=1.21.11 {
 		/*
@@ -78,7 +75,6 @@ public class AtmosphericFauna implements ClientModInitializer {
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.NORTHERN_CARDINAL, NorthernCardinalParticle.Factory::new);
 		//?}
 
-		// Ambient spawning
         LOGGER.debug("setting up ambient spawning...");
 		//? if <=1.21.11 {
 		/*ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
@@ -117,9 +113,9 @@ public class AtmosphericFauna implements ClientModInitializer {
 			}
 		});
 
-        // Register all client commands
         LOGGER.debug("loading client commands...");
         ModCommands.registerClientCommands();
+
         LOGGER.debug("registering debug HUD overlay...");
         DebugHudOverlay.register();
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
