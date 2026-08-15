@@ -45,12 +45,14 @@ public class AtmosphericFauna implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		LOGGER.info("Client is initializing...");
+        LOGGER.info("Atmospheric Fauna is initializing...");
 
 		// Load configuration
+        LOGGER.debug("loading configuration...");
 		ConfigHandler.load();
 
 		// Register particle types
+        LOGGER.debug("registering particle types...");
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "blue_jay"),
 				BLUE_JAY);
 		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "common_swift"),
@@ -60,6 +62,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 				NORTHERN_CARDINAL);
 
 		// Register particle factories
+        LOGGER.debug("registering particle factories...");
 		//? if <=1.21.11 {
 		/*
 		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
@@ -76,6 +79,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 		//?}
 
 		// Ambient spawning
+        LOGGER.debug("setting up ambient spawning...");
 		//? if <=1.21.11 {
 		/*ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
 		*//*?} else {*/
@@ -87,7 +91,6 @@ public class AtmosphericFauna implements ClientModInitializer {
                 lastLevel = client.level;
             }
         });
-
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
@@ -114,14 +117,15 @@ public class AtmosphericFauna implements ClientModInitializer {
 			}
 		});
 
+        // Register all client commands
+        LOGGER.debug("loading client commands...");
+        ModCommands.registerClientCommands();
+        LOGGER.debug("registering debug HUD overlay...");
+        DebugHudOverlay.register();
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (ConfigHandler.enableDebugScreenOnJoin) {
 				DebugHudOverlay.showDebug = true;
 			}
-		});
-
-		// Register all client commands
-		ModCommands.registerClientCommands();
-		DebugHudOverlay.register();
+        });
 	}
 }

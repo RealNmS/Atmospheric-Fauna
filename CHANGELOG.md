@@ -13,13 +13,14 @@
 
 ### quick todo
 
-*v0.6.0 (The "Interactions" Update)*
+**v0.6.0 (The "Interactions" Update)**
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile interaction
 - sneaking halves the scare distance
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
-*v0.5.1*
+
+**v0.5.1**
 - rework Crow texture, making it unified with the new texture style
 - update banner
 - rework all of showcase images
@@ -31,6 +32,7 @@
 - Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
 - Improved stuck detection when landing
 - Improved group takeoff logic to include other birds that are either landing or already flying
+- Improved debugging texts in console and logs
 - Removed creative mode check for "spawn" command
 - Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
