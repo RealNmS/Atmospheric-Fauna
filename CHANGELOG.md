@@ -25,11 +25,14 @@
 - update banner
 - rework all of showcase images
 - update wiki with images
+- [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 
 ## current update notes *(wip v0.5.1)*
 
 - Added 2x chance multiplier to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
 - Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
+- Added config options to set spawning pack sizes and max flock size for each bird type
+  - by @gjacka in https://github.com/RealNmS/Atmospheric-Fauna/pull/5
 - Improved stuck detection when landing
 - Improved group takeoff logic to include other birds that are either landing or already flying
 - Improved debugging texts in console and logs
