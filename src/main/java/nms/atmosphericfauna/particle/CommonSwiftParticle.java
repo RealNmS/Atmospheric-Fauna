@@ -51,7 +51,7 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         this.separationDistance = 2.5;
         this.separationStrength = 0.06;
         this.flockGoalBias = 0.40;
-        this.maxFlockSize = 12;
+        this.maxFlockSize = maxFlockSizeCommonSwift <= 0 ? Integer.MAX_VALUE : maxFlockSizeCommonSwift;
         this.fliesOverOcean = true;
 
         this.scareRadius = 15.0;

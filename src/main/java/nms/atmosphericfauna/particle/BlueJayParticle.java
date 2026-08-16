@@ -51,7 +51,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.separationDistance = 3.0;
         this.separationStrength = 0.05;
         this.flockGoalBias = 0.25;
-        this.maxFlockSize = 3;
+        this.maxFlockSize = maxFlockSizeBlueJay <= 0 ? Integer.MAX_VALUE : maxFlockSizeBlueJay;
         this.fliesOverOcean = false;
 
         this.scareRadius = 12.5;

@@ -20,8 +20,8 @@ public final class SpawnData {
     private final String name;
     private final SimpleParticleType particleType;
     private final int weight;
-    private final int minPackSize;
-    private final int maxPackSize;
+    private int minPackSize;
+    private int maxPackSize;
     private final int minLightLevel;
     private final int maxLightLevel;
     private final boolean spawnInBadWeather;
@@ -85,8 +85,16 @@ public final class SpawnData {
         return minPackSize;
     }
 
+    public void setMinPackSize(int minPackSize) {
+        this.minPackSize = minPackSize;
+    }
+
     public int maxPackSize() {
         return maxPackSize;
+    }
+
+    public void setMaxPackSize(int maxPackSize) {
+        this.maxPackSize = maxPackSize;
     }
 
     public int minLightLevel() {
@@ -149,12 +157,23 @@ public final class SpawnData {
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
         BLUE_JAY.setCheckBiomeTags(!ConfigHandler.disableBlueJaySpawnBiomeChecks);
         BLUE_JAY.setCheckSpawnBlocks(!ConfigHandler.disableBlueJaySpawnBlockChecks);
+        BLUE_JAY.setMinPackSize(ConfigHandler.minPackSizeBlueJay);
+        BLUE_JAY.setMaxPackSize(ConfigHandler.maxPackSizeBlueJay);
         COMMON_SWIFT.setSpawnAllowed(ConfigHandler.enableCommonSwiftSpawning);
         COMMON_SWIFT.setCheckBiomeTags(!ConfigHandler.disableCommonSwiftSpawnBiomeChecks);
         COMMON_SWIFT.setCheckSpawnBlocks(!ConfigHandler.disableCommonSwiftSpawnBlockChecks);
+        COMMON_SWIFT.setMinPackSize(ConfigHandler.minPackSizeCommonSwift);
+        COMMON_SWIFT.setMaxPackSize(ConfigHandler.maxPackSizeCommonSwift);
         CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
         CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
         CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
+        CROW.setMinPackSize(ConfigHandler.minPackSizeCrow);
+        CROW.setMaxPackSize(ConfigHandler.maxPackSizeCrow);
+        NORTHERN_CARDINAL.setSpawnAllowed(ConfigHandler.enableNorthernCardinalSpawning);
+        NORTHERN_CARDINAL.setCheckBiomeTags(!ConfigHandler.disableNorthernCardinalSpawnBiomeChecks);
+        NORTHERN_CARDINAL.setCheckSpawnBlocks(!ConfigHandler.disableNorthernCardinalSpawnBlockChecks);
+        NORTHERN_CARDINAL.setMinPackSize(ConfigHandler.minPackSizeNorthernCardinal);
+        NORTHERN_CARDINAL.setMaxPackSize(ConfigHandler.maxPackSizeNorthernCardinal);
     }
 
     public static SpawnData byName(String name) {
@@ -173,7 +192,7 @@ public final class SpawnData {
     public static final SpawnData BLUE_JAY = new SpawnData(
             "blue_jay",
             AtmosphericFauna.BLUE_JAY,
-            25, 1, 2, 8, 15, false, true, false,
+            25, ConfigHandler.minPackSizeBlueJay, ConfigHandler.maxPackSizeBlueJay, 8, 15, false, true, false,
             ConfigHandler.enableBlueJaySpawning,
             !ConfigHandler.disableBlueJaySpawnBiomeChecks,
             !ConfigHandler.disableBlueJaySpawnBlockChecks,
@@ -185,7 +204,7 @@ public final class SpawnData {
     public static final SpawnData COMMON_SWIFT = new SpawnData(
             "common_swift",
             AtmosphericFauna.COMMON_SWIFT,
-            20, 4, 12, 8, 15, false, true, false,
+            20, ConfigHandler.minPackSizeCommonSwift, ConfigHandler.maxPackSizeCommonSwift, 8, 15, false, true, false,
             ConfigHandler.enableCommonSwiftSpawning,
             !ConfigHandler.disableCommonSwiftSpawnBiomeChecks,
             !ConfigHandler.disableCommonSwiftSpawnBlockChecks,
@@ -198,7 +217,7 @@ public final class SpawnData {
     public static final SpawnData CROW = new SpawnData(
             "crow",
             AtmosphericFauna.CROW,
-            30, 3, 9, 8, 15, true, true, true,
+            30, ConfigHandler.minPackSizeCrow, ConfigHandler.maxPackSizeCrow, 8, 15, true, true, true,
             ConfigHandler.enableCrowSpawning,
             !ConfigHandler.disableCrowSpawnBiomeChecks,
             !ConfigHandler.disableCrowSpawnBlockChecks,
@@ -211,7 +230,7 @@ public final class SpawnData {
     public static final SpawnData NORTHERN_CARDINAL = new SpawnData(
             "northern_cardinal",
             AtmosphericFauna.NORTHERN_CARDINAL,
-            30, 1, 3, 8, 15, false, true, false,
+            30, ConfigHandler.minPackSizeNorthernCardinal, ConfigHandler.maxPackSizeNorthernCardinal, 8, 15, false, true, false,
             ConfigHandler.enableNorthernCardinalSpawning,
             !ConfigHandler.disableNorthernCardinalSpawnBiomeChecks,
             !ConfigHandler.disableNorthernCardinalSpawnBlockChecks,
