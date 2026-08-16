@@ -53,6 +53,7 @@ public class NorthernCardinalParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.35; 
         this.maxFlockSize = 3;
         this.fliesOverOcean = false;
+        this.patternWeights = new float[] { 0.40f, 0.05f, 0.15f, 0.40f };
 
         this.scareRadius = 10.0;
         this.scareTakeoffSpeed = 0.35;

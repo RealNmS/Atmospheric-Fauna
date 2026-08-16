@@ -53,6 +53,8 @@ public class CrowParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.25;
         this.maxFlockSize = Integer.MAX_VALUE;
         this.fliesOverOcean = true;
+        // Mostly soars/circles, but re-rolls periodically so it isn't locked into one style
+        this.patternWeights = new float[] { 0.25f, 0.55f, 0.05f, 0.15f };
 
         this.scareRadius = 10.0;
         this.scareTakeoffSpeed = 0.35;

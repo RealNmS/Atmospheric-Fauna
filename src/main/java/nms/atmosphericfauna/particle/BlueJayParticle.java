@@ -53,6 +53,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.25;
         this.maxFlockSize = 3;
         this.fliesOverOcean = false;
+        this.patternWeights = new float[] { 0.35f, 0.10f, 0.20f, 0.35f };
 
         this.scareRadius = 12.5;
         this.scareTakeoffSpeed = 0.40;

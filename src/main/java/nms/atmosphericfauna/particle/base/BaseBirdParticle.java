@@ -26,7 +26,24 @@ public abstract class BaseBirdParticle extends BaseParticle {
         FLYING, LANDING, PERCHED, TAKING_OFF, DYING
     }
 
+    // Signature flight styles a bird can wander with; species lean toward one via patternWeights
+    // but periodically reroll so behavior doesn't feel locked-in (e.g. crows mostly circle, not always)
+    private enum FlightPattern {
+        WANDER, CIRCLING, DARTING, UNDULATING
+    }
+
     protected State state = State.FLYING;
+
+    // Per-species odds of {WANDER, CIRCLING, DARTING, UNDULATING}; overridden in each species' constructor
+    protected float[] patternWeights = { 1.0f, 0.0f, 0.0f, 0.0f };
+    private FlightPattern currentPattern = FlightPattern.WANDER;
+    private int patternTimer = 0;
+    private double circlePivotX = Double.NaN;
+    private double circlePivotZ = Double.NaN;
+    private double circleAngle = 0.0;
+    private double circleRadius = 10.0;
+    private int circleDirection = 1;
+    private int dartWeaveSign = 1;
 
     protected double goalX = Double.NaN;
     protected double goalY = Double.NaN;
@@ -245,6 +262,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.cachedDirZ = this.zd;
         }
 
+        float distanceAlpha = 1.0f;
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
@@ -259,7 +277,20 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.remove();
                 return;
             }
+
+            // Fade out over most of the visible range (not just the last stretch before despawn), and front-load
+            // the falloff so birds visibly haze soon after the start distance instead of staying crisp for a while
+            double fadeStartDist = maxDist * 0.3;
+            if (distSq > fadeStartDist * fadeStartDist) {
+                double dist = Math.sqrt(distSq);
+                double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
+                distanceAlpha = (float) Math.max(0.0, 1.0 - Math.pow(t, 0.6));
+            }
         }
+
+        // Fade in on spawn to match, and let the engine's own fog shader haze the sprite at range
+        float ageAlpha = Math.min(1.0f, this.age / 10.0f);
+        this.alpha = Math.min(distanceAlpha, ageAlpha);
 
         if (landingCooldown > 0)
             landingCooldown--;
@@ -712,12 +743,80 @@ public abstract class BaseBirdParticle extends BaseParticle {
         return count;
     }
 
+    // Rerolls the bird's current flight pattern once its timer expires, weighted by its species' patternWeights
+    private void updateFlightPattern() {
+        if (this.patternTimer-- > 0)
+            return;
+
+        float totalWeight = patternWeights[0] + patternWeights[1] + patternWeights[2] + patternWeights[3];
+        FlightPattern[] patterns = FlightPattern.values();
+        FlightPattern chosen = FlightPattern.WANDER;
+
+        if (totalWeight > 0.0f) {
+            float roll = this.random.nextFloat() * totalWeight;
+            float cumulative = 0.0f;
+            for (int i = 0; i < patterns.length; i++) {
+                cumulative += patternWeights[i];
+                if (roll < cumulative) {
+                    chosen = patterns[i];
+                    break;
+                }
+            }
+        }
+
+        this.currentPattern = chosen;
+        this.patternTimer = 3 + this.random.nextInt(5);
+
+        if (chosen == FlightPattern.CIRCLING) {
+            double startAngle = this.random.nextFloat() * Math.PI * 2;
+            this.circleRadius = 8.0 + this.random.nextFloat() * Math.min(17.0, goalRadius * 0.4);
+            this.circlePivotX = this.x - Math.cos(startAngle) * this.circleRadius;
+            this.circlePivotZ = this.z - Math.sin(startAngle) * this.circleRadius;
+            this.circleAngle = startAngle;
+            this.circleDirection = this.random.nextBoolean() ? 1 : -1;
+        }
+    }
+
+    // Shortens the goal duration for quick successive bursts while DARTING, but not so short it flickers
+    private int scaleGoalTimer(int base) {
+        if (this.currentPattern == FlightPattern.DARTING) {
+            return Math.max(9, (int) (base * 0.5));
+        }
+        return base;
+    }
+
     // Pick a new wandering goal
     private void chooseNewGoal() {
+        updateFlightPattern();
+
         double randRadius = 2.5 + this.random.nextFloat() * (goalRadius - 2.5);
-        double angle = this.random.nextFloat() * Math.PI * 2;
-        double nx = Math.cos(angle) * randRadius + this.xd * 5.0 * (this.random.nextFloat() - 0.5f);
-        double nz = Math.sin(angle) * randRadius + this.zd * 5.0 * (this.random.nextFloat() - 0.5f);
+        double nx;
+        double nz;
+
+        switch (this.currentPattern) {
+            case CIRCLING -> {
+                this.circleAngle += this.circleDirection * (0.35 + this.random.nextFloat() * 0.25);
+                double targetX = this.circlePivotX + Math.cos(this.circleAngle) * this.circleRadius;
+                double targetZ = this.circlePivotZ + Math.sin(this.circleAngle) * this.circleRadius;
+                nx = targetX - this.x;
+                nz = targetZ - this.z;
+            }
+            case DARTING -> {
+                // Alternating, modest turns read as a weaving wave; big random flips read as a stutter
+                double dartRadius = randRadius * (0.25 + this.random.nextFloat() * 0.2);
+                double currentHeading = Math.atan2(this.zd, this.xd);
+                double turn = (Math.PI * 0.12) + this.random.nextFloat() * (Math.PI * 0.18);
+                this.dartWeaveSign = -this.dartWeaveSign;
+                double dartAngle = currentHeading + turn * this.dartWeaveSign;
+                nx = Math.cos(dartAngle) * dartRadius;
+                nz = Math.sin(dartAngle) * dartRadius;
+            }
+            default -> {
+                double angle = this.random.nextFloat() * Math.PI * 2;
+                nx = Math.cos(angle) * randRadius + this.xd * 5.0 * (this.random.nextFloat() - 0.5f);
+                nz = Math.sin(angle) * randRadius + this.zd * 5.0 * (this.random.nextFloat() - 0.5f);
+            }
+        }
 
         // Ocean avoidance
         if (!this.fliesOverOcean) {
@@ -727,7 +826,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (attempts % 3 == 0)
                     randRadius += 15.0;
 
-                angle = this.random.nextFloat() * Math.PI * 2;
+                double angle = this.random.nextFloat() * Math.PI * 2;
                 nx = Math.cos(angle) * randRadius;
                 nz = Math.sin(angle) * randRadius;
             }
@@ -759,6 +858,13 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
             ny = this.y + (this.random.nextFloat() - 0.5f) * 2.0 + this.yd * 1.5 + drift;
             ny = Math.max(ny, ground + minFlightHeight);
+        }
+
+        if (this.currentPattern == FlightPattern.UNDULATING) {
+            ny += Math.sin((this.age + this.tickOffset) * 0.15) * 1.5;
+        } else if (this.currentPattern == FlightPattern.DARTING) {
+            // Sharp dips/climbs alongside the horizontal turn, not just a flat swerve
+            ny += (this.random.nextFloat() - 0.5f) * 6.0;
         }
 
         double safeFloor = isVoid ? env.getLevelMinY() + 10.0 : env.getLevelMinY() + 1.0;
@@ -799,12 +905,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.goalX = this.x + pushX * (goalRadius * 1.5) + (this.random.nextFloat() - 0.5f) * 5.0;
                 this.goalY = ny;
                 this.goalZ = this.z + pushZ * (goalRadius * 1.5) + (this.random.nextFloat() - 0.5f) * 5.0;
-                this.goalTimer = Math.min(this.goalTimer, goalDurationMin / 2);
+                this.goalTimer = scaleGoalTimer(Math.min(this.goalTimer, goalDurationMin / 2));
             } else {
                 this.goalX = (this.x + nx) * (1.0 - flockGoalBias) + cx * flockGoalBias;
                 this.goalY = ny * (1.0 - flockGoalBias) + cy * flockGoalBias;
                 this.goalZ = (this.z + nz) * (1.0 - flockGoalBias) + cz * flockGoalBias;
-                this.goalTimer = Math.min(this.goalTimer, (goalDurationMin + goalDurationMax) / 4);
+                this.goalTimer = scaleGoalTimer(Math.min(this.goalTimer, (goalDurationMin + goalDurationMax) / 4));
             }
             return;
         }
@@ -812,7 +918,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.goalX = this.x + nx;
         this.goalY = ny;
         this.goalZ = this.z + nz;
-        this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
+        this.goalTimer = scaleGoalTimer(
+                goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin)));
     }
 
     // MARK: --- TICK FLYING ---
@@ -872,10 +979,24 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         applyDesiredVector(targetHeight, absoluteCeiling, blockAvoidance, waterAvoidance);
 
-        // Apply speed limits
+        if (this.currentPattern == FlightPattern.DARTING) {
+            // Continuous perpendicular wobble so the path reads as one smooth wave between waypoint
+            // updates, instead of a series of discrete jerks each time a new dart target is picked
+            double headingMag = Math.sqrt(xd * xd + zd * zd);
+            if (headingMag > 0.0001) {
+                double perpX = -zd / headingMag;
+                double perpZ = xd / headingMag;
+                double wobble = Math.sin((this.age + this.tickOffset) * 0.5) * 0.045;
+                this.xd += perpX * wobble;
+                this.zd += perpZ * wobble;
+            }
+        }
+
+        // Apply speed limits -- DARTING gets a burst cap well above cruising speed for a swoosh of acceleration
+        double speedCap = this.currentPattern == FlightPattern.DARTING ? flySpeed * 1.4 : flySpeed;
         double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);
-        if (horizontalSpeed > flySpeed) {
-            double scale = flySpeed / horizontalSpeed;
+        if (horizontalSpeed > speedCap) {
+            double scale = speedCap / horizontalSpeed;
             this.xd *= scale;
             this.zd *= scale;
         }
@@ -1076,6 +1197,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double currentSteerStrength = steerStrength;
             if (blockAvoidance || waterAvoidance) {
                 currentSteerStrength *= 4.0;
+            } else if (this.currentPattern == FlightPattern.DARTING) {
+                // Enough acceleration to feel snappy without overshoot-correcting into a stutter
+                currentSteerStrength *= 1.5;
             }
 
             double steerMag = Math.sqrt(steerX * steerX + steerY * steerY + steerZ * steerZ);
