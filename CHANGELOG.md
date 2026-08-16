@@ -19,11 +19,11 @@
 - sneaking halves the scare distance
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
-
-**v0.5.1**
 - rework Crow texture, making it unified with the new texture style
 - update banner
 - rework all of showcase images
+
+**v0.5.1**
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 
@@ -40,6 +40,7 @@
 - Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
 - Fixed stuck detection when landing
+- Fixed Northern Cardinal config toggles not working properly (ty @gjacka)
 - Optimized backend logic when spawning on chunk load
 
 ---
