@@ -53,8 +53,9 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.40;
         this.maxFlockSize = 12;
         this.fliesOverOcean = true;
-        // Mostly sharp, erratic darting -- leaned even harder into it for a swooshier feel
-        this.patternWeights = new float[] { 0.15f, 0.05f, 0.70f, 0.10f };
+        // Continuous weave for a wavier, more fluid flight path than the other species
+        this.weaveAmplitude = 0.045;
+        this.weaveFrequency = 0.5;
 
         this.scareRadius = 15.0;
         this.scareTakeoffSpeed = 0.50;
