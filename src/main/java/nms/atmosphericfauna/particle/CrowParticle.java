@@ -51,7 +51,7 @@ public class CrowParticle extends BaseBirdParticle {
         this.separationDistance = 2.5;
         this.separationStrength = 0.05;
         this.flockGoalBias = 0.25;
-        this.maxFlockSize = Integer.MAX_VALUE;
+        this.maxFlockSize = maxFlockSizeCrow <= 0 ? Integer.MAX_VALUE : maxFlockSizeCrow;
         this.fliesOverOcean = true;
 
         this.scareRadius = 10.0;

@@ -51,7 +51,7 @@ public class NorthernCardinalParticle extends BaseBirdParticle {
         this.separationDistance = 1.5;
         this.separationStrength = 0.04;
         this.flockGoalBias = 0.35; 
-        this.maxFlockSize = 3;
+        this.maxFlockSize = maxFlockSizeNorthernCardinal <= 0 ? Integer.MAX_VALUE : maxFlockSizeNorthernCardinal;
         this.fliesOverOcean = false;
 
         this.scareRadius = 10.0;

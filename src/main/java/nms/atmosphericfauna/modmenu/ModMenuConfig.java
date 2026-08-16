@@ -166,6 +166,33 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBlockChecks = newValue)
                 .build());
 
+        blueJays.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.min_pack_size"),
+                        ConfigHandler.minPackSizeBlueJay)
+                .setDefaultValue(ConfigHandler.Defaults.MIN_PACK_SIZE_BLUE_JAY)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.min_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.minPackSizeBlueJay = newValue)
+                .build());
+
+        blueJays.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_pack_size"),
+                        ConfigHandler.maxPackSizeBlueJay)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_PACK_SIZE_BLUE_JAY)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxPackSizeBlueJay = newValue)
+                .build());
+
+        blueJays.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_flock_size"),
+                        ConfigHandler.maxFlockSizeBlueJay)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_FLOCK_SIZE_BLUE_JAY)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_flock_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxFlockSizeBlueJay = newValue)
+                .build());
+
         birds.addEntry(blueJays.build());
 
         SubCategoryBuilder commonSwifts = entryBuilder
@@ -212,6 +239,33 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBlockChecks = newValue)
                 .build());
 
+        commonSwifts.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.min_pack_size"),
+                        ConfigHandler.minPackSizeCommonSwift)
+                .setDefaultValue(ConfigHandler.Defaults.MIN_PACK_SIZE_COMMON_SWIFT)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.min_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.minPackSizeCommonSwift = newValue)
+                .build());
+
+        commonSwifts.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_pack_size"),
+                        ConfigHandler.maxPackSizeCommonSwift)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_PACK_SIZE_COMMON_SWIFT)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxPackSizeCommonSwift = newValue)
+                .build());
+
+        commonSwifts.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_flock_size"),
+                        ConfigHandler.maxFlockSizeCommonSwift)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_FLOCK_SIZE_COMMON_SWIFT)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_flock_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxFlockSizeCommonSwift = newValue)
+                .build());
+
         birds.addEntry(commonSwifts.build());
 
         SubCategoryBuilder crows = entryBuilder
@@ -254,6 +308,33 @@ public class ModMenuConfig {
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBlockChecks = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.min_pack_size"),
+                        ConfigHandler.minPackSizeCrow)
+                .setDefaultValue(ConfigHandler.Defaults.MIN_PACK_SIZE_CROW)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.min_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.minPackSizeCrow = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_pack_size"),
+                        ConfigHandler.maxPackSizeCrow)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_PACK_SIZE_CROW)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxPackSizeCrow = newValue)
+                .build());
+
+        crows.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_flock_size"),
+                        ConfigHandler.maxFlockSizeCrow)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_FLOCK_SIZE_CROW)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_flock_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxFlockSizeCrow = newValue)
                 .build());
 
         birds.addEntry(crows.build());
@@ -302,6 +383,33 @@ public class ModMenuConfig {
                 .setTooltip(Component.translatable(
                         "option.atmosphericfauna.species.ignore_block_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBlockChecks = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.min_pack_size"),
+                        ConfigHandler.minPackSizeNorthernCardinal)
+                .setDefaultValue(ConfigHandler.Defaults.MIN_PACK_SIZE_NORTHERN_CARDINAL)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.min_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.minPackSizeNorthernCardinal = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_pack_size"),
+                        ConfigHandler.maxPackSizeNorthernCardinal)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_PACK_SIZE_NORTHERN_CARDINAL)
+                .setMin(1)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_pack_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxPackSizeNorthernCardinal = newValue)
+                .build());
+
+        northernCardinals.add(entryBuilder
+                .startIntField(Component.translatable("option.atmosphericfauna.species.max_flock_size"),
+                        ConfigHandler.maxFlockSizeNorthernCardinal)
+                .setDefaultValue(ConfigHandler.Defaults.MAX_FLOCK_SIZE_NORTHERN_CARDINAL)
+                .setMin(0)
+                .setTooltip(Component.translatable("option.atmosphericfauna.species.max_flock_size.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.maxFlockSizeNorthernCardinal = newValue)
                 .build());
 
         birds.addEntry(northernCardinals.build());
