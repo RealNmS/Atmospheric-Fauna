@@ -28,11 +28,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected State state = State.FLYING;
 
-    // Continuous perpendicular weave applied while flying, for a wavier/more fluid path; 0 = no weave (default).
-    // Only Common Swift sets this to a nonzero value today.
-    protected double weaveAmplitude = 0.0;
-    protected double weaveFrequency = 0.5;
-
     protected double goalX = Double.NaN;
     protected double goalY = Double.NaN;
     protected double goalZ = Double.NaN;
@@ -890,21 +885,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         boolean waterAvoidance = !this.fliesOverOcean && env.isOceanBiome(lookX, lookZ);
 
         applyDesiredVector(targetHeight, absoluteCeiling, blockAvoidance, waterAvoidance);
-
-        if (this.weaveAmplitude > 0.0) {
-            // Continuous perpendicular + vertical wobble so the path reads as one smooth, fluid wave
-            // rather than a straight line -- used by species that fly with a wavier, undulating style
-            double headingMag = Math.sqrt(xd * xd + zd * zd);
-            if (headingMag > 0.0001) {
-                double perpX = -zd / headingMag;
-                double perpZ = xd / headingMag;
-                double phase = (this.age + this.tickOffset) * this.weaveFrequency;
-                double wobble = Math.sin(phase) * this.weaveAmplitude;
-                this.xd += perpX * wobble;
-                this.zd += perpZ * wobble;
-                this.yd += Math.sin(phase * 0.7) * (this.weaveAmplitude * 0.4);
-            }
-        }
 
         // Apply speed limits
         double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);

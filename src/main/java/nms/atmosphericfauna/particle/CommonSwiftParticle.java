@@ -53,9 +53,6 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         this.flockGoalBias = 0.40;
         this.maxFlockSize = maxFlockSizeCommonSwift <= 0 ? Integer.MAX_VALUE : maxFlockSizeCommonSwift;
         this.fliesOverOcean = true;
-        // Continuous weave for a wavier, more fluid flight path than the other species
-        this.weaveAmplitude = 0.045;
-        this.weaveFrequency = 0.5;
 
         this.scareRadius = 15.0;
         this.scareTakeoffSpeed = 0.50;
