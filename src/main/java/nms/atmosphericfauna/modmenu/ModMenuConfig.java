@@ -111,6 +111,8 @@ public class ModMenuConfig {
                 .build());
 
         // MARK: --- VISUALS ---
+        // If I add way too many I should add sodium config support
+        // (https://github.com/CaffeineMC/sodium/blob/dev/common/src/api/java/net/caffeinemc/mods/sodium/api/config/USAGE.md)
 
         ConfigCategory visuals = builder
                 .getOrCreateCategory(Component.translatable("category.atmosphericfauna.visuals"));
