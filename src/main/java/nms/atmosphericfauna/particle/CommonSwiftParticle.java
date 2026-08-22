@@ -31,10 +31,10 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         this.lifetime = 4200;
         this.quadSize = 0.35f;
 
-        this.flySpeed = 0.34f + BaseBirdParticle.getNextFlockSpeedOffset();
+        this.flySpeed = 0.30f + BaseBirdParticle.getNextFlockSpeedOffset();
         this.wingFlapSpeed = 2;
         this.wingFlapOffset = random.nextInt(wingFlapSpeed);
-        this.steerStrength = 0.022;
+        this.steerStrength = 0.018;
         this.minFlightHeight = 10.0;
         this.preferredFlightHeight = 15.0 + (this.random.nextDouble() * 20.0);
         if (this.random.nextFloat() < 0.15f) {
@@ -42,8 +42,8 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         }
         this.heightTolerance = 4.0;
         this.heightAdherence = 0.003;
-        this.maxVerticalSpeed = 0.65;
-        this.verticalSteerFactor = 1.9;
+        this.maxVerticalSpeed = 0.55;
+        this.verticalSteerFactor = 1.75;
         this.takeoffClimb = 3.5;
         this.flockRadius = 15.0;
         this.cohesionStrength = 0.002;
@@ -57,8 +57,8 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         this.scareRadius = 15.0;
         this.scareTakeoffSpeed = 0.50;
 
-        this.perchingChance = 0.0002; 
-        this.perchingTime = 200; 
+        this.perchingChance = 0.0002;
+        this.perchingTime = 200;
         this.perchingDistance = 15;
 
         this.goalRadius = 60.0;
