@@ -60,7 +60,7 @@ My plan right now is to build a solid foundation for the mod, so I can easily ad
 
 ---
 
-## Installation
+## Installation & Configuration
 
 Just make sure you have the latest version of [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api) installed. For the best experience I recommend using this alongside with [Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config) to be able to customize the mod to your liking.
 
@@ -81,6 +81,8 @@ The mod is completely **client-side**, so you don't need to install it on the se
 I welcome all contributions!
 If you have feedback, bug reports, or improvements:
 
-- Open an issue on [GitHub](https://github.com/RealNmS/Atmospheric-Fauna)
-- Submit a pull request
+- [Open an issue](https://github.com/RealNmS/Atmospheric-Fauna/issues)
+- [Submit a pull request](https://github.com/RealNmS/Atmospheric-Fauna/pulls)
 - Share and star the project ⭐
+
+For suggestions and ideas I prefer you to open an issue, so I can keep track of them and discuss them with you. If you want to contribute code, please consider making an Issue first, so we can discuss the implementation and make sure it fits the mod's vision.
