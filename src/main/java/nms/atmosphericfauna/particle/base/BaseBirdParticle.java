@@ -263,11 +263,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
             // Fade out sprite
             if (enableBirdDistanceFadeOut) {
-                double fadeStartDist = maxDist * 0.3;
+                double fadeStartDist = maxDist * 0.75;
                 if (distSq > fadeStartDist * fadeStartDist) {
                     double dist = Math.sqrt(distSq);
                     double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
-                    distanceAlpha = (float) Math.max(0.0, 1.0 - Math.pow(t, 0.6));
+                    distanceAlpha = (float) Math.max(0.0, 1.0 - t);
                 }
             }
         }
