@@ -2,7 +2,7 @@
 
 - bugs (like ladybugs, beetles, butterflies)
 - more birds
-  - seagull, sparrow, hawk, kingfisher, owl, ...
+  - seagull, sparrow, hawk, kingfisher, owl, toucan, ...
   - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
 - random events (flying in circles above the player for example)
 - server-side support (least likely to happen lol)
@@ -22,8 +22,6 @@
 - rework Crow texture, making it unified with the new texture style
 - update banner
 - rework all of showcase images
-
-**v0.5.1**
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 
