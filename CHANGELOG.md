@@ -31,11 +31,12 @@
 
 - Added 2x chance multiplier to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
 - Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
-- Added config options to set spawning pack sizes and max flock size for each bird type
-  - by @gjacka in https://github.com/RealNmS/Atmospheric-Fauna/pull/5
+- Added config options to set spawning pack sizes and max flock size for each bird type (by @gjacka)
+- Added sprite fade out when birds are far away (can be turned off in config)
 - Improved stuck detection when landing
 - Improved group takeoff logic to include other birds that are either landing or already flying
 - Improved debugging texts in console and logs
+- Changed some of the Common Swift parameters like wing flapping speed to be faster
 - Removed creative mode check for "spawn" command
 - Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
