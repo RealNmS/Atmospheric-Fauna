@@ -48,7 +48,7 @@ dependencies {
     // Applies Mojang Mappings on obfuscated versions
     loomx.applyMojangMappings()
 
-    // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
+    // Fabric Loader
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 
     // Fabric API
