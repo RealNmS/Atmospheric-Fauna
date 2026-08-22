@@ -261,13 +261,14 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 return;
             }
 
-            // Fade out over most of the visible range (not just the last stretch before despawn), and front-load
-            // the falloff so birds visibly haze soon after the start distance instead of staying crisp for a while
-            double fadeStartDist = maxDist * 0.3;
-            if (distSq > fadeStartDist * fadeStartDist) {
-                double dist = Math.sqrt(distSq);
-                double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
-                distanceAlpha = (float) Math.max(0.0, 1.0 - Math.pow(t, 0.6));
+            // Fade out sprite
+            if (enableBirdDistanceFadeOut) {
+                double fadeStartDist = maxDist * 0.3;
+                if (distSq > fadeStartDist * fadeStartDist) {
+                    double dist = Math.sqrt(distSq);
+                    double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
+                    distanceAlpha = (float) Math.max(0.0, 1.0 - Math.pow(t, 0.6));
+                }
             }
         }
 

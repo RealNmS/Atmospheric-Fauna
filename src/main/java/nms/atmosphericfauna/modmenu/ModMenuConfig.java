@@ -110,6 +110,21 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.spawnAroundSpectators = newValue)
                 .build());
 
+        // MARK: --- VISUALS ---
+
+        ConfigCategory visuals = builder
+                .getOrCreateCategory(Component.translatable("category.atmosphericfauna.visuals"));
+
+        visuals.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.enable_bird_distance_fade_out"),
+                        ConfigHandler.enableBirdDistanceFadeOut)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_BIRD_DISTANCE_FADE_OUT)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.enable_bird_distance_fade_out.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableBirdDistanceFadeOut = newValue)
+                .build());
+
         // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder

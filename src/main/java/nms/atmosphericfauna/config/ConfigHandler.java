@@ -28,6 +28,8 @@ public class ConfigHandler {
         public static final boolean SPAWN_BELOW_SEA_LEVEL = false;
         public static final boolean SPAWN_AROUND_SPECTATORS = true;
 
+        public static final boolean ENABLE_BIRD_DISTANCE_FADE_OUT = true;
+
         public static final int MAX_ACTIVE_BIRDS = 100;
         // Blue Jay
         public static final boolean ENABLE_BLUE_JAY_SPAWNING = true;
@@ -76,6 +78,8 @@ public class ConfigHandler {
     public static int searchRadius = Defaults.SEARCH_RADIUS;
     public static boolean spawnBelowSeaLevel = Defaults.SPAWN_BELOW_SEA_LEVEL;
     public static boolean spawnAroundSpectators = Defaults.SPAWN_AROUND_SPECTATORS;
+
+    public static boolean enableBirdDistanceFadeOut = Defaults.ENABLE_BIRD_DISTANCE_FADE_OUT;
 
     public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
     // Blue Jay
@@ -183,6 +187,13 @@ public class ConfigHandler {
             public Boolean spawnAroundSpectators;
         }
 
+        // Visuals Category
+        public Visuals visuals = new Visuals();
+
+        public static class Visuals {
+            public Boolean enableBirdDistanceFadeOut;
+        }
+
         // Birds Category
         public Birds birds = new Birds();
 
@@ -247,6 +258,9 @@ public class ConfigHandler {
         data.spawning.spawnBelowSeaLevel = spawnBelowSeaLevel;
         data.spawning.spawnAroundSpectators = spawnAroundSpectators;
 
+        // Visuals Category
+        data.visuals.enableBirdDistanceFadeOut = enableBirdDistanceFadeOut;
+
         // Birds Category
         data.birds.maxActiveBirds = maxActiveBirds;
         // Blue Jay
@@ -301,6 +315,9 @@ public class ConfigHandler {
         searchRadius = data.spawning.searchRadius;
         spawnBelowSeaLevel = data.spawning.spawnBelowSeaLevel;
         spawnAroundSpectators = data.spawning.spawnAroundSpectators;
+
+        // Visuals Category
+        enableBirdDistanceFadeOut = data.visuals.enableBirdDistanceFadeOut;
 
         // Birds Category
         maxActiveBirds = data.birds.maxActiveBirds;
