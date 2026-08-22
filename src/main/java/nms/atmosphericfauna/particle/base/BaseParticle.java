@@ -45,13 +45,13 @@ public abstract class BaseParticle extends SingleQuadParticle
     //? if <=1.21.8 {
     //  @Override
     //  public ParticleRenderType getRenderType() {
-    //      return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    //      return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     //  }
     //?}
     //? if >1.21.8 {
     @Override
     protected Layer getLayer() {
-        return Layer.OPAQUE;
+        return Layer.TRANSLUCENT;
     }
     //?}
 

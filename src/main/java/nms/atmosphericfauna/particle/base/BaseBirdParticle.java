@@ -28,6 +28,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     protected State state = State.FLYING;
 
+    // Continuous perpendicular weave applied while flying, for a wavier/more fluid path; 0 = no weave (default).
+    // Only Common Swift sets this to a nonzero value today.
+    protected double weaveAmplitude = 0.0;
+    protected double weaveFrequency = 0.5;
+
     protected double goalX = Double.NaN;
     protected double goalY = Double.NaN;
     protected double goalZ = Double.NaN;
@@ -245,6 +250,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             this.cachedDirZ = this.zd;
         }
 
+        float distanceAlpha = 1.0f;
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
@@ -259,7 +265,20 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 this.remove();
                 return;
             }
+
+            // Fade out over most of the visible range (not just the last stretch before despawn), and front-load
+            // the falloff so birds visibly haze soon after the start distance instead of staying crisp for a while
+            double fadeStartDist = maxDist * 0.3;
+            if (distSq > fadeStartDist * fadeStartDist) {
+                double dist = Math.sqrt(distSq);
+                double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
+                distanceAlpha = (float) Math.max(0.0, 1.0 - Math.pow(t, 0.6));
+            }
         }
+
+        // Fade in on spawn to match, and let the engine's own fog shader haze the sprite at range
+        float ageAlpha = Math.min(1.0f, this.age / 10.0f);
+        this.alpha = Math.min(distanceAlpha, ageAlpha);
 
         if (landingCooldown > 0)
             landingCooldown--;
@@ -871,6 +890,21 @@ public abstract class BaseBirdParticle extends BaseParticle {
         boolean waterAvoidance = !this.fliesOverOcean && env.isOceanBiome(lookX, lookZ);
 
         applyDesiredVector(targetHeight, absoluteCeiling, blockAvoidance, waterAvoidance);
+
+        if (this.weaveAmplitude > 0.0) {
+            // Continuous perpendicular + vertical wobble so the path reads as one smooth, fluid wave
+            // rather than a straight line -- used by species that fly with a wavier, undulating style
+            double headingMag = Math.sqrt(xd * xd + zd * zd);
+            if (headingMag > 0.0001) {
+                double perpX = -zd / headingMag;
+                double perpZ = xd / headingMag;
+                double phase = (this.age + this.tickOffset) * this.weaveFrequency;
+                double wobble = Math.sin(phase) * this.weaveAmplitude;
+                this.xd += perpX * wobble;
+                this.zd += perpZ * wobble;
+                this.yd += Math.sin(phase * 0.7) * (this.weaveAmplitude * 0.4);
+            }
+        }
 
         // Apply speed limits
         double horizontalSpeed = Math.sqrt(xd * xd + zd * zd);
