@@ -40,7 +40,7 @@
 - Fixed birds being able to perch onto a block below another block
 - Fixed stuck detection when landing
 - Fixed Northern Cardinal config toggles not working properly (ty @gjacka)
-- Fixed birds being able to spawn on water when "Ignore spawn block checks" is enabled
+- Fixed birds being able to spawn on water when "Ignore Spawn Block Checks" is enabled
 - Optimized backend logic when spawning on chunk load
 
 ---
