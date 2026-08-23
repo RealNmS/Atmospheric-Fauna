@@ -27,18 +27,17 @@
 
 ## current update notes *(wip v0.5.1)*
 
-- Added 2x chance multiplier to perch on weirdly shaped blocks (like fences, walls, levers, etc.)
-- Added 4x chance multiplier to perch when it's bad weather (rain, snow, thunder)
+- Added bigger chance for birds to perch on top of weirdly shaped blocks (like fences, walls, leaves, etc.)
+- Added even bigger chance for birds to perch when it's bad weather (rain, snow, thunder)
 - Added config options to set spawning pack sizes and max flock size for each bird type (by @gjacka)
-- Added sprite fade out when birds are far away (can be turned off in config)
+- Added sprite fade out when birds are far away (can be turned off in config) (ty @gjacka)
 - Improved stuck detection when landing
-- Improved group takeoff logic to include other birds that are either landing or already flying
 - Improved debugging texts in console and logs
 - Changed some of the Common Swift parameters like wing flapping speed to be faster
 - Removed creative mode check for "spawn" command
 - Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
-- Fixed stuck detection when landing
+- Fixed birds performing group takeoff not telling others that were in the landing or flying state
 - Fixed Northern Cardinal config toggles not working properly (ty @gjacka)
 - Fixed birds being able to spawn on water when "Ignore Spawn Block Checks" is enabled
 - Optimized backend logic when spawning on chunk load
