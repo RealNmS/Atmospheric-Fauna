@@ -114,17 +114,19 @@ public class AmbientSpawning {
             }
         } else {
             var stateAtPos = world.getBlockState(pos);
+            var stateBelow = world.getBlockState(pos.below());
+
             if (!stateAtPos.getFluidState().isEmpty()
                     || !stateAtPos.getCollisionShape(world, pos).isEmpty()
                     || !world.isEmptyBlock(pos.above())
-                    || world.isEmptyBlock(pos.below())) {
+                    || world.isEmptyBlock(pos.below())
+                    || !stateBelow.getFluidState().isEmpty()) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
                 return false;
             }
 
             if (spawnData.checkSpawnBlocks()) {
-                var stateBelow = world.getBlockState(pos.below());
                 boolean isValidBlock = false;
                 for (TagKey<Block> tag : spawnData.validSpawnBlocks()) {
                     if (stateBelow.is(tag)) {
