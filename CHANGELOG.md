@@ -40,6 +40,8 @@
 - Fixed birds performing group takeoff not telling others that were in the landing or flying state
 - Fixed Northern Cardinal config toggles not working properly (ty @gjacka)
 - Fixed birds being able to spawn on water when "Ignore Spawn Block Checks" is enabled
+- Fixed birds being able to spawn outside of render distance
+- Fixed birds being able to spawn in unloaded chunks
 - Optimized backend logic when spawning on chunk load
 
 ---

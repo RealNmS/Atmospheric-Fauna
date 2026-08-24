@@ -4,6 +4,7 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import static nms.atmosphericfauna.config.ConfigHandler.*;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -106,6 +107,24 @@ public class AmbientSpawning {
 
     private static boolean isValidSpawnLocation(ClientLevel world, BlockPos pos, SpawnData spawnData,
             boolean isMidair) {
+
+        if (!world.getChunkSource().hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
+            if (debugTextSpawning)
+                AtmosphericFauna.LOGGER.info("[AS] Could not spawn: Chunk is not loaded");
+            return false;
+        }
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            double distSq = mc.player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ());
+            double maxDist = mc.options.renderDistance().get() * 16.0;
+            if (distSq > maxDist * maxDist) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Could not spawn: Location is outside render distance");
+                return false;
+            }
+        }
+
         if (isMidair) {
             if (!world.isEmptyBlock(pos)) {
                 if (debugTextSpawning)
