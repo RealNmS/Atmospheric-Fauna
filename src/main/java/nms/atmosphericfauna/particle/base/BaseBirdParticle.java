@@ -262,12 +262,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 return;
             }
 
-            // Fade out sprite
-            if (enableBirdDistanceFadeOut) {
+            // Birds in the grace distance remain active but are always invisible.
+            if (distSq > renderEdgeDist * renderEdgeDist) {
+                distanceAlpha = 0.0f;
+            } else if (enableBirdDistanceFadeOut) {
                 double fadeStartDist = renderEdgeDist * 0.8;
-                if (distSq > renderEdgeDist * renderEdgeDist) {
-                    distanceAlpha = 0.0f;
-                } else if (distSq > fadeStartDist * fadeStartDist) {
+                if (distSq > fadeStartDist * fadeStartDist) {
                     double dist = Math.sqrt(distSq);
                     double t = (dist - fadeStartDist) / (renderEdgeDist - fadeStartDist);
                     distanceAlpha = (float) Math.max(0.0, 1.0 - t);
