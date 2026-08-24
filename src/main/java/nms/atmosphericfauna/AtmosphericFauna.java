@@ -81,7 +81,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 		*//*?} else {*/
 		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
 		//?}
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.level != lastLevel) {
                 BaseBirdParticle.reset();
                 lastLevel = client.level;
