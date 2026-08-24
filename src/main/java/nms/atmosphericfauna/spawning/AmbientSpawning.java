@@ -219,8 +219,10 @@ public class AmbientSpawning {
             var player = players.get(random.nextInt(players.size()));
 
             double angle = random.nextFloat() * Math.PI * 2;
-            double dist = spawnRangeFromPlayer;
-
+            Minecraft mc = Minecraft.getInstance();
+            double maxLoadedRadius = Math.max(16.0, (mc.options.renderDistance().get() - 1) * 16.0);
+            double dynamicMaxRange = Math.min((double) spawnRangeFromPlayer, maxLoadedRadius);
+            double dist = dynamicMaxRange;
             double spawnX = player.getX() + Math.cos(angle) * dist;
             double spawnZ = player.getZ() + Math.sin(angle) * dist;
             double spawnY = player.getY();
@@ -275,8 +277,12 @@ public class AmbientSpawning {
             BlockPos playerPos = player.blockPosition();
 
             double angle = random.nextFloat() * Math.PI * 2;
-            double minDist = spawnRangeFromPlayer / 2.0;
-            double distance = minDist + random.nextFloat() * (spawnRangeFromPlayer - minDist);
+            Minecraft mc = Minecraft.getInstance();
+            double maxLoadedRadius = Math.max(16.0, (mc.options.renderDistance().get() - 1) * 16.0);
+            double dynamicMaxRange = Math.min((double) spawnRangeFromPlayer, maxLoadedRadius);
+            double curveFactor = dynamicMaxRange / (double) Math.max(1, spawnRangeFromPlayer);
+            double minDist = (dynamicMaxRange / 2.0) * curveFactor;
+            double distance = minDist + random.nextFloat() * (dynamicMaxRange - minDist);
 
             int baseX = playerPos.getX() + (int) Math.floor(Math.cos(angle) * distance);
             int baseZ = playerPos.getZ() + (int) Math.floor(Math.sin(angle) * distance);

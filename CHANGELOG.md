@@ -34,6 +34,7 @@
 - Improved stuck detection when landing
 - Improved debugging texts in console and logs
 - Changed some of the Common Swift parameters like wing flapping speed to be faster
+- Changed bird spawn distance calculation to better fit the player's render distance
 - Removed creative mode check for "spawn" command
 - Removed useless JSpecify annotations dependency
 - Fixed birds being able to perch onto a block below another block
