@@ -13,7 +13,6 @@
 
 ### quick todo
 
-**v0.6.0 (The "Interactions" Update)**
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile interaction
 - sneaking halves the scare distance
@@ -25,7 +24,15 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 
-## current update notes *(wip v0.5.1)*
+## current update notes *(wip v0.6.0)*
+
+- nothing yet
+
+---
+
+## v0.5.1 [1.21 - 26.2] `24.08.2026`
+
+Small update with mostly fixes and polishing before I start working on the next big update. Also had our first PR with good ideas and code contributions. Once again, if you find any bugs or have any suggestions, please open an issue on GitHub.
 
 - Added bigger chance for birds to perch on top of weirdly shaped blocks (like fences, walls, leaves, etc.)
 - Added even bigger chance for birds to perch when it's bad weather (rain, snow, thunder)
@@ -46,8 +53,6 @@
 - Fixed birds being able to spawn in unloaded chunks
 - Fixed clearing of cache starting too late, causing birds to spawn but not register properly
 - Optimized backend logic when spawning on chunk load
-
----
 
 ## v0.5.0 [1.21 - 26.2] `13.08.2026`
 
