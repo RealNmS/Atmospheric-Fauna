@@ -88,6 +88,10 @@ public class AtmosphericFauna implements ClientModInitializer {
             }
         });
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
+            if (world != lastLevel) {
+                BaseBirdParticle.reset();
+                lastLevel = world;
+            }
 			chunkLoadCount++;
 			if (chunkLoadCount % 4 == 0 && enableChunkLoadSpawning) {
                 Map<Field, Integer> originalValues = new HashMap<>();
