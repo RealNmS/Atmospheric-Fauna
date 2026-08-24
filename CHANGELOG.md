@@ -31,6 +31,7 @@
 - Added even bigger chance for birds to perch when it's bad weather (rain, snow, thunder)
 - Added config options to set spawning pack sizes and max flock size for each bird type (by @gjacka)
 - Added sprite fade out when birds are far away (can be turned off in config) (ty @gjacka)
+- Added a grace distance (16 blocks) outside of render distance where birds can still exist before despawning
 - Improved stuck detection when landing
 - Improved debugging texts in console and logs
 - Changed some of the Common Swift parameters like wing flapping speed to be faster

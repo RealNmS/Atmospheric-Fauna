@@ -249,9 +249,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (mc.player != null) {
             double distSq = mc.player.distanceToSqr(this.x, this.y, this.z);
             int renderDist = mc.options.renderDistance().get();
-            double maxDist = (renderDist + 1) * 16.0;
+            double renderEdgeDist = renderDist * 16.0;
+            double despawnDist = renderEdgeDist + 16.0;
 
-            if (distSq > maxDist * maxDist) {
+            if (distSq > despawnDist * despawnDist) {
                 for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
                     if (!nb.removed) {
                         nb.remove();
@@ -263,10 +264,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
             // Fade out sprite
             if (enableBirdDistanceFadeOut) {
-                double fadeStartDist = maxDist * 0.75;
-                if (distSq > fadeStartDist * fadeStartDist) {
+                double fadeStartDist = renderEdgeDist * 0.8;
+                if (distSq > renderEdgeDist * renderEdgeDist) {
+                    distanceAlpha = 0.0f;
+                } else if (distSq > fadeStartDist * fadeStartDist) {
                     double dist = Math.sqrt(distSq);
-                    double t = Math.min(1.0, (dist - fadeStartDist) / (maxDist - fadeStartDist));
+                    double t = (dist - fadeStartDist) / (renderEdgeDist - fadeStartDist);
                     distanceAlpha = (float) Math.max(0.0, 1.0 - t);
                 }
             }
