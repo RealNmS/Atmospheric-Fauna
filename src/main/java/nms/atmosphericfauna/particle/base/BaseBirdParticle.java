@@ -1267,9 +1267,9 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         setState(this, State.DYING);
 
-        this.xd = pushX;
-        this.yd = pushY;
-        this.zd = pushZ;
+        this.xd = pushX / 2;
+        this.yd = pushY / 2;
+        this.zd = pushZ / 2;
 
         this.animator.updateSprite(2, false);
         this.lifetime = this.age + 100;
