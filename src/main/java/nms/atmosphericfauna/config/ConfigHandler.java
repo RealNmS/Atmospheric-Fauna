@@ -29,6 +29,7 @@ public class ConfigHandler {
         public static final boolean SPAWN_AROUND_SPECTATORS = true;
 
         public static final boolean ENABLE_BIRD_DISTANCE_FADE_OUT = true;
+        public static final boolean ENABLE_HIT_PARTICLES = true;
 
         public static final int MAX_ACTIVE_BIRDS = 100;
         // Blue Jay
@@ -80,6 +81,7 @@ public class ConfigHandler {
     public static boolean spawnAroundSpectators = Defaults.SPAWN_AROUND_SPECTATORS;
 
     public static boolean enableBirdDistanceFadeOut = Defaults.ENABLE_BIRD_DISTANCE_FADE_OUT;
+    public static boolean enableHitParticles = Defaults.ENABLE_HIT_PARTICLES;
 
     public static int maxActiveBirds = Defaults.MAX_ACTIVE_BIRDS;
     // Blue Jay
@@ -192,6 +194,7 @@ public class ConfigHandler {
 
         public static class Visuals {
             public Boolean enableBirdDistanceFadeOut;
+            public Boolean enableHitParticles;
         }
 
         // Birds Category
@@ -260,6 +263,7 @@ public class ConfigHandler {
 
         // Visuals Category
         data.visuals.enableBirdDistanceFadeOut = enableBirdDistanceFadeOut;
+        data.visuals.enableHitParticles = enableHitParticles;
 
         // Birds Category
         data.birds.maxActiveBirds = maxActiveBirds;
@@ -318,6 +322,7 @@ public class ConfigHandler {
 
         // Visuals Category
         enableBirdDistanceFadeOut = data.visuals.enableBirdDistanceFadeOut;
+        enableHitParticles = data.visuals.enableHitParticles;
 
         // Birds Category
         maxActiveBirds = data.birds.maxActiveBirds;

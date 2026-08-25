@@ -1275,8 +1275,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.animator.updateSprite(2, false);
         this.lifetime = this.age + 100;
 
-        // TODO: connect to config
-        boolean enableHitParticles = true;
         if (enableHitParticles) {
             for (int i = 0; i < 3; i++) {
                 this.level.addParticle(net.minecraft.core.particles.ParticleTypes.POOF,
@@ -1660,8 +1658,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.zd *= 0.98;
 
         if (this.onGround || this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime) {
-            // TODO: connect to config
-            boolean enableHitParticles = true;
             if (enableHitParticles && this.onGround) {
                 this.level.addParticle(net.minecraft.core.particles.ParticleTypes.POOF,
                         this.x, this.y, this.z,

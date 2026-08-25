@@ -44,6 +44,8 @@
   "category.atmosphericfauna.visuals": "Visuals",
   "option.atmosphericfauna.enable_bird_distance_fade_out": "Bird Distance Fade Out",
   "option.atmosphericfauna.enable_bird_distance_fade_out.tooltip": "Fades bird sprites as they approach the render distance limit.",
+  "option.atmosphericfauna.enable_hit_particles": "Hit Particles",
+  "option.atmosphericfauna.enable_hit_particles.tooltip": "Shows particle effects when birds are hit.",
   "category.atmosphericfauna.debug": "Debug",
   "option.atmosphericfauna.debug_text_spawning": "Spawning Debug Text",
   "option.atmosphericfauna.debug_text_spawning.tooltip": "Enables console debug text for ambient spawning in the world.",

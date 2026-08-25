@@ -14,7 +14,6 @@
 ### quick todo
 
 - some kind of interaction with spyglass
-- arrow, tnt, and other projectile interaction
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - rework Crow texture, making it unified with the new texture style
@@ -23,6 +22,7 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - fix fade in on spawn command
+- polish dying state ending at ground touch
 
 ## current update notes *(wip v0.6.0)*
 

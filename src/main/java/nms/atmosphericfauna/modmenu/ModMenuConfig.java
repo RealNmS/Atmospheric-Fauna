@@ -127,6 +127,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.enableBirdDistanceFadeOut = newValue)
                 .build());
 
+        visuals.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.enable_hit_particles"),
+                        ConfigHandler.enableHitParticles)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_HIT_PARTICLES)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.enable_hit_particles.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableHitParticles = newValue)
+                .build());
+
         // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder
