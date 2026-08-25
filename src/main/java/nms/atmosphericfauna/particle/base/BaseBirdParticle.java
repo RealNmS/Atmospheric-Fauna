@@ -277,9 +277,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             }
         }
 
-        // Fade in on spawn to match, and let the engine's own fog shader haze the sprite at range
-        float ageAlpha = Math.min(1.0f, this.age / 10.0f);
-        this.alpha = Math.min(distanceAlpha, ageAlpha);
+        this.alpha = distanceAlpha;
 
         if (landingCooldown > 0)
             landingCooldown--;

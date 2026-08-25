@@ -33,6 +33,7 @@
 - Reworked birds getting scared off
   - Birds will now react to any loud noise near enough
   - You can get closer if you're crouching (50% more distance)
+- Removed bird fade in on spawn
 
 ---
 
