@@ -8,6 +8,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
@@ -1354,9 +1355,27 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    // Failsafe for players sneaking up without making noise
+    private void checkProximityScare() {
+        if (this.threatX != null)
+            return;
+
+        if ((this.age + this.tickOffset) % 5 != 0)
+            return;
+
+        for (Player p : this.level.players()) {
+            if (p.isSpectator())
+                continue;
+            float simulatedVolume = p.isCrouching() ? 0.5f : 1.0f;
+            this.startle(p.getX(), p.getY(), p.getZ(), simulatedVolume);
+        }
+    }
+
     // MARK: --- TICK LANDING ---
 
     private void tickLanding() {
+        checkProximityScare();
+
         this.perchedTimer = 0;
 
         // If target missing, abort to flying
@@ -1479,6 +1498,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // MARK: --- TICK PERCHED ---
 
     private void tickPerched() {
+        checkProximityScare();
+
         this.perchedTimer++;
 
         this.xd = 0;

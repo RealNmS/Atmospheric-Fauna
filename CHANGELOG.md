@@ -15,7 +15,6 @@
 
 - some kind of interaction with spyglass
 - arrow, tnt, and other projectile interaction
-- sneaking halves the scare distance
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - rework Crow texture, making it unified with the new texture style
@@ -28,6 +27,7 @@
 
 - Reworked birds getting scared off
   - Now instead of reacting to just the player, birds will react to any loud sound
+  - You can get closer if you're crouching (50% more distance)
 
 ---
 
