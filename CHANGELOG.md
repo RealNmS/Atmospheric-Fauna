@@ -26,7 +26,8 @@
 
 ## current update notes *(wip v0.6.0)*
 
-- nothing yet
+- Reworked birds getting scared off
+  - Now instead of reacting to just the player, birds will react to any loud sound
 
 ---
 

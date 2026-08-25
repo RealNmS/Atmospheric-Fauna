@@ -8,7 +8,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
@@ -47,6 +46,8 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
     protected Double takeoffGoalY = Double.NaN;
     protected int takeoffTime = 0;
+    protected Double threatX = null;
+    protected Double threatZ = null;
     protected double lastDistSqToGoal = -1.0;
     protected int stuckTicks = 0;
     protected double cachedGroundHeight = Double.NaN;
@@ -635,10 +636,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     // Takeoff logic
-    private void performTakeoff(Player source) {
-        if (source != null) {
-            double dx = this.x - source.getX();
-            double dz = this.z - source.getZ();
+    private void performTakeoff(Double sourceX, Double sourceZ) {
+        if (sourceX != null && sourceZ != null) {
+            double dx = this.x - sourceX;
+            double dz = this.z - sourceZ;
             double mag = Math.sqrt(dx * dx + dz * dz);
             if (mag < 0.001) {
                 dx = (this.random.nextFloat() - 0.5f);
@@ -1160,6 +1161,60 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    public static void onSoundPlayed(double x, double y, double z, float volume) {
+        List<BaseBirdParticle> birdsToStartle;
+        synchronized (ALL_BIRDS) {
+            birdsToStartle = new ArrayList<>(ALL_BIRDS);
+        }
+        for (BaseBirdParticle bird : birdsToStartle) {
+            if (!bird.removed && (bird.state == State.PERCHED || bird.state == State.LANDING)) {
+                bird.startle(x, y, z, volume);
+            }
+        }
+    }
+
+    public void startle(double sx, double sy, double sz, float volume) {
+        // Cap volume multiplier between 0.5x and 3.0x to prevent tiny/massive extremes
+        double effectiveRadius = this.scareRadius * Math.max(0.5, Math.min(volume, 3.0));
+        double dx = this.x - sx;
+        double dy = this.y - sy;
+        double dz = this.z - sz;
+        double distSq = dx * dx + dy * dy + dz * dz;
+
+        // Math.abs(dy) < 5.0 prevents zombies in a deep cave from scaring a bird in a
+        // tree above
+        if (distSq <= effectiveRadius * effectiveRadius && Math.abs(dy) < 5.0) {
+            if (this.state == State.LANDING) {
+                this.performTakeoff(sx, sz);
+                this.landingDelay = 0;
+                return;
+            }
+
+            boolean amIClosest = true;
+            for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
+                if (nb.state == State.PERCHED) {
+                    double nbDistSq = (nb.x - sx) * (nb.x - sx) + (nb.y - sy) * (nb.y - sy) + (nb.z - sz) * (nb.z - sz);
+                    if (nbDistSq < distSq) {
+                        amIClosest = false;
+                        break;
+                    }
+                }
+            }
+
+            this.threatX = sx;
+            this.threatZ = sz;
+
+            if (amIClosest) {
+                this.perchTimer = 0;
+            } else {
+                int waveDelay = (int) (Math.sqrt(distSq) * 2.0);
+                if (this.perchTimer > waveDelay) {
+                    this.perchTimer = waveDelay;
+                }
+            }
+        }
+    }
+
     // Perching Scan
     private void scanForPerch() {
         int effectiveFlockSize = this.cachedFlockNeighbors.size() + 1;
@@ -1302,23 +1357,6 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // MARK: --- TICK LANDING ---
 
     private void tickLanding() {
-        double scareRadiusSq = scareRadius * scareRadius;
-        for (Player p : this.level.players()) {
-            if (p.isSpectator())
-                continue;
-
-            double dx = p.getX() - this.x;
-            double dz = p.getZ() - this.z;
-            double distSq = dx * dx + dz * dz;
-            double dy = Math.abs(p.getY() - this.y);
-
-            if (distSq <= scareRadiusSq && dy < 3.0) {
-                performTakeoff(p);
-                this.landingDelay = 0;
-                return;
-            }
-        }
-
         this.perchedTimer = 0;
 
         // If target missing, abort to flying
@@ -1459,54 +1497,15 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         if (this.perchBlockPos != null
                 && level.getBlockState(this.perchBlockPos).getCollisionShape(level, this.perchBlockPos).isEmpty()) {
-            performTakeoff(null);
+            performTakeoff(null, null);
             return;
         }
 
-        Player threateningPlayer = null;
-        double closestDistSq = scareRadius * scareRadius;
-
-        for (Player p : this.level.players()) {
-            if (p.isSpectator())
-                continue;
-
-            double dx = p.getX() - this.x;
-            double dz = p.getZ() - this.z;
-            double distSq = dx * dx + dz * dz;
-            double dy = Math.abs(p.getY() - this.y);
-
-            if (distSq <= closestDistSq && dy < 3.0) {
-                closestDistSq = distSq;
-                threateningPlayer = p;
-            }
-        }
-
-        if (threateningPlayer != null) {
-            boolean amIClosest = true;
-            for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
-                if (nb.state == State.PERCHED) {
-                    double dx = nb.x - threateningPlayer.getX();
-                    double dz = nb.z - threateningPlayer.getZ();
-                    if ((dx * dx + dz * dz) < closestDistSq) {
-                        amIClosest = false;
-                        break;
-                    }
-                }
-            }
-
-            if (amIClosest) {
-                this.perchTimer = 0;
-            } else {
-                int waveDelay = (int) (Math.sqrt(closestDistSq) * 2.0);
-                if (this.perchTimer > waveDelay) {
-                    this.perchTimer = waveDelay;
-                }
-            }
-        }
-
         if (perchTimer-- <= 0) {
-            if (threateningPlayer != null) {
-                performTakeoff(threateningPlayer);
+            if (this.threatX != null && this.threatZ != null) {
+                performTakeoff(this.threatX, this.threatZ);
+                this.threatX = null;
+                this.threatZ = null;
             } else {
                 setState(this, State.TAKING_OFF);
                 this.perchTimer = 20;

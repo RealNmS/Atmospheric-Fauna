@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "nms.atmosphericfauna.mixin",
+  "compatibilityLevel": "${java}",
+  "client": [
+    "SoundEngineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -17,6 +17,9 @@
     "client": ["nms.atmosphericfauna.AtmosphericFauna"],
     "modmenu": ["nms.atmosphericfauna.modmenu.ModMenuCompat"]
   },
+  "mixins": [
+    "atmosphericfauna.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.18.2",
     "minecraft": "${minecraft}",
