@@ -47,6 +47,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
     protected Double takeoffGoalY = Double.NaN;
     protected int takeoffTime = 0;
+    private int dyingGroundTicks = 0;
     protected Double threatX = null;
     protected Double threatZ = null;
     protected double lastDistSqToGoal = -1.0;
@@ -1655,12 +1656,16 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.xd *= 0.98;
         this.zd *= 0.98;
 
-        if (this.onGround || this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime) {
-            if (enableHitParticles && this.onGround) {
+        if (this.onGround) {
+            if (this.dyingGroundTicks == 0 && enableHitParticles) {
                 this.level.addParticle(net.minecraft.core.particles.ParticleTypes.POOF,
                         this.x, this.y, this.z,
                         0, 0.02, 0);
             }
+            this.dyingGroundTicks++;
+        }
+
+        if (this.dyingGroundTicks >= 30 || this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime) {
 
             if (debugTextBirds) {
                 AtmosphericFauna.LOGGER.info("Bird particle removed due to death impact: " + this.baseSpriteName);
