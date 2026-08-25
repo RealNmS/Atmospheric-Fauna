@@ -22,11 +22,16 @@
 - rework all of showcase images
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
+- fix fade in on spawn command
 
 ## current update notes *(wip v0.6.0)*
 
+- Added interaction with projectiles
+  - Birds can now be hit with arrows and other similiar projectiles
+  - When hit, cloud particles will be emitted (can be turned off in config)
+  - Birds can be blown up by explosions (TNT, creepers, etc.)
 - Reworked birds getting scared off
-  - Now instead of reacting to just the player, birds will react to any loud sound
+  - Birds will now react to any loud noise near enough
   - You can get closer if you're crouching (50% more distance)
 
 ---

@@ -1174,6 +1174,52 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
     }
 
+    public static void checkProjectileHit(double px, double py, double pz, double vx, double vy, double vz) {
+        List<BaseBirdParticle> birdsToCheck;
+        synchronized (ALL_BIRDS) {
+            birdsToCheck = new ArrayList<>(ALL_BIRDS);
+        }
+        for (BaseBirdParticle bird : birdsToCheck) {
+            if (bird.removed || bird.state == State.DYING)
+                continue;
+
+            double dx = bird.x - px;
+            double dy = bird.y - py;
+            double dz = bird.z - pz;
+
+            if (dx * dx + dy * dy + dz * dz < 2.25) {
+                bird.strike(vx * 0.5, 0.1 + Math.abs(vy * 0.2), vz * 0.5);
+            }
+        }
+    }
+
+    public static void onExplosion(double ex, double ey, double ez, float volume) {
+        List<BaseBirdParticle> birdsToCheck;
+        synchronized (ALL_BIRDS) {
+            birdsToCheck = new ArrayList<>(ALL_BIRDS);
+        }
+
+        double blastRadius = Math.min(volume * 8.0, 32.0);
+        double blastRadiusSq = blastRadius * blastRadius;
+
+        for (BaseBirdParticle bird : birdsToCheck) {
+            if (bird.removed || bird.state == State.DYING)
+                continue;
+
+            double dx = bird.x - ex;
+            double dy = bird.y - ey;
+            double dz = bird.z - ez;
+            double distSq = dx * dx + dy * dy + dz * dz;
+
+            if (distSq < blastRadiusSq) {
+                double dist = Math.sqrt(distSq);
+                double power = 1.0 - (dist / blastRadius);
+
+                bird.strike((dx / dist) * power * 1.5, power * 1.0, (dz / dist) * power * 1.5);
+            }
+        }
+    }
+
     public void startle(double sx, double sy, double sz, float volume) {
         // Cap volume multiplier between 0.5x and 3.0x to prevent tiny/massive extremes
         double effectiveRadius = this.scareRadius * Math.max(0.5, Math.min(volume, 3.0));
@@ -1212,6 +1258,32 @@ public abstract class BaseBirdParticle extends BaseParticle {
                 if (this.perchTimer > waveDelay) {
                     this.perchTimer = waveDelay;
                 }
+            }
+        }
+    }
+
+    public void strike(double pushX, double pushY, double pushZ) {
+        if (this.state == State.DYING)
+            return;
+
+        setState(this, State.DYING);
+
+        this.xd = pushX;
+        this.yd = pushY;
+        this.zd = pushZ;
+
+        this.animator.updateSprite(2, false);
+        this.lifetime = this.age + 100;
+
+        // TODO: connect to config
+        boolean enableHitParticles = true;
+        if (enableHitParticles) {
+            for (int i = 0; i < 3; i++) {
+                this.level.addParticle(net.minecraft.core.particles.ParticleTypes.POOF,
+                        this.x + (this.random.nextDouble() - 0.5) * 0.3,
+                        this.y + (this.random.nextDouble() - 0.5) * 0.3,
+                        this.z + (this.random.nextDouble() - 0.5) * 0.3,
+                        pushX * 0.1, pushY * 0.1, pushZ * 0.1);
             }
         }
     }
@@ -1583,11 +1655,21 @@ public abstract class BaseBirdParticle extends BaseParticle {
     // MARK: --- TICK DYING ---
 
     private void tickDying() {
-        this.yd -= 0.02;
-        if (this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime + 240) {
+        this.yd -= 0.05;
+        this.xd *= 0.98;
+        this.zd *= 0.98;
+
+        if (this.onGround || this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime) {
+            // TODO: connect to config
+            boolean enableHitParticles = true;
+            if (enableHitParticles && this.onGround) {
+                this.level.addParticle(net.minecraft.core.particles.ParticleTypes.POOF,
+                        this.x, this.y, this.z,
+                        0, 0.02, 0);
+            }
+
             if (debugTextBirds) {
-                AtmosphericFauna.LOGGER
-                        .info("Bird particle removed due to age or falling out of world: " + this.baseSpriteName);
+                AtmosphericFauna.LOGGER.info("Bird particle removed due to death impact: " + this.baseSpriteName);
             }
             this.remove();
         }

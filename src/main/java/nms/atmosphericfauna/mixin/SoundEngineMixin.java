@@ -27,7 +27,12 @@ public class SoundEngineMixin {
             } catch (Exception e) {
                 // Ignore exceptions when getting volume
             }
-            
+
+            String soundId = sound.getIdentifier().getPath();
+            if (soundId.contains("explode")) {
+                BaseBirdParticle.onExplosion(sound.getX(), sound.getY(), sound.getZ(), volume);
+            }
+
             BaseBirdParticle.onSoundPlayed(sound.getX(), sound.getY(), sound.getZ(), volume);
         }
     }

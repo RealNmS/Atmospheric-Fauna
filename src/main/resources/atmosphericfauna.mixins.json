@@ -3,7 +3,8 @@
   "package": "nms.atmosphericfauna.mixin",
   "compatibilityLevel": "${java}",
   "client": [
-    "SoundEngineMixin"
+    "SoundEngineMixin",
+    "ProjectileMixin"
   ],
   "injectors": {
     "defaultRequire": 1
