@@ -3,7 +3,7 @@
 - bugs (like ladybugs, beetles, butterflies)
 - more birds
   - seagull, sparrow, hawk, kingfisher, owl, toucan, ...
-  - for 1.0 update I want every vanilla biome to have at least one specific bird (desert, snowy, mountains, ...)
+  - for 1.0 update I want every vanilla biome to have at least one biome-specific bird (desert, snowy, mountains, ...)
 - random events (flying in circles above the player for example)
 - server-side support (least likely to happen lol)
 - advancements if i can figure out how to do them client-side only
@@ -21,6 +21,8 @@
 - rework all of showcase images
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
+- polish bird settings (another rolldown menu for numbers)
+- experiment with terrain generation mods to see if they are compatible (scared of height differences)
 
 ## current update notes *(wip v0.6.0)*
 
