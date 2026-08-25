@@ -1220,15 +1220,12 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     public void startle(double sx, double sy, double sz, float volume) {
-        // Cap volume multiplier between 0.5x and 3.0x to prevent tiny/massive extremes
         double effectiveRadius = this.scareRadius * Math.max(0.5, Math.min(volume, 3.0));
         double dx = this.x - sx;
         double dy = this.y - sy;
         double dz = this.z - sz;
         double distSq = dx * dx + dy * dy + dz * dz;
 
-        // Math.abs(dy) < 5.0 prevents zombies in a deep cave from scaring a bird in a
-        // tree above
         if (distSq <= effectiveRadius * effectiveRadius && Math.abs(dy) < 5.0) {
             if (this.state == State.LANDING) {
                 this.performTakeoff(sx, sz);
