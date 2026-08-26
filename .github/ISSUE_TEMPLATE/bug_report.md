@@ -20,5 +20,10 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Minecraft version**
+_Minecraft:_ 
+_Mod:_ 
+_Loader:_ 
+
 **Additional context**
-Add any other context about the problem here.
+Add any other context about the problem here. If your game crashed, you can include here the crash report or a link to it. You can also include your log file if you think it is relevant.
