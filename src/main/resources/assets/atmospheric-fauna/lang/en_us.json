@@ -26,6 +26,7 @@
   "subcategory.atmosphericfauna.blue_jays": "Blue Jays",
   "subcategory.atmosphericfauna.common_swifts": "Common Swifts",
   "subcategory.atmosphericfauna.crows": "Crows",
+  "subcategory.atmosphericfauna.flock_settings": "Flock Settings",
   "subcategory.atmosphericfauna.northern_cardinals": "Northern Cardinals",
   "option.atmosphericfauna.species.enable_spawning": "Allowed to Spawn",
   "option.atmosphericfauna.species.enable_spawning.tooltip": "Allows this species to be selected by the ambient spawning system.",

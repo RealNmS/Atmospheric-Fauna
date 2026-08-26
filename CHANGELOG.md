@@ -21,7 +21,6 @@
 - rework all of showcase images
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
-- polish bird settings (another rolldown menu for numbers)
 - experiment with terrain generation mods to see if they are compatible (scared of height differences)
 
 ## current update notes *(wip v0.6.0)*
@@ -33,6 +32,7 @@
 - Reworked birds getting scared off
   - Birds will now react to any loud noise near enough
   - You can get closer if you're crouching (50% more distance)
+- Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
 
 ---
