@@ -4,12 +4,14 @@
 - more birds
   - seagull, sparrow, hawk, kingfisher, owl, toucan, ...
   - for 1.0 update I want every vanilla biome to have at least one biome-specific bird (desert, snowy, mountains, ...)
+- bird variants (different colors / textures)
 - random events (flying in circles above the player for example)
 - server-side support (least likely to happen lol)
 - advancements if i can figure out how to do them client-side only
 - neoforge support (might rely just on synitra connector)
 - quilt support (this won't happen ever, but I want to keep it in mind just in case)
 - sounds (idk where to get them from, might just not add them, will figure it out eventually)
+- music (i'm a music producer after all)
 
 ### quick todo
 
