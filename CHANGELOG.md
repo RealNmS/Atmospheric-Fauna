@@ -36,6 +36,7 @@
   - You can get closer if you're crouching (50% more distance)
 - Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
+- Fixed debug scoreboard showing when F3 was enabled
 
 ---
 
