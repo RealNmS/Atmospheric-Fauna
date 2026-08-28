@@ -30,14 +30,20 @@ public class DebugHudOverlay {
 
                     Minecraft mc = Minecraft.getInstance();
                     //? if >=26.2 {
-                    // if (mc.gui.hud.isHidden())
+                    // if (mc.gui.hud.isHidden() || mc.gui.screen() != null)
                     //      return;
                     //?} else {
                     if (mc.options.hideGui)
                         return;
                     //?}
+
+                    //? if >=1.21.9 {
+                    // if (mc.getDebugOverlay().showDebugScreen() && mc.debugEntries.getCurrentlyEnabled().size() >= 4)
+                    //      return;
+                    //?} else {
                     if (mc.getDebugOverlay().showDebugScreen())
                         return;
+                    //?}
 
                     Map<String, Integer> birdCounts = new HashMap<>();
                     Map<String, Integer> birdMaxCounts = new HashMap<>();
