@@ -24,6 +24,7 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - experiment with terrain generation mods to see if they are compatible (scared of height differences)
+- fix fade out
 
 ## current update notes *(wip v0.6.0)*
 

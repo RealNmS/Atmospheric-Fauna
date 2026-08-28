@@ -26,6 +26,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.phys.Vec3;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
@@ -85,6 +88,22 @@ public class AtmosphericFauna implements ClientModInitializer {
             if (client.level != lastLevel) {
                 BaseBirdParticle.reset();
                 lastLevel = client.level;
+            }
+        });
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.level == null)
+                return;
+
+            for (var entity : client.level.entitiesForRendering()) {
+                if (!(entity instanceof Projectile projectile))
+                    continue;
+
+                Vec3 movement = projectile.getDeltaMovement();
+                if (movement.lengthSqr() > 0.01) {
+                    BaseBirdParticle.checkProjectileHit(
+                            projectile.getX(), projectile.getY(), projectile.getZ(),
+                            movement.x, movement.y, movement.z);
+                }
             }
         });
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
