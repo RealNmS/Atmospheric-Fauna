@@ -13,8 +13,8 @@ import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import net.fabricmc.api.ClientModInitializer;
 //? if <=1.21.11 {
-/*import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-*//*?} else {*/
+// import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+//?} else {
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 //?}
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -80,8 +80,8 @@ public class AtmosphericFauna implements ClientModInitializer {
 
         LOGGER.debug("setting up ambient spawning...");
 		//? if <=1.21.11 {
-		/*ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
-		*//*?} else {*/
+		// ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
+		//?} else {
 		ClientTickEvents.END_LEVEL_TICK.register(AmbientSpawning::tick);
 		//?}
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
