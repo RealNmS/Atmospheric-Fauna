@@ -24,7 +24,6 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - experiment with terrain generation mods to see if they are compatible (scared of height differences)
-- fix fade out
 
 ## current update notes *(wip v0.6.0)*
 
@@ -38,6 +37,7 @@
 - Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
 - Fixed debug scoreboard showing when F3 was enabled
+- Fixed fade out animation ending too early
 
 ---
 
