@@ -89,26 +89,6 @@ public class AtmosphericFauna implements ClientModInitializer {
                 lastLevel = client.level;
             }
         });
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.level == null)
-                return;
-
-            try {
-                for (var entity : client.level.entitiesForRendering()) {
-                    if (!(entity instanceof Projectile projectile))
-                        continue;
-
-                    Vec3 movement = projectile.getDeltaMovement();
-                    if (movement.lengthSqr() > 0.01) {
-                        BaseBirdParticle.checkProjectileHit(
-                                projectile.getX(), projectile.getY(), projectile.getZ(),
-                                movement.x, movement.y, movement.z);
-                    }
-                }
-            } catch (Exception e) {
-                LOGGER.error("Error checking for projectile hits", e);
-            }
-        });
 		ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
             if (world != lastLevel) {
                 BaseBirdParticle.reset();
@@ -138,6 +118,28 @@ public class AtmosphericFauna implements ClientModInitializer {
 				}
 			}
 		});
+
+        LOGGER.debug("registering projectile hit detection...");
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.level == null)
+                return;
+
+            try {
+                for (var entity : client.level.entitiesForRendering()) {
+                    if (!(entity instanceof Projectile projectile))
+                        continue;
+
+                    Vec3 movement = projectile.getDeltaMovement();
+                    if (movement.lengthSqr() > 0.01) {
+                        BaseBirdParticle.checkProjectileHit(
+                                projectile.getX(), projectile.getY(), projectile.getZ(),
+                                movement.x, movement.y, movement.z);
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.error("Error checking for projectile hits", e);
+            }
+        });
 
         LOGGER.debug("loading client commands...");
         ModCommands.registerClientCommands();
