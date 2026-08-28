@@ -8,7 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-//? if <=1.21.1 {
+//? if <=1.21.5 {
 //import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //?} else {
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SoundEngine.class)
 public class SoundEngineMixin {
     
-    //? if <=1.21.1 {
+    //? if <=1.21.5 {
     // @Inject(method = "play", at = @At("RETURN"))
     // private void atmosphericfauna$onSoundPlayed(SoundInstance sound, CallbackInfo ci) {
     //?} else {
