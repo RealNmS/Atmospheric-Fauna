@@ -119,11 +119,22 @@ public class AtmosphericFauna implements ClientModInitializer {
 			}
 		});
 
-        LOGGER.debug("registering projectile hit detection...");
+        LOGGER.debug("registering client tick events...");
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.level == null)
                 return;
 
+            // Spyglass
+            if (client.player != null && client.player.isScoping()) {
+                if (client.level.getGameTime() % 10 == 0) {
+                    BaseBirdParticle lookedAtBird = BaseBirdParticle.getBirdInCrosshairs(client.player);
+                    if (lookedAtBird != null) {
+                        LOGGER.info("Spyglass focused on: " + lookedAtBird.getBaseSpriteName());
+                    }
+                }
+            }
+
+            // Check for projectile hits
             try {
                 for (var entity : client.level.entitiesForRendering()) {
                     if (!(entity instanceof Projectile projectile))

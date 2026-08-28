@@ -5,11 +5,13 @@ import static nms.atmosphericfauna.config.ConfigHandler.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -832,6 +834,50 @@ public abstract class BaseBirdParticle extends BaseParticle {
         this.goalY = ny;
         this.goalZ = this.z + nz;
         this.goalTimer = goalDurationMin + (int) (this.random.nextFloat() * (goalDurationMax - goalDurationMin));
+    }
+
+    public static BaseBirdParticle getBirdInCrosshairs(LocalPlayer player) {
+        if (!player.isScoping())
+            return null;
+
+        Vec3 eyePos = player.getEyePosition();
+        Vec3 lookVec = player.getViewVector(1.0F);
+
+        BaseBirdParticle closestBird = null;
+        double closestDist = Double.MAX_VALUE;
+        double hitRadiusSq = 0.75 * 0.75;
+
+        List<BaseBirdParticle> birdsToCheck;
+        synchronized (ALL_BIRDS) {
+            birdsToCheck = new ArrayList<>(ALL_BIRDS);
+        }
+
+        for (BaseBirdParticle bird : birdsToCheck) {
+            if (bird.removed)
+                continue;
+
+            double wX = bird.x - eyePos.x;
+            double wY = bird.y - eyePos.y;
+            double wZ = bird.z - eyePos.z;
+            double t = wX * lookVec.x + wY * lookVec.y + wZ * lookVec.z;
+
+            if (t > 0 && t < 128.0) {
+                double cX = eyePos.x + t * lookVec.x;
+                double cY = eyePos.y + t * lookVec.y;
+                double cZ = eyePos.z + t * lookVec.z;
+
+                double dSq = (bird.x - cX) * (bird.x - cX) +
+                        (bird.y - cY) * (bird.y - cY) +
+                        (bird.z - cZ) * (bird.z - cZ);
+
+                if (dSq <= hitRadiusSq && t < closestDist) {
+                    closestDist = t;
+                    closestBird = bird;
+                }
+            }
+        }
+
+        return closestBird;
     }
 
     // MARK: --- TICK FLYING ---
