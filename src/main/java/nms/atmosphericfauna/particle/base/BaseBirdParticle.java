@@ -66,6 +66,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected String baseSpriteName = null;
     protected String spriteName = null;
     protected boolean facingRight = false;
+    public static BaseBirdParticle hoveredBird = null;
 
     public static final List<BaseBirdParticle> ALL_BIRDS = Collections.synchronizedList(new ArrayList<>());
     public static final List<List<BaseBirdParticle>> SPECIES_REGISTRY = new ArrayList<>();

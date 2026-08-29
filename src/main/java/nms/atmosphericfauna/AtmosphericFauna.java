@@ -21,6 +21,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+//? if <=1.21.5 {
+//  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+//?} else {
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+//?}
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -126,12 +132,9 @@ public class AtmosphericFauna implements ClientModInitializer {
 
             // Spyglass
             if (client.player != null && client.player.isScoping()) {
-                if (client.level.getGameTime() % 10 == 0) {
-                    BaseBirdParticle lookedAtBird = BaseBirdParticle.getBirdInCrosshairs(client.player);
-                    if (lookedAtBird != null) {
-                        LOGGER.info("Spyglass focused on: " + lookedAtBird.getBaseSpriteName());
-                    }
-                }
+                BaseBirdParticle.hoveredBird = BaseBirdParticle.getBirdInCrosshairs(client.player);
+            } else {
+                BaseBirdParticle.hoveredBird = null;
             }
 
             // Check for projectile hits
@@ -149,6 +152,47 @@ public class AtmosphericFauna implements ClientModInitializer {
                 }
             } catch (Exception e) {
                 LOGGER.error("Error checking for projectile hits", e);
+            }
+        });
+
+        LOGGER.debug("registering spyglass HUD overlay...");
+        //? if <=1.21.5 {
+        // net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
+        //?} else {
+        HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "spyglass_hud"),
+                (graphics, tickDelta) -> {
+        //?}
+            BaseBirdParticle bird = BaseBirdParticle.hoveredBird;
+
+            if (bird != null) {
+                Minecraft client = Minecraft.getInstance();
+                int screenWidth = client.getWindow().getGuiScaledWidth();
+                int screenHeight = client.getWindow().getGuiScaledHeight();
+
+                int x = screenWidth / 2 + 30;
+                int y = screenHeight / 2 - 8;
+
+                String displayName = bird.getBaseSpriteName().replace("_", " ").toUpperCase();
+
+                int textX = x + 20;
+                int textY = y + 4;
+
+                //? if <=1.21.11 {
+                // graphics.drawString(client.font, displayName, textX, textY, -1);
+                //?} else {
+                graphics.text(client.font, displayName, textX, textY, -1, false);
+                //?}
+
+                Identifier texture = Identifier.fromNamespaceAndPath(MOD_ID,
+                        "textures/particle/" + bird.getBaseSpriteName() + "_perched_1.png");
+
+                //? if <=1.21.1 {
+                // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+                // graphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
+                // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+                //?} else {
+                graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, x, y, 0.0F, 0.0F, 16, 16, 16, 16);
+                //?}
             }
         });
 
