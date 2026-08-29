@@ -190,6 +190,8 @@ public class AtmosphericFauna implements ClientModInitializer {
                 // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                 // graphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
                 // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+                //?} else if <=1.21.5 {
+                // graphics.blit(net.minecraft.client.renderer.RenderType::guiTextured, texture, x, y, 0.0F, 0.0F, 16, 16, 16, 16);
                 //?} else {
                 graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, x, y, 0.0F, 0.0F, 16, 16, 16, 16);
                 //?}

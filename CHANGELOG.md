@@ -15,7 +15,6 @@
 
 ### quick todo
 
-- some kind of interaction with spyglass
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - rework Crow texture, making it unified with the new texture style
@@ -23,6 +22,7 @@
 - rework all of showcase images
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
+- [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
 
 ## current update notes *(wip v0.6.0)*
 
@@ -33,6 +33,8 @@
 - Reworked birds getting scared off
   - Birds will now react to any loud noise near enough
   - You can get closer if you're crouching (50% more distance)
+- Added interaction with the spyglass
+  - You can see the birds name and icon when looking at them through the spyglass
 - Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
 - Fixed debug scoreboard showing when F3 was enabled
