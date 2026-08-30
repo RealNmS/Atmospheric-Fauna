@@ -29,15 +29,17 @@ public class SpyglassHudOverlay {
 
                     Minecraft client = Minecraft.getInstance();
 
-                    int x = 4;
-                    int y = 4;
+                    int screenWidth = client.getWindow().getGuiScaledWidth();
+                    int screenHeight = client.getWindow().getGuiScaledHeight();
+
+                    int totalWidth = 52 + client.font.width(
+                            bird.getBaseSpriteName().replace("_", " ").toUpperCase());
+                    int totalHeight = 40;
+
+                    int x = (screenWidth - totalWidth) / 2;
+                    int y = (screenHeight - totalHeight) / 2 + (screenHeight / 4);
 
                     String displayName = bird.getBaseSpriteName().replace("_", " ").toUpperCase();
-
-                    int textWidth = client.font.width(displayName);
-
-                    int totalWidth = 52 + textWidth;
-                    int totalHeight = 40;
 
                     int spriteX = x + 4;
                     int spriteY = y + 4;
