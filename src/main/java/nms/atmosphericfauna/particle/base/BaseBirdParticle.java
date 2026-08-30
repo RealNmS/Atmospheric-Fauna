@@ -846,7 +846,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
         BaseBirdParticle closestBird = null;
         double closestDist = Double.MAX_VALUE;
-        double hitRadiusSq = 0.75 * 0.75;
+        double hitRadiusSq = 0.8 * 0.8;
 
         List<BaseBirdParticle> birdsToCheck;
         synchronized (ALL_BIRDS) {
@@ -862,7 +862,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double wZ = bird.z - eyePos.z;
             double t = wX * lookVec.x + wY * lookVec.y + wZ * lookVec.z;
 
-            if (t > 0 && t < 128.0) {
+            if (t > 0 && t < 160.0) {
                 double cX = eyePos.x + t * lookVec.x;
                 double cY = eyePos.y + t * lookVec.y;
                 double cZ = eyePos.z + t * lookVec.z;
