@@ -26,6 +26,7 @@
 - fix birds flocking with birds in dying state
 - fix birds in dying state when being deleted deleting the flock
 - fix birds registering in spyglass when invisible
+- change entitiesForRendering() in projectile hit check to class specific get
 
 ## current update notes *(wip v0.6.0)*
 
@@ -42,7 +43,7 @@
 - Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
 - Fixed debug scoreboard showing when F3 was enabled
-- Fixed fade out animation ending too early
+- Fixed bird fade out animation ending too early
 
 ---
 
