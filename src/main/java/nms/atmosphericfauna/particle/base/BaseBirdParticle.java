@@ -838,7 +838,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     }
 
     public static BaseBirdParticle getBirdInCrosshairs(LocalPlayer player) {
-        if (!player.isScoping())
+        if (!enableSpyglassInteraction || !player.isScoping())
             return null;
 
         Vec3 eyePos = player.getEyePosition();

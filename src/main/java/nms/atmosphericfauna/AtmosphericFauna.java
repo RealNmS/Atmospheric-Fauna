@@ -131,7 +131,9 @@ public class AtmosphericFauna implements ClientModInitializer {
                 return;
 
             // Spyglass
-            if (client.player != null && client.player.isScoping()) {
+            if (!enableSpyglassInteraction) {
+                BaseBirdParticle.hoveredBird = null;
+            } else if (client.player != null && client.player.isScoping()) {
                 BaseBirdParticle.hoveredBird = BaseBirdParticle.getBirdInCrosshairs(client.player);
             } else {
                 BaseBirdParticle.hoveredBird = null;
@@ -162,6 +164,10 @@ public class AtmosphericFauna implements ClientModInitializer {
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "spyglass_hud"),
                 (graphics, tickDelta) -> {
         //?}
+                    if (!enableSpyglassInteraction) {
+                        return;
+                    }
+
             BaseBirdParticle bird = BaseBirdParticle.hoveredBird;
 
             if (bird != null) {

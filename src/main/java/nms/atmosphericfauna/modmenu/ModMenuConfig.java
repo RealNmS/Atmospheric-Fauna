@@ -137,6 +137,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.enableHitParticles = newValue)
                 .build());
 
+        visuals.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.enable_spyglass_interaction"),
+                        ConfigHandler.enableSpyglassInteraction)
+                .setDefaultValue(ConfigHandler.Defaults.ENABLE_SPYGLASS_INTERACTION)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.enable_spyglass_interaction.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.enableSpyglassInteraction = newValue)
+                .build());
+
         // MARK: --- BIRDS ---
 
         ConfigCategory birds = builder
