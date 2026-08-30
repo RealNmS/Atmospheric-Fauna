@@ -32,7 +32,7 @@ public class SpyglassHudOverlay {
                     int screenWidth = client.getWindow().getGuiScaledWidth();
                     int screenHeight = client.getWindow().getGuiScaledHeight();
 
-                    int totalWidth = 52 + client.font.width(
+                    int totalWidth = 48 + client.font.width(
                             bird.getBaseSpriteName().replace("_", " ").toUpperCase());
                     int totalHeight = 40;
 
@@ -41,37 +41,37 @@ public class SpyglassHudOverlay {
 
                     String displayName = bird.getBaseSpriteName().replace("_", " ").toUpperCase();
 
-                    int spriteX = x + 4;
+                    int spriteX = x;
                     int spriteY = y + 4;
 
                     int textX = spriteX + 32 + 8;
                     int textY = y + 16;
 
-                    Identifier bgMain = Identifier.withDefaultNamespace("toast/advancement");
-                    Identifier bgSprite = Identifier.withDefaultNamespace("toast/recipe");
+                    Identifier bgMain = Identifier.withDefaultNamespace("tooltip/background");
+                    Identifier bgSprite = Identifier.withDefaultNamespace("hud/effect_background");
                     Identifier texture = Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID,
                             "textures/particle/" + bird.getBaseSpriteName() + "_perched_1.png");
 
                     //? if <=1.21.1 {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
-                    // graphics.blitSprite(bgMain, x, y, totalWidth, totalHeight);
+                    // graphics.blitSprite(bgMain, x + 16, y, totalWidth, totalHeight);
                     // graphics.blitSprite(bgSprite, spriteX, spriteY, 32, 32);
-                    // graphics.blit(texture, spriteX, spriteY, 0, 0, 32, 32, 32, 32);
+                    // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
                     //?} else if <=1.21.5 {
                     // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
-                    // bgMain, x, y, totalWidth, totalHeight);
+                    // bgMain, x + 16, y, totalWidth, totalHeight);
                     // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
                     // bgSprite, spriteX, spriteY, 32, 32);
                     // graphics.blit(net.minecraft.client.renderer.RenderType::guiTextured, texture,
-                    // spriteX, spriteY, 0.0F, 0.0F, 32, 32, 32, 32);
+                    // spriteX, spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32);
                     //?} else {
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgMain, x, y,
+                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgMain, x + 16, y,
                             totalWidth, totalHeight);
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgSprite,
                             spriteX, spriteY, 32, 32);
                     graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, spriteX,
-                            spriteY, 0.0F, 0.0F, 32, 32, 32, 32);
+                            spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32);
                     //?}
 
                     //? if <=1.21.11 {
