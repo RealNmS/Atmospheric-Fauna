@@ -47,7 +47,7 @@ public class SpyglassHudOverlay {
                     int textX = spriteX + 32 + 8;
                     int textY = y + 16;
 
-                    Identifier bgMain = Identifier.withDefaultNamespace("tooltip/background");
+                    Identifier bgMain = Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "spyglass_background");
                     Identifier bgSprite = Identifier.withDefaultNamespace("hud/effect_background");
                     Identifier texture = Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID,
                             "textures/particle/" + bird.getBaseSpriteName() + "_perched_1.png");
