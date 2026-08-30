@@ -210,11 +210,11 @@ public class AtmosphericFauna implements ClientModInitializer {
                         spriteX, spriteY, 32, 32);
                 graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, spriteX,
                         spriteY, 0.0F, 0.0F, 32, 32, 32, 32);
-                // ?}
+                //?}
 
-                // ? if <=1.21.11 {
+                //? if <=1.21.11 {
                 // graphics.drawString(client.font, displayName, textX, textY, -1, true);
-                // ?} else {
+                //?} else {
                 graphics.text(client.font, displayName, textX, textY, -1, true);
                 //?}
             }
