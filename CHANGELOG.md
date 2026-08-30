@@ -12,19 +12,20 @@
 - quilt support (this won't happen ever, but I want to keep it in mind just in case)
 - sounds (idk where to get them from, might just not add them, will figure it out eventually)
 - music (i'm a music producer after all)
+- 1.20 - 1.21.6 support
 
 ### quick todo
 
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - rework Crow texture, making it unified with the new texture style
-- update banner
-- rework all of showcase images
+- rework README.md (new banner, new showcase images, show off features)
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
 - fix birds flocking with birds in dying state
 - fix birds in dying state when being deleted deleting the flock
+- fix birds registering in spyglass when invisible
 
 ## current update notes *(wip v0.6.0)*
 
