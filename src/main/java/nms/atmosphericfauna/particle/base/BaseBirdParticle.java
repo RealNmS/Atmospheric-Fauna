@@ -857,7 +857,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         }
 
         for (BaseBirdParticle bird : birdsToCheck) {
-            if (bird.removed)
+            if (bird.removed || bird.alpha <= 0.0f)
                 continue;
 
             double wX = bird.x - eyePos.x;
