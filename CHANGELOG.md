@@ -23,7 +23,6 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
-- fix birds flocking with birds in dying state
 - fix birds in dying state when being deleted deleting the flock
 - fix birds registering in spyglass when invisible
 - change entitiesForRendering() in projectile hit check to class specific get
@@ -44,6 +43,7 @@
 - Removed bird fade in on spawn
 - Fixed debug scoreboard showing when F3 was enabled
 - Fixed bird fade out animation ending too early
+- Fixed birds flocking with birds that were in the dying state
 
 ---
 

@@ -362,7 +362,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
                     int cellSize = cell.size();
                     for (int j = 0; j < cellSize; j++) {
                         BaseBirdParticle other = cell.get(j);
-                        if (other == this || other.removed)
+                        if (other == this || other.removed || other.state == State.DYING)
                             continue;
 
                         // Fast fail bounds check (avoids Math.abs overhead)
@@ -912,6 +912,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
             cachedFlockNeighbors.clear();
             cachedFlockNeighbors.addAll(getNeighbors(flockRadius));
         }
+        cachedFlockNeighbors.removeIf(nb -> nb.removed || nb.state == State.DYING);
 
         applyFlockingBehavior(groundY);
 
