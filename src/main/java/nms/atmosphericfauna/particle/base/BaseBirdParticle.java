@@ -259,9 +259,11 @@ public abstract class BaseBirdParticle extends BaseParticle {
             double despawnDist = renderEdgeDist + 16.0;
 
             if (distSq > despawnDist * despawnDist) {
-                for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
-                    if (!nb.removed) {
-                        nb.remove();
+                if (this.state != State.DYING) {
+                    for (BaseBirdParticle nb : this.cachedFlockNeighbors) {
+                        if (!nb.removed) {
+                            nb.remove();
+                        }
                     }
                 }
                 this.remove();
