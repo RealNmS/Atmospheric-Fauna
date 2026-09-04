@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
@@ -32,8 +33,11 @@ import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AtmosphericFauna implements ClientModInitializer {
 	public static final String MOD_ID = "atmospheric-fauna";
@@ -45,6 +49,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 	public static final SimpleParticleType NORTHERN_CARDINAL = FabricParticleTypes.simple(true);
 	private static int chunkLoadCount = 0;
     private static ClientLevel lastLevel = null;
+    public static final Set<Projectile> ACTIVE_PROJECTILES = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
 	@Override
 	public void onInitializeClient() {
@@ -120,6 +125,18 @@ public class AtmosphericFauna implements ClientModInitializer {
 			}
 		});
 
+        LOGGER.debug("registeting projectile hit events...");
+        ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            if (entity instanceof Projectile projectile) {
+                ACTIVE_PROJECTILES.add(projectile);
+            }
+        });
+        ClientEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
+            if (entity instanceof Projectile projectile) {
+                ACTIVE_PROJECTILES.remove(projectile);
+            }
+        });
+
         LOGGER.debug("registering client tick events...");
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.level == null)
@@ -136,10 +153,8 @@ public class AtmosphericFauna implements ClientModInitializer {
 
             // Check for projectile hits
             try {
-                for (var entity : client.level.entitiesForRendering()) {
-                    if (!(entity instanceof Projectile projectile))
-                        continue;
-
+                ACTIVE_PROJECTILES.removeIf(p -> p.isRemoved());
+                for (Projectile projectile : ACTIVE_PROJECTILES) {
                     Vec3 movement = projectile.getDeltaMovement();
                     if (movement.lengthSqr() > 0.01) {
                         BaseBirdParticle.checkProjectileHit(
