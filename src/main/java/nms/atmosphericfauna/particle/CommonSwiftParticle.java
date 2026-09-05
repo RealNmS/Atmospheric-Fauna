@@ -26,6 +26,7 @@ public class CommonSwiftParticle extends BaseBirdParticle {
         if (this.removed)
             return;
         this.baseSpriteName = "common_swift";
+        this.formattedName = "Common Swift";
         this.spriteName = "common_swift_flying_1";
 
         this.lifetime = 4200;

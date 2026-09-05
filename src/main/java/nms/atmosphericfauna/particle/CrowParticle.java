@@ -26,6 +26,7 @@ public class CrowParticle extends BaseBirdParticle {
         if (this.removed)
             return;
         this.baseSpriteName = "crow";
+        this.formattedName = "Crow";
         this.spriteName = "crow_flying_1";
 
         this.lifetime = 3200;

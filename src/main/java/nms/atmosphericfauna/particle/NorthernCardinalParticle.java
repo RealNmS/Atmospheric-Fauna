@@ -26,6 +26,7 @@ public class NorthernCardinalParticle extends BaseBirdParticle {
         if (this.removed)
             return;
         this.baseSpriteName = "northern_cardinal";
+        this.formattedName = "Northern Cardinal";
         this.spriteName = "northern_cardinal_flying_1";
 
         this.lifetime = 3500;

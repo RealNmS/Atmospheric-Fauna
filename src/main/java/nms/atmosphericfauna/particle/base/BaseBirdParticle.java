@@ -64,6 +64,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
     protected final BirdAnimator animator;
     protected final EnvironmentScanner env;
     protected String baseSpriteName = null;
+    protected String formattedName = null;
     protected String spriteName = null;
     protected boolean facingRight = false;
     public static BaseBirdParticle hoveredBird = null;
@@ -199,6 +200,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
 
     public String getBaseSpriteName() {
         return this.baseSpriteName;
+    }
+
+    public String getFormattedName() {
+        return this.formattedName;
     }
 
     public void applySprite(String name) {

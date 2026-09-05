@@ -50,7 +50,7 @@ public class DebugHudOverlay {
 
                     synchronized (BaseBirdParticle.ALL_BIRDS) {
                         for (BaseBirdParticle bird : BaseBirdParticle.ALL_BIRDS) {
-                            String type = bird.getBaseSpriteName();
+                            String type = bird.getFormattedName();
                             if (type == null)
                                 type = "unknown";
 

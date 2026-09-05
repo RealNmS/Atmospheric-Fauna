@@ -26,6 +26,7 @@ public class BlueJayParticle extends BaseBirdParticle {
         if (this.removed)
             return;
         this.baseSpriteName = "blue_jay";
+        this.formattedName = "Blue Jay";
         this.spriteName = "blue_jay_flying_1";
 
         this.lifetime = 3800;

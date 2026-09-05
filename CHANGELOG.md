@@ -24,7 +24,6 @@
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
 - fix spyglass hud design when fading out
-- add default formatted bird names (shows up in spyglass hud and debug scoreboard)
 
 ## current update notes *(wip v0.6.0)*
 
@@ -40,6 +39,7 @@
   - Can be turned off in config
 - Hidden config flock settings under a rolldown menu to make it less cluttered
 - Removed bird fade in on spawn
+- Changed debug scoreboard to show formatted name instead of base name
 - Fixed debug scoreboard showing when F3 was enabled
 - Fixed bird fade out animation ending too early
 - Fixed birds flocking with birds that were in the dying state

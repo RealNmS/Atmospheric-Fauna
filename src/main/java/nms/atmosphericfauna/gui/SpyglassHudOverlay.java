@@ -47,7 +47,7 @@ public class SpyglassHudOverlay {
                     int alphaInt = (int) (fadeAlpha * 255.0F);
                     int argbColor = (alphaInt << 24) | 0xFFFFFF;
 
-                    String displayName = lastBird.getBaseSpriteName().replace("_", " ").toUpperCase();
+                    String displayName = lastBird.getFormattedName();
 
                     int totalWidth = 48 + client.font.width(displayName);
                     int totalHeight = 40;
