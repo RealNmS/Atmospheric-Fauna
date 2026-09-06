@@ -70,17 +70,18 @@ public class SpyglassHudOverlay {
                     //? if <=1.21.1 {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-                    // graphics.blitSprite(bgMain, x + 16, y, totalWidth, totalHeight);
+                    // graphics.blitSprite(bgMain, x + 24, y, totalWidth - 16, totalHeight);
                     // graphics.blitSprite(bgSprite, spriteX, spriteY, 32, 32);
                     // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
                     //?} else if <=1.21.5 {
-                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgMain, x + 16, y, totalWidth, totalHeight, argbColor);
+                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgMain, x + 24, y, totalWidth - 16, totalHeight, argbColor);
                     // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgSprite, spriteX, spriteY, 32, 32, argbColor);
                     // graphics.blit(net.minecraft.client.renderer.RenderType::guiTextured, texture, spriteX, spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32, argbColor);
                     //?} else {
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgMain, x + 16, y, totalWidth, totalHeight, argbColor);
+                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgMain, x + 24, y,
+                            totalWidth - 16, totalHeight, argbColor);
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgSprite, spriteX, spriteY, 32, 32, argbColor);
                     graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, spriteX, spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32, argbColor);
                     //?}

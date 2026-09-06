@@ -23,7 +23,6 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
-- fix spyglass hud design when fading out
 
 ## current update notes *(wip v0.6.0)*
 
