@@ -7,22 +7,21 @@
 - bird variants (different colors / textures)
 - random events (flying in circles above the player for example)
 - server-side support (least likely to happen lol)
-- advancements if i can figure out how to do them client-side only
-- neoforge support (might rely just on synitra connector)
+- advancements (if i can figure out how to do them client-side only)
 - quilt support (this won't happen ever, but I want to keep it in mind just in case)
 - sounds (idk where to get them from, might just not add them, will figure it out eventually)
 - music (i'm a music producer after all)
-- 1.20 - 1.21.6 support
+- [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
+- rework Crow texture, making it unified with the new texture style
 
 ### quick todo
 
 - dying state with a new texture
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
-- rework Crow texture, making it unified with the new texture style
 - rework README.md (new banner, new showcase images, show off features)
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
-- [fix wynncraft and minebox compatibility](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
+- 1.20 - 1.21.6 support
 
 ## current update notes *(wip v0.6.0)*
 
