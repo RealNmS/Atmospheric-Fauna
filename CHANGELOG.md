@@ -20,6 +20,7 @@
 - option for birds to hop small distance on ground when perched (varied by distance and amount depending on bird type)
 - rework README.md (new banner, new showcase images, show off features)
 - update wiki with images
+- config button in the command
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - 1.20 - 1.21.6 support
 - 26.3 support
