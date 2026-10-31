@@ -24,7 +24,15 @@
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - 1.20 - 1.21.6 support
 
-## current update notes *(wip v0.6.0)*
+## current update notes *(wip v0.6.1)*
+
+- nothing yet
+
+---
+
+## v0.6.0 [1.21 - 26.3] `31.10.2026`
+
+Sorry for the long wait, lost motivation to work on it for a while. I'll try to release a few smaller updates, but don't expect anything big for a while. If you have any issues or want to ask questions, go to GitHub Issues and ask away, I don't respond anywhere else as fast as there.
 
 - Added support for 26.3
 - Added interaction with projectiles
@@ -44,8 +52,6 @@
 - Fixed bird fade out animation ending too early
 - Fixed birds flocking with birds that were in the dying state
 - Fixed birds that were in the dying state removing their entire flock when they were removed
-
----
 
 ## v0.5.1 [1.21 - 26.2] `24.08.2026`
 
