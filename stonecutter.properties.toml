@@ -79,3 +79,11 @@ mod.mc_releases = ["26.2"]
 deps.fabric_api = "0.152.2+26.2"
 deps.modmenu = "20.0.1"
 deps.cloth_config = "26.2.155"
+
+["26.3"]
+mod.mc_compat = "~26.3"
+mod.mc_releases = ["26.3"]
+
+deps.fabric_api = "0.165.0+26.3"
+deps.modmenu = "21.0.0"
+deps.cloth_config = "26.3.159"

@@ -22,10 +22,10 @@
 - update wiki with images
 - [add biome configuration](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - 1.20 - 1.21.6 support
-- 26.3 support
 
 ## current update notes *(wip v0.6.0)*
 
+- Added support for 26.3
 - Added interaction with projectiles
   - Birds can now be hit with arrows and other similiar projectiles
   - When hit, cloud particles will be emitted (can be turned off in config)
