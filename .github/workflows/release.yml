@@ -11,6 +11,21 @@ jobs:
       image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
       options: --user root
     steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: setup jdk
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "25"
+          distribution: "microsoft"
+      
+      - name: make gradlew executable
+        run: chmod +x gradlew
+
+      - name: build and publish
       - uses: actions/checkout@v4
       - run: ./gradlew build publishMods
         env:
