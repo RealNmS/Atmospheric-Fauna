@@ -26,7 +26,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: build and publish
-        run: ./gradlew build publishMods
+        run: ./gradlew build publishMods --no-parallel
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

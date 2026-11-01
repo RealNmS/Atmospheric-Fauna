@@ -20,6 +20,15 @@ val requiredJava: JavaVersion = when {
 val compatibleVersions: List<String> = sc.properties.rawOrNull("mod", "mc_releases")
     ?.asList().orEmpty().map { it.toString() }
 
+// Formats as "1.21.6 - 1.21.8" for ranges, or "1.21.4" if single version
+val mcVersionRange = when {
+    compatibleVersions.size > 1 -> "${compatibleVersions.first()} - ${compatibleVersions.last()}"
+    compatibleVersions.isNotEmpty() -> compatibleVersions.first()
+    else -> sc.current.version
+}
+
+val releaseDisplayName = "v${property("mod.version")} [$mcVersionRange]"
+
 repositories {
     /**
      * Restricts dependency search of the given [groups] to the [maven URL][url],
@@ -152,26 +161,27 @@ publishMods {
     type.set(STABLE)
     modLoaders.add("fabric")
 
-    displayName.set("${property("mod.name")} ${project.version}")
+    displayName.set(releaseDisplayName)
     version.set("${project.version}")
 
     github {
         accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
         repository.set("RealNmS/Atmospheric-Fauna")
         commitish.set("main")
-        tagName.set("v${project.version}")
+        tagName.set("v${property("mod.version")}")
+        displayName.set("v${property("mod.version")} Test Release (Ignore)")
     }
 
     /*
     modrinth {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
-        projectId.set("your-modrinth-project-id")
+        projectId.set("yd14I2wN")
         minecraftVersions.addAll(compatibleVersions)
     }
 
     curseforge {
         accessToken.set(providers.environmentVariable("CURSEFORGE_TOKEN"))
-        projectId.set("your-curseforge-project-id")
+        projectId.set("1427513")
         minecraftVersions.addAll(compatibleVersions)
     }
     */
