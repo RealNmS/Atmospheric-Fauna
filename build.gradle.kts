@@ -103,18 +103,17 @@ tasks {
         exclude("assets/docs/**")
         exclude("assets/sources/**")
         
-        fun MutableMap<String, String>.register(key: String, property: String) {
-            val value: String = sc.properties[property]
+        fun MutableMap<String, String>.register(key: String, value: String) {
             inputs.property(key, value)
             set(key, value)
         }
 
         val props = buildMap {
-            register("id", "mod.id")
-            register("name", "mod.name")
-            register("version", "mod.version")
-            register("minecraft", "mod.mc_compat")
-            put("java", requiredJava.majorVersion)
+            register("id", sc.properties["mod.id"])
+            register("name", sc.properties["mod.name"])
+            register("version", sc.properties["mod.version"])
+            register("minecraft", sc.properties["mod.mc_compat"])
+            register("loader", Regex("\\d+\\.\\d+").find(sc.properties.get<String>("deps.fabric_loader"))!!.value)
         }
 
         filesMatching("fabric.mod.json") { expand(props) }

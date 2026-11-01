@@ -21,9 +21,8 @@
     "atmosphericfauna.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.18.2",
+    "fabricloader": ">=${loader}",
     "minecraft": "${minecraft}",
-    "java": ">=${java}",
     "fabric-api": "*"
   },
   "recommends": {
