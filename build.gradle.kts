@@ -164,14 +164,6 @@ publishMods {
     displayName.set(releaseDisplayName)
     version.set("${project.version}")
 
-    github {
-        accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
-        repository.set("RealNmS/Atmospheric-Fauna")
-        commitish.set("main")
-        tagName.set("v${property("mod.version")}")
-        displayName.set("v${property("mod.version")} Test Release (Ignore)")
-    }
-
     /*
     modrinth {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
