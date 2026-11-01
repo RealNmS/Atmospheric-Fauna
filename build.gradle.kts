@@ -141,14 +141,38 @@ tasks {
 }
 
 publishMods {
-    file.set(jar.archiveFile)
-    changelog.set(file("CHANGELOG.md").text)
+    file.set(loomx.modJar.flatMap { it.archiveFile })
+
+    // Optional: Also publish the sources jar as an additional file
+    // additionalFiles.from(loomx.modSourcesJar.flatMap { it.archiveFile })
+
+    val changelogFile = rootProject.file("CHANGELOG.md")
+    changelog.set(if (changelogFile.exists()) changelogFile.readText() else "No changelog provided.")
+
     type.set(STABLE)
     modLoaders.add("fabric")
+
+    displayName.set("${property("mod.name")} ${project.version}")
+    version.set("${project.version}")
 
     github {
         accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
         repository.set("RealNmS/Atmospheric-Fauna")
         commitish.set("main")
+        tagName.set("v${project.version}")
     }
+
+    /*
+    modrinth {
+        accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
+        projectId.set("your-modrinth-project-id")
+        minecraftVersions.addAll(compatibleVersions)
+    }
+
+    curseforge {
+        accessToken.set(providers.environmentVariable("CURSEFORGE_TOKEN"))
+        projectId.set("your-curseforge-project-id")
+        minecraftVersions.addAll(compatibleVersions)
+    }
+    */
 }
