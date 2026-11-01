@@ -26,7 +26,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: build and publish
-        uses: actions/checkout@v4
         run: ./gradlew build publishMods
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
