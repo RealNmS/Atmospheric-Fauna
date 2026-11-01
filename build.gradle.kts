@@ -1,6 +1,7 @@
 plugins {
     // This plugin applies the correct loom variant based on the Minecraft version
     id("dev.kikugie.loom-back-compat")
+    id("me.modmuss50.mod-publish-plugin") version "2.2.1"   
 }
 
 // DO NOT set group = ...!
@@ -136,5 +137,18 @@ tasks {
         // loomx.mod(Sources)Jar returns the jar task for the applied loom variant
         from(loomx.modJar.flatMap { it.archiveFile }, loomx.modSourcesJar.flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+    }
+}
+
+publishMods {
+    file.set(jar.archiveFile)
+    changelog.set(file("CHANGELOG.md").text)
+    type.set(STABLE)
+    modLoaders.add("fabric")
+
+    github {
+        accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
+        repository.set("RealNmS/Atmospheric-Fauna")
+        commitish.set("main")
     }
 }
