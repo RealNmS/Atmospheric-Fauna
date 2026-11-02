@@ -8,21 +8,21 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: setup jdk
+      - name: Setup jdk
         uses: actions/setup-java@v4
         with:
           java-version: "25"
           distribution: "microsoft"
       
-      - name: make gradlew executable
+      - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: build and publish to platforms
+      - name: Build and publish to platforms
         run: ./gradlew buildAndCollect publishMods --no-parallel --no-daemon
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}

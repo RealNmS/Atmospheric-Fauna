@@ -4,31 +4,31 @@
 # against bad commits.
 
 name: build
-on: [pull_request, workflow_dispatch]
+on: [pull_request, push]
 
 jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: setup jdk
+      - name: Setup jdk
         uses: actions/setup-java@v4
         with:
           java-version: "25"
           distribution: "microsoft"
           
-      - name: setup gradle
+      - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         
-      - name: make gradle wrapper executable
+      - name: Make gradle wrapper executable
         run: chmod +x ./gradlew
         
-      - name: build mod jars
+      - name: Build mod jars
         run: ./gradlew buildAndCollect
         
-      - name: capture build artifacts
+      - name: Capture build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Atmospheric-Fauna-Artifacts
