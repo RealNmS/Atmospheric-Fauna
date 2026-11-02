@@ -1,9 +1,9 @@
 name: Release
-on: [workflow_dispatch] # Manual trigger
- 
+on: [workflow_dispatch]
+
 permissions:
   contents: write
- 
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -22,8 +22,8 @@ jobs:
       - name: make gradlew executable
         run: chmod +x gradlew
 
-      - name: build and publish
-        run: ./gradlew build publishMods --no-parallel
+      - name: build and publish to platforms
+        run: ./gradlew chiseledBuildAndCollect chiseledPublishMods --no-parallel --no-daemon
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -32,11 +32,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Extract root mod version (e.g. 0.6.0) from stonecutter.properties.toml
           MOD_VERSION=$(grep -m1 '^mod.version' stonecutter.properties.toml | cut -d '"' -f2)
           TAG="v$MOD_VERSION"
 
-          # Uploads only the mod jars (ignores -sources.jar files)
-          gh release create "$TAG" build/libs/$MOD_VERSION/*[!sources].jar \
+          # Enable extended globbing to cleanly ignore -sources.jar
+          shopt -s extglob
+          gh release create "$TAG" build/libs/$MOD_VERSION/!(*-sources).jar \
             --title "$TAG" \
             --notes-file CHANGELOG.md
