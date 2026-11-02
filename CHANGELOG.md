@@ -1,1 +1,5 @@
-- this is a testing release, ignore it
+- Added mob-publish-plugin for easier publishing to modrinth and curseforge
+- Added the lisence file to the jar file
+- Reworked most of the wiki
+- Moved the changelog history and todo list to the wiki
+- Updated gradle and stonectutter
