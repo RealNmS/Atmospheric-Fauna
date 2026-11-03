@@ -1,3 +1,4 @@
+- Added support for 1.20 - 1.20.6
 - Added mob-publish-plugin for easier publishing to modrinth and curseforge
 - Added "/atmosphericfauna config" command to open the mod config screen
   - now you can access the config screen without needing to have mod menu installed
