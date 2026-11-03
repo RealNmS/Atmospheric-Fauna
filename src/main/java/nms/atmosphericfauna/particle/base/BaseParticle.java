@@ -55,12 +55,15 @@ public abstract class BaseParticle extends SingleQuadParticle
     }
     //?}
 
-    //? if <=1.21.8 {
+    //? if <=1.20.6 {
+    // public static ResourceLocation getId(String path) {
+    //      return new ResourceLocation(AtmosphericFauna.MOD_ID, path);
+    // }
+    //?} else if <=1.21.8 {
     // public static ResourceLocation getId(String path) {
     //      return ResourceLocation.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
     // }
-    //?}
-    //? if >1.21.8 {
+    //?} else {
     public static Identifier getId(String path) {
         return Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, path);
     }

@@ -51,6 +51,30 @@ public class AtmosphericFauna implements ClientModInitializer {
     private static ClientLevel lastLevel = null;
     public static final Set<Projectile> ACTIVE_PROJECTILES = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
+    public static Identifier id(String path) {
+        //? if <=1.20.6 {
+        // return new Identifier(MOD_ID, path);
+        //?} else {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+        //?}
+    }
+
+    public static Identifier id(String namespace, String path) {
+        //? if <=1.20.6 {
+        // return new Identifier(namespace, path);
+        //?} else {
+        return Identifier.fromNamespaceAndPath(namespace, path);
+        //?}
+    }
+
+    public static Identifier defaultId(String path) {
+        //? if <=1.20.6 {
+        // return new Identifier("minecraft", path);
+        //?} else {
+        return Identifier.withDefaultNamespace(path);
+        //?}
+    }
+
 	@Override
 	public void onInitializeClient() {
         LOGGER.info("Atmospheric Fauna is initializing...");
@@ -59,13 +83,10 @@ public class AtmosphericFauna implements ClientModInitializer {
 		ConfigHandler.load();
 
         LOGGER.debug("registering particle types...");
-		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "blue_jay"),
-				BLUE_JAY);
-		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "common_swift"),
-				COMMON_SWIFT);
-		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "crow"), CROW);
-		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "northern_cardinal"),
-				NORTHERN_CARDINAL);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("blue_jay"), BLUE_JAY);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("common_swift"), COMMON_SWIFT);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("crow"), CROW);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("northern_cardinal"), NORTHERN_CARDINAL);
 
         LOGGER.debug("registering particle factories...");
 		//? if <=1.21.11 {

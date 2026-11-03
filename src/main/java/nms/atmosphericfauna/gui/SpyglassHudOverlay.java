@@ -21,8 +21,7 @@ public class SpyglassHudOverlay {
         //? if <=1.21.5 {
         //      HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
         //?} else {
-        HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "spyglass_hud"),
-                (graphics, tickDelta) -> {
+        HudElementRegistry.addLast(AtmosphericFauna.id("spyglass_hud"), (graphics, tickDelta) -> {
         //?}
                     if (!enableSpyglassInteraction)
                         return;
@@ -61,10 +60,10 @@ public class SpyglassHudOverlay {
                     int textX = spriteX + 32 + 8;
                     int textY = y + 16;
 
-                    Identifier bgMain = Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "spyglass_background");
-                    Identifier bgSprite = Identifier.withDefaultNamespace("hud/effect_background");
-                    Identifier texture = Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID,
-                            "textures/particle/" + lastBird.getBaseSpriteName() + "_perched_1.png");
+                    Identifier bgMain = AtmosphericFauna.id("spyglass_background");
+                    Identifier bgSprite = AtmosphericFauna.defaultId("hud/effect_background");
+                    Identifier texture = AtmosphericFauna
+                            .id("textures/particle/" + lastBird.getBaseSpriteName() + "_perched_1.png");
 
                     // Render textures
                     //? if <=1.21.1 {
