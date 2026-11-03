@@ -1,4 +1,5 @@
 - Added mob-publish-plugin for easier publishing to modrinth and curseforge
+- Added "/atmosphericfauna config" command to open the mod settings screen
 - Added the lisence file to the jar file
 - Reworked most of the wiki
 - Moved the changelog history and todo list to the wiki

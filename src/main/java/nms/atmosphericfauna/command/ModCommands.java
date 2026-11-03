@@ -23,8 +23,14 @@ import net.minecraft.util.RandomSource;
 public class ModCommands {
     //? if <=1.21.4 {
     //  private static ClickEvent createUrlEvent(String url) { return new ClickEvent(ClickEvent.Action.OPEN_URL, url); }
+    // private static ClickEvent createRunCommandEvent(String command) { return new
+    // ClickEvent(ClickEvent.Action.RUN_COMMAND, command); }
     //?} else {
     private static ClickEvent createUrlEvent(String url) { return new ClickEvent.OpenUrl(java.net.URI.create(url)); }
+
+    private static ClickEvent createRunCommandEvent(String command) {
+        return new ClickEvent.RunCommand(command);
+    }
     //?}
 
     private static SpawnData findSpawnData(String birdName) {
@@ -117,17 +123,35 @@ public class ModCommands {
     //                      }));
     //
     //      ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-    //          dispatcher.register(ClientCommandManager.literal("atmosphericfauna")
-    //                  .executes(context -> {
-    //                      context.getSource().sendFeedback(Component.literal("Welcome to Atmospheric Fauna!").withStyle(ChatFormatting.GREEN));
-    //                      context.getSource().sendFeedback(Component.literal("📖 ")
-    //                              .append(Component.literal("Click here for the Official Wiki")
-    //                                      .withStyle(style -> style.withColor(ChatFormatting.AQUA)
-    //                                              .withUnderlined(true)
-    //                                              .withClickEvent(createUrlEvent("https://github.com/RealNmS/Atmospheric-Fauna/wiki")))));
-    //                      return 1;
-    //                  })
-    //                  .then(ClientCommandManager.literal("help")
+    // dispatcher.register(ClientCommandManager.literal("atmosphericfauna")
+    // .executes(context -> {
+    // context.getSource().sendFeedback(Component.literal("Welcome to Atmospheric
+    // Fauna!").withStyle(ChatFormatting.GREEN));
+    // context.getSource().sendFeedback(Component.literal("📖 ")
+    // .append(Component.literal("Click here for the Official Wiki")
+    // .withStyle(style -> style.withColor(ChatFormatting.AQUA)
+    // .withUnderlined(true)
+    // .withClickEvent(createUrlEvent("https://github.com/RealNmS/Atmospheric-Fauna/wiki")))));
+    // context.getSource().sendFeedback(Component.literal("⚙ ")
+    // .append(Component.literal("Click here to open Mod Settings")
+    // .withStyle(style -> style.withColor(ChatFormatting.YELLOW)
+    // .withUnderlined(true)
+    // .withClickEvent(createRunCommandEvent("/atmosphericfauna config")))));
+    // return 1;
+    // })
+    // .then(ClientCommandManager.literal("config")
+    // .executes(context -> {
+    // Minecraft client = Minecraft.getInstance();
+    // client.execute(() -> {
+    // nms.atmosphericfauna.modmenu.ModMenuCompat compat = new
+    // nms.atmosphericfauna.modmenu.ModMenuCompat();
+    // net.minecraft.client.gui.screens.Screen configScreen =
+    // compat.getModConfigScreenFactory().create(null);
+    // client.setScreen(configScreen);
+    // });
+    // return 1;
+    // }))
+    // .then(ClientCommandManager.literal("help")
     //                          .executes(context -> {
     //                              context.getSource().sendFeedback(Component.literal("--- Atmospheric Fauna Help ---").withStyle(ChatFormatting.GOLD));
     //                              context.getSource().sendFeedback(Component.literal("• Learn about bird behaviors: ")
@@ -218,8 +242,29 @@ public class ModCommands {
                                         .withStyle(style -> style.withColor(ChatFormatting.AQUA)
                                                 .withUnderlined(true)
                                                 .withClickEvent(createUrlEvent("https://github.com/RealNmS/Atmospheric-Fauna/wiki")))));
+                        context.getSource().sendFeedback(Component.literal("⚙ ")
+                                .append(Component.literal("Click here to open Mod Settings")
+                                        .withStyle(style -> style.withColor(ChatFormatting.YELLOW)
+                                                .withUnderlined(true)
+                                                .withClickEvent(createRunCommandEvent("/atmosphericfauna config")))));
                         return 1;
                     })
+                    .then(ClientCommands.literal("config")
+                            .executes(context -> {
+                                Minecraft client = Minecraft.getInstance();
+                                client.execute(() -> {
+                                    nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
+                                    net.minecraft.client.gui.screens.Screen configScreen = compat
+                                            .getModConfigScreenFactory().create(null);
+                                    // ? if >=26.2 {
+                                    /*
+                                     * client.setScreenAndShow(configScreen);
+                                     *//* ?} else { */
+                                    client.setScreen(configScreen);
+                                    // ?}
+                                });
+                                return 1;
+                            }))
                     .then(ClientCommands.literal("help")
                             .executes(context -> {
                                 context.getSource().sendFeedback(Component.literal("--- Atmospheric Fauna Help ---").withStyle(ChatFormatting.GOLD));
