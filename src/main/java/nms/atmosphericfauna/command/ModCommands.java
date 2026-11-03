@@ -12,6 +12,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 //?} else {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 //?}
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 
 public class ModCommands {
+    private static Screen screenToOpen = null;
     //? if <=1.21.4 {
     //  private static ClickEvent createUrlEvent(String url) { return new ClickEvent(ClickEvent.Action.OPEN_URL, url); }
     // private static ClickEvent createRunCommandEvent(String command) { return new
@@ -71,6 +74,17 @@ public class ModCommands {
     }
 
     public static void registerClientCommands() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (screenToOpen != null) {
+                Screen screen = screenToOpen;
+                screenToOpen = null;
+                //? if >=26.2 {
+                /*client.setScreenAndShow(screen);
+                *//*?} else {*/
+                client.setScreen(screen);
+                //?}
+            }
+        });
     //? if <=1.21.11 {
     //      var spawnCommand = ClientCommandManager.literal("spawn")
     //              .then(ClientCommandManager.argument("bird", StringArgumentType.word())
@@ -123,35 +137,28 @@ public class ModCommands {
     //                      }));
     //
     //      ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-    // dispatcher.register(ClientCommandManager.literal("atmosphericfauna")
-    // .executes(context -> {
-    // context.getSource().sendFeedback(Component.literal("Welcome to Atmospheric
-    // Fauna!").withStyle(ChatFormatting.GREEN));
-    // context.getSource().sendFeedback(Component.literal("📖 ")
-    // .append(Component.literal("Click here for the Official Wiki")
-    // .withStyle(style -> style.withColor(ChatFormatting.AQUA)
-    // .withUnderlined(true)
-    // .withClickEvent(createUrlEvent("https://github.com/RealNmS/Atmospheric-Fauna/wiki")))));
-    // context.getSource().sendFeedback(Component.literal("⚙ ")
-    // .append(Component.literal("Click here to open Mod Settings")
-    // .withStyle(style -> style.withColor(ChatFormatting.YELLOW)
-    // .withUnderlined(true)
-    // .withClickEvent(createRunCommandEvent("/atmosphericfauna config")))));
-    // return 1;
-    // })
-    // .then(ClientCommandManager.literal("config")
-    // .executes(context -> {
-    // Minecraft client = Minecraft.getInstance();
-    // client.execute(() -> {
-    // nms.atmosphericfauna.modmenu.ModMenuCompat compat = new
-    // nms.atmosphericfauna.modmenu.ModMenuCompat();
-    // net.minecraft.client.gui.screens.Screen configScreen =
-    // compat.getModConfigScreenFactory().create(null);
-    // client.setScreen(configScreen);
-    // });
-    // return 1;
-    // }))
-    // .then(ClientCommandManager.literal("help")
+    //        dispatcher.register(ClientCommandManager.literal("atmosphericfauna")
+    //                .executes(context -> {
+    //                    context.getSource().sendFeedback(Component.literal("Welcome to Atmospheric Fauna!").withStyle(ChatFormatting.GREEN));
+    //                    context.getSource().sendFeedback(Component.literal("📖 ")
+    //                            .append(Component.literal("Click here for the Official Wiki")
+    //                                    .withStyle(style -> style.withColor(ChatFormatting.AQUA)
+    //                                            .withUnderlined(true)
+    //                                            .withClickEvent(createUrlEvent("https://github.com/RealNmS/Atmospheric-Fauna/wiki")))));
+    //                    context.getSource().sendFeedback(Component.literal("⚙ ")
+    //                            .append(Component.literal("Click here to open Mod Settings")
+    //                                    .withStyle(style -> style.withColor(ChatFormatting.YELLOW)
+    //                                            .withUnderlined(true)
+    //                                            .withClickEvent(createRunCommandEvent("/atmosphericfauna config")))));
+    //                    return 1;
+    //                })
+    //                .then(ClientCommandManager.literal("config")
+    //                        .executes(context -> {
+    //                            nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
+    //                            screenToOpen = compat.getModConfigScreenFactory().create(null);
+    //                            return 1;
+    //                        }))
+    //                .then(ClientCommandManager.literal("help")
     //                          .executes(context -> {
     //                              context.getSource().sendFeedback(Component.literal("--- Atmospheric Fauna Help ---").withStyle(ChatFormatting.GOLD));
     //                              context.getSource().sendFeedback(Component.literal("• Learn about bird behaviors: ")
@@ -251,18 +258,8 @@ public class ModCommands {
                     })
                     .then(ClientCommands.literal("config")
                             .executes(context -> {
-                                Minecraft client = Minecraft.getInstance();
-                                client.execute(() -> {
-                                    nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
-                                    net.minecraft.client.gui.screens.Screen configScreen = compat
-                                            .getModConfigScreenFactory().create(null);
-                                    // ? if >=26.2 {
-                                    /*
-                                     * client.setScreenAndShow(configScreen);
-                                     *//* ?} else { */
-                                    client.setScreen(configScreen);
-                                    // ?}
-                                });
+                                nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
+                                screenToOpen = compat.getModConfigScreenFactory().create(null);
                                 return 1;
                             }))
                     .then(ClientCommands.literal("help")
