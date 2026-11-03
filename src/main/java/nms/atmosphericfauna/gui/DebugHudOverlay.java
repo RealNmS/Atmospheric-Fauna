@@ -7,9 +7,9 @@ import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 //  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 //?} else {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.minecraft.resources.Identifier;
 //?}
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.Identifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +39,9 @@ public class DebugHudOverlay {
 
                     //? if >=1.21.9 {
                     // if (mc.getDebugOverlay().showDebugScreen() && mc.debugEntries.getCurrentlyEnabled().size() >= 4)
+                    //      return;
+                    //?} else if <=1.20.1 {
+                    // if (mc.options.renderDebug)
                     //      return;
                     //?} else {
                     if (mc.getDebugOverlay().showDebugScreen())
