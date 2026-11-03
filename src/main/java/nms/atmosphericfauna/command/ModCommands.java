@@ -154,8 +154,7 @@ public class ModCommands {
     //                })
     //                .then(ClientCommandManager.literal("config")
     //                        .executes(context -> {
-    //                            nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
-    //                            screenToOpen = compat.getModConfigScreenFactory().create(null);
+    //                            screenToOpen = nms.atmosphericfauna.gui.ConfigScreenHelper.createScreen(null);
     //                            return 1;
     //                        }))
     //                .then(ClientCommandManager.literal("help")
@@ -258,8 +257,7 @@ public class ModCommands {
                     })
                     .then(ClientCommands.literal("config")
                             .executes(context -> {
-                                nms.atmosphericfauna.modmenu.ModMenuCompat compat = new nms.atmosphericfauna.modmenu.ModMenuCompat();
-                                screenToOpen = compat.getModConfigScreenFactory().create(null);
+                                screenToOpen = nms.atmosphericfauna.gui.ConfigScreenHelper.createScreen(null);
                                 return 1;
                             }))
                     .then(ClientCommands.literal("help")
