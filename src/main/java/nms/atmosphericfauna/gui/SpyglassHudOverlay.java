@@ -69,10 +69,10 @@ public class SpyglassHudOverlay {
                     //? if <=1.20.1 {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-                    // int bgAlpha = (int) (fadeAlpha * 0xAA);
-                    // graphics.fill(x + 24, y, x + 24 + totalWidth - 16, y + totalHeight, (bgAlpha << 24) | 0x101010);
-                    // int spriteBgAlpha = (int) (fadeAlpha * 0x55);
-                    // graphics.fill(spriteX, spriteY, spriteX + 32, spriteY + 32, (spriteBgAlpha << 24) | 0x000000);
+                    // Identifier bgMainTexture = AtmosphericFauna.id("textures/gui/sprites/spyglass_background.png");
+                    // graphics.blitNineSliced(bgMainTexture, x + 21, y, totalWidth - 16, totalHeight - 9, 9, 9, 100, 100, 0, 0);
+                    // Identifier inventorySheet = AtmosphericFauna.defaultId("textures/gui/container/inventory.png");
+                    // graphics.blit(inventorySheet, spriteX - 1, spriteY, 31, 31, 141.0F, 166.0F, 24, 24, 256, 256);
                     // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
