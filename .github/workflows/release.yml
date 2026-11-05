@@ -27,16 +27,3 @@ jobs:
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      
-      - name: Create Unified GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          MOD_VERSION=$(grep -m1 '^mod.version' stonecutter.properties.toml | cut -d '"' -f2)
-          TAG="v$MOD_VERSION"
-
-          # Enable extended globbing to cleanly ignore -sources.jar
-          shopt -s extglob
-          gh release create "$TAG" build/libs/$MOD_VERSION/!(*-sources).jar \
-            --title "$TAG" \
-            --notes-file CHANGELOG.md
