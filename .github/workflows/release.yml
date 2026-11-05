@@ -23,7 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and publish to platforms
-        run: ./gradlew buildAndCollect publishMods --no-parallel --no-daemon
+        run: ./gradlew buildAndCollect publishMods --no-parallel --no-daemon --dry-run
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
