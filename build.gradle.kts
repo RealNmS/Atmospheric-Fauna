@@ -164,17 +164,18 @@ publishMods {
     displayName.set(releaseDisplayName)
     version.set("${project.version}")
 
-    /*
     modrinth {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
         projectId.set("yd14I2wN")
         minecraftVersions.addAll(compatibleVersions)
+        environment.set(CLIENT_ONLY)
     }
 
     curseforge {
         accessToken.set(providers.environmentVariable("CURSEFORGE_TOKEN"))
         projectId.set("1427513")
         minecraftVersions.addAll(compatibleVersions)
+        client.set(true)
+        server.set(false)
     }
-    */
 }
