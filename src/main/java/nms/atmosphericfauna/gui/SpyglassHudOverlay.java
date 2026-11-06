@@ -70,7 +70,7 @@ public class SpyglassHudOverlay {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
                     // Identifier bgMainTexture = AtmosphericFauna.id("textures/gui/sprites/spyglass_background.png");
-                    // graphics.blitNineSliced(bgMainTexture, x + 21, y, totalWidth - 16, totalHeight - 9, 9, 9, 100, 100, 0, 0);
+                    // blitNineSliced(graphics, bgMainTexture, x + 22, y, totalWidth - 14, totalHeight);
                     // Identifier inventorySheet = AtmosphericFauna.defaultId("textures/gui/container/inventory.png");
                     // graphics.blit(inventorySheet, spriteX - 1, spriteY, 31, 31, 141.0F, 166.0F, 24, 24, 256, 256);
                     // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
@@ -105,4 +105,257 @@ public class SpyglassHudOverlay {
                     //?}
                 });
     }
+
+    //? if <=1.20.1 {
+    // private static void blitNineSliced(
+    //         net.minecraft.client.gui.GuiGraphics graphics,
+    //         Identifier texture,
+    //         int x,
+    //         int y,
+    //         int width,
+    //         int height
+    // ) {
+    //     final int textureWidth = 100;
+    //     final int textureHeight = 100;
+    //     final int border = 9;
+
+    //     // Keep the corners from becoming larger than half the destination.
+    //     int leftBorder = Math.min(border, width / 2);
+    //     int rightBorder = Math.min(border, width / 2);
+    //     int topBorder = Math.min(border, height / 2);
+    //     int bottomBorder = Math.min(border, height / 2);
+
+    //     int middleWidth = width - leftBorder - rightBorder;
+    //     int middleHeight = height - topBorder - bottomBorder;
+
+    //     // =========================================================
+    //     // Corners
+    //     // =========================================================
+
+    //     // Top-left
+    //     graphics.blit(
+    //             texture,
+    //             x, y,
+    //             0, 0,
+    //             leftBorder, topBorder,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // Top-right
+    //     graphics.blit(
+    //             texture,
+    //             x + width - rightBorder, y,
+    //             textureWidth - rightBorder, 0,
+    //             rightBorder, topBorder,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // Bottom-left
+    //     graphics.blit(
+    //             texture,
+    //             x, y + height - bottomBorder,
+    //             0, textureHeight - bottomBorder,
+    //             leftBorder, bottomBorder,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // Bottom-right
+    //     graphics.blit(
+    //             texture,
+    //             x + width - rightBorder,
+    //             y + height - bottomBorder,
+    //             textureWidth - rightBorder,
+    //             textureHeight - bottomBorder,
+    //             rightBorder, bottomBorder,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // =========================================================
+    //     // Top edge
+    //     // =========================================================
+
+    //     blitRepeatingHorizontal(
+    //             graphics, texture,
+    //             x + leftBorder, y,
+    //             middleWidth, topBorder,
+    //             border, 0,
+    //             textureWidth - border * 2,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // =========================================================
+    //     // Bottom edge
+    //     // =========================================================
+
+    //     blitRepeatingHorizontal(
+    //             graphics, texture,
+    //             x + leftBorder,
+    //             y + height - bottomBorder,
+    //             middleWidth, bottomBorder,
+    //             border,
+    //             textureHeight - bottomBorder,
+    //             textureWidth - border * 2,
+    //             textureWidth, textureHeight
+    //     );
+
+    //     // =========================================================
+    //     // Left edge
+    //     // =========================================================
+
+    //     blitRepeatingVertical(
+    //             graphics, texture,
+    //             x,
+    //             y + topBorder,
+    //             leftBorder,
+    //             middleHeight,
+    //             0,
+    //             border,
+    //             textureHeight - border * 2,
+    //             textureWidth,
+    //             textureHeight
+    //     );
+
+    //     // =========================================================
+    //     // Right edge
+    //     // =========================================================
+
+    //     blitRepeatingVertical(
+    //             graphics, texture,
+    //             x + width - rightBorder,
+    //             y + topBorder,
+    //             rightBorder,
+    //             middleHeight,
+    //             textureWidth - rightBorder,
+    //             border,
+    //             textureHeight - border * 2,
+    //             textureWidth,
+    //             textureHeight
+    //     );
+
+    //     // =========================================================
+    //     // Center
+    //     // =========================================================
+
+    //     blitRepeating(
+    //             graphics, texture,
+    //             x + leftBorder,
+    //             y + topBorder,
+    //             middleWidth,
+    //             middleHeight,
+    //             border,
+    //             border,
+    //             textureWidth - border * 2,
+    //             textureHeight - border * 2,
+    //             textureWidth,
+    //             textureHeight
+    //     );
+    // }
+
+    // private static void blitRepeatingHorizontal(
+    //         net.minecraft.client.gui.GuiGraphics graphics,
+    //         Identifier texture,
+    //         int x,
+    //         int y,
+    //         int width,
+    //         int height,
+    //         int u,
+    //         int v,
+    //         int sourceWidth,
+    //         int textureWidth,
+    //         int textureHeight
+    // ) {
+    //     int remaining = width;
+    //     int drawX = x;
+
+    //     while (remaining > 0) {
+    //         int sliceWidth = Math.min(remaining, sourceWidth);
+
+    //         graphics.blit(
+    //                 texture,
+    //                 drawX, y,
+    //                 u, v,
+    //                 sliceWidth, height,
+    //                 textureWidth, textureHeight
+    //         );
+
+    //         drawX += sliceWidth;
+    //         remaining -= sliceWidth;
+    //     }
+    // }
+
+    // private static void blitRepeatingVertical(
+    //         net.minecraft.client.gui.GuiGraphics graphics,
+    //         Identifier texture,
+    //         int x,
+    //         int y,
+    //         int width,
+    //         int height,
+    //         int u,
+    //         int v,
+    //         int sourceHeight,
+    //         int textureWidth,
+    //         int textureHeight
+    // ) {
+    //     int remaining = height;
+    //     int drawY = y;
+
+    //     while (remaining > 0) {
+    //         int sliceHeight = Math.min(remaining, sourceHeight);
+
+    //         graphics.blit(
+    //                 texture,
+    //                 x, drawY,
+    //                 u, v,
+    //                 width, sliceHeight,
+    //                 textureWidth, textureHeight
+    //         );
+
+    //         drawY += sliceHeight;
+    //         remaining -= sliceHeight;
+    //     }
+    // }
+
+    // private static void blitRepeating(
+    //         net.minecraft.client.gui.GuiGraphics graphics,
+    //         Identifier texture,
+    //         int x,
+    //         int y,
+    //         int width,
+    //         int height,
+    //         int u,
+    //         int v,
+    //         int sourceWidth,
+    //         int sourceHeight,
+    //         int textureWidth,
+    //         int textureHeight
+    // ) {
+    //     int remainingY = height;
+    //     int drawY = y;
+
+    //     while (remainingY > 0) {
+    //         int sliceHeight = Math.min(remainingY, sourceHeight);
+
+    //         int remainingX = width;
+    //         int drawX = x;
+
+    //         while (remainingX > 0) {
+    //             int sliceWidth = Math.min(remainingX, sourceWidth);
+
+    //             graphics.blit(
+    //                     texture,
+    //                     drawX, drawY,
+    //                     u, v,
+    //                     sliceWidth, sliceHeight,
+    //                     textureWidth, textureHeight
+    //             );
+
+    //             drawX += sliceWidth;
+    //             remainingX -= sliceWidth;
+    //         }
+
+    //         drawY += sliceHeight;
+    //         remainingY -= sliceHeight;
+    //     }
+    // }
+    //?}
 }
