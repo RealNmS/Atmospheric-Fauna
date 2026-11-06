@@ -5,7 +5,7 @@ import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import static nms.atmosphericfauna.config.ConfigHandler.enableSpyglassInteraction;
 
 //? if <=1.21.5 {
-//  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+// import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 //?} else {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 //?}
@@ -19,7 +19,7 @@ public class SpyglassHudOverlay {
 
     public static void register() {
         //? if <=1.21.5 {
-        //      HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
+        // HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
         //?} else {
         HudElementRegistry.addLast(AtmosphericFauna.id("spyglass_hud"), (graphics, tickDelta) -> {
         //?}
@@ -106,6 +106,10 @@ public class SpyglassHudOverlay {
                 });
     }
 
+    // MARK: --- blitNineSliced ---
+    // the texture didnt look right when using vanilla blitNineSliced, so i had ai vibecode a better one
+    // usually i dont like vibecoding but i actually spent 2 days debugging the texture before
+    // ai said "just make it yourself bruh"
     //? if <=1.20.1 {
     // private static void blitNineSliced(
     //         net.minecraft.client.gui.GuiGraphics graphics,

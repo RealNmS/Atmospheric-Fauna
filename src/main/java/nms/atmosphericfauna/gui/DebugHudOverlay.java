@@ -4,7 +4,7 @@ import nms.atmosphericfauna.AtmosphericFauna;
 import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 
 //? if <=1.21.5 {
-//  import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+// import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 //?} else {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.resources.Identifier;
@@ -20,7 +20,7 @@ public class DebugHudOverlay {
 
     public static void register() {
     //? if <=1.21.5 {
-    //      HudRenderCallback.EVENT.register((guiGraphics, tickCounter) -> {
+    // HudRenderCallback.EVENT.register((guiGraphics, tickCounter) -> {
     //?} else {
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(AtmosphericFauna.MOD_ID, "debug_hud"),
                 (guiGraphics, tickCounter) -> {
@@ -74,7 +74,7 @@ public class DebugHudOverlay {
                     guiGraphics.fill(screenWidth - titleWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                     
                     //? if <=1.21.11 {
-                    //  guiGraphics.drawString(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
+                    // guiGraphics.drawString(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
                     //?} else {
                     guiGraphics.text(mc.font, title, screenWidth - titleWidth - 8, y, 0xFFFFFFAA, false);
                     //?}
@@ -89,7 +89,7 @@ public class DebugHudOverlay {
                         guiGraphics.fill(screenWidth - width - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                         
                         //? if <=1.21.11 {
-                        //  guiGraphics.drawString(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
+                        // guiGraphics.drawString(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
                         //?} else {
                         guiGraphics.text(mc.font, text, screenWidth - width - 8, y, 0xFFFFFFFF, false);
                         //?}
@@ -102,7 +102,7 @@ public class DebugHudOverlay {
                     guiGraphics.fill(screenWidth - totalWidth - 14, y - 2, screenWidth - 2, y + 10, 0x80000000);
                     
                     //? if <=1.21.11 {
-                    //  guiGraphics.drawString(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
+                    // guiGraphics.drawString(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
                     //?} else {
                     guiGraphics.text(mc.font, totalText, screenWidth - totalWidth - 8, y, 0xFFAAFFAA, false);
                     //?}

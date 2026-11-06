@@ -25,7 +25,7 @@ import net.minecraft.util.RandomSource;
 public class ModCommands {
     private static Screen screenToOpen = null;
     //? if <=1.21.4 {
-    //  private static ClickEvent createUrlEvent(String url) { return new ClickEvent(ClickEvent.Action.OPEN_URL, url); }
+    // private static ClickEvent createUrlEvent(String url) { return new ClickEvent(ClickEvent.Action.OPEN_URL, url); }
     // private static ClickEvent createRunCommandEvent(String command) { return new
     // ClickEvent(ClickEvent.Action.RUN_COMMAND, command); }
     //?} else {
@@ -79,8 +79,8 @@ public class ModCommands {
                 Screen screen = screenToOpen;
                 screenToOpen = null;
                 //? if >=26.2 {
-                /*client.setScreenAndShow(screen);
-                *//*?} else {*/
+                // client.setScreenAndShow(screen);
+                //?} else {
                 client.setScreen(screen);
                 //?}
             }

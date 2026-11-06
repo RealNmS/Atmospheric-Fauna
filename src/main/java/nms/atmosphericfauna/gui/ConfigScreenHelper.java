@@ -4,8 +4,8 @@ package nms.atmosphericfauna.gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 //?}
 //? if <=1.21.11 {
-/*import net.minecraft.client.gui.GuiGraphics;
-*//*?} */
+// import net.minecraft.client.gui.GuiGraphics;
+//?}
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -30,8 +30,8 @@ public class ConfigScreenHelper {
                 super.init();
                 this.addRenderableWidget(
                         //? if >=26.2 {
-                        /*Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreenAndShow(parent))
-                        *//*?} else {*/
+                        // Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreenAndShow(parent))
+                        //?} else {
                         Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(parent))
                         //?}
                                 .bounds(this.width / 2 - 100, this.height / 2 + 20, 200, 20)
