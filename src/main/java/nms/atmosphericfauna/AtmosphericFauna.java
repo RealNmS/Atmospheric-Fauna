@@ -201,5 +201,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 				DebugHudOverlay.showDebug = true;
 			}
         });
+
+        LOGGER.debug("Atmospheric Fauna client initialization complete.");
 	}
 }
