@@ -73,7 +73,7 @@ public class SpyglassHudOverlay {
                     // blitNineSliced(graphics, bgMainTexture, x + 22, y, totalWidth - 14, totalHeight);
                     // Identifier inventorySheet = AtmosphericFauna.defaultId("textures/gui/container/inventory.png");
                     // graphics.blit(inventorySheet, spriteX - 1, spriteY, 31, 31, 141.0F, 166.0F, 24, 24, 256, 256);
-                    // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
+                    // graphics.blit(texture, spriteX - 1, spriteY - 5, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
                     //?} else if <=1.21.1 {
