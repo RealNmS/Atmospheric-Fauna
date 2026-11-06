@@ -169,6 +169,8 @@ publishMods {
         projectId.set("yd14I2wN")
         minecraftVersions.addAll(compatibleVersions)
         environment.set(CLIENT_ONLY)
+        requires("fabric-api")
+        optional("modmenu", "cloth-config")
     }
 
     curseforge {
@@ -177,5 +179,7 @@ publishMods {
         minecraftVersions.addAll(compatibleVersions)
         client.set(true)
         server.set(false)
+        requires("fabric-api")
+        optional("modmenu", "cloth-config")
     }
 }
