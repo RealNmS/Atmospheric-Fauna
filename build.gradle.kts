@@ -138,6 +138,12 @@ tasks {
         from("../../LICENSE") { rename { "$it-$name" } }
     }
 
+    /*
+    withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-Xlint:deprecation")
+    }
+    */
+
     register<Copy>("buildAndCollect") {
         group = "build"
         description = "Builds mod jars and copies results to `build/libs/{mod version}/`"
