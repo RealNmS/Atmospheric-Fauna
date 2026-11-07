@@ -8,7 +8,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 //? if <=1.21.11 {
-//  import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+// import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 //?} else {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 //?}

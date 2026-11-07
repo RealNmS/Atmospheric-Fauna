@@ -1,10 +1,9 @@
 package nms.atmosphericfauna.gui;
 
-//? if >=26.1 {
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-//?}
 //? if <=1.21.11 {
 // import net.minecraft.client.gui.GuiGraphics;
+//?} else {
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 //?}
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -39,14 +38,14 @@ public class ConfigScreenHelper {
             }
 
             //? if <=1.21.11 {
-            /*@Override
-            public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-                super.render(guiGraphics, mouseX, mouseY, delta);
-                guiGraphics.drawCenteredString(this.font,
-                        Component.translatable("text.atmosphericfauna.cloth_missing"), this.width / 2,
-                        this.height / 2 - 15, 0xFFFFFFFF);
-            }
-            *//*?} else {*/
+            // @Override
+            // public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+            //     super.render(guiGraphics, mouseX, mouseY, delta);
+            //     guiGraphics.drawCenteredString(this.font,
+            //             Component.translatable("text.atmosphericfauna.cloth_missing"), this.width / 2,
+            //             this.height / 2 - 15, 0xFFFFFFFF);
+            // }
+            //?} else {
             @Override
             public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
                 super.extractRenderState(guiGraphics, mouseX, mouseY, delta);

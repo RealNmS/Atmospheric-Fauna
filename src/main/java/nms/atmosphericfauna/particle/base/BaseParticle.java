@@ -11,11 +11,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
 //? if <=1.21.8 {
-//  import net.minecraft.client.particle.TextureSheetParticle;
-//  import net.minecraft.client.particle.ParticleRenderType;
-//  import net.minecraft.client.renderer.texture.TextureAtlas;
-//  import net.minecraft.client.renderer.texture.AbstractTexture;
-//  import net.minecraft.resources.ResourceLocation;
+// import net.minecraft.client.particle.TextureSheetParticle;
+// import net.minecraft.client.particle.ParticleRenderType;
+// import net.minecraft.client.renderer.texture.TextureAtlas;
+// import net.minecraft.client.renderer.texture.AbstractTexture;
+// import net.minecraft.resources.ResourceLocation;
 //?}
 //? if >1.21.8 {
 import net.minecraft.client.particle.SingleQuadParticle;
@@ -24,7 +24,7 @@ import net.minecraft.resources.Identifier;
 //?}
 
 //? if <=1.21.8 {
-//  public abstract class BaseParticle extends TextureSheetParticle
+// public abstract class BaseParticle extends TextureSheetParticle
 //?}
 //? if >1.21.8 {
 public abstract class BaseParticle extends SingleQuadParticle
@@ -32,8 +32,8 @@ public abstract class BaseParticle extends SingleQuadParticle
 {
     protected BaseParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
     //? if <=1.21.8 {
-    //      super(level, x, y, z);
-    //      this.setSprite(sprite);
+    //    super(level, x, y, z);
+    //    this.setSprite(sprite);
     //?}
     //? if >1.21.8 {
         super(level, x, y, z, sprite);
@@ -43,10 +43,10 @@ public abstract class BaseParticle extends SingleQuadParticle
     }
 
     //? if <=1.21.8 {
-    //  @Override
-    //  public ParticleRenderType getRenderType() {
-    //      return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-    //  }
+    // @Override
+    // public ParticleRenderType getRenderType() {
+    //     return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    // }
     //?}
     //? if >1.21.8 {
     @Override
@@ -71,11 +71,11 @@ public abstract class BaseParticle extends SingleQuadParticle
 
     public static TextureAtlasSprite getSprite(String path) {
     //? if <=1.21.8 {
-    //      AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
-    //      if (texture instanceof TextureAtlas atlas) {
-    //          return atlas.getSprite(getId(path));
-    //      }
-    //      throw new IllegalStateException("Particle atlas not found!");
+    //    AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
+    //    if (texture instanceof TextureAtlas atlas) {
+    //        return atlas.getSprite(getId(path));
+    //    }
+    //    throw new IllegalStateException("Particle atlas not found!");
     //?}
     //? if >1.21.8 {
         return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(getId(path));
