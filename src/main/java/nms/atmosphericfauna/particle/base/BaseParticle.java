@@ -69,18 +69,21 @@ public abstract class BaseParticle extends SingleQuadParticle
     }
     //?}
 
-    public static TextureAtlasSprite getSprite(String path) {
     //? if <=1.21.8 {
-    //    AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
-    //    if (texture instanceof TextureAtlas atlas) {
-    //        return atlas.getSprite(getId(path));
-    //    }
-    //    throw new IllegalStateException("Particle atlas not found!");
+    // @SuppressWarnings("deprecation")
+    // public static TextureAtlasSprite getSprite(String path) {
+    //     AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
+    //     if (texture instanceof TextureAtlas atlas) {
+    //         return atlas.getSprite(getId(path));
+    //     }
+    //     throw new IllegalStateException("Particle atlas not found!");
+    // }
     //?}
     //? if >1.21.8 {
+    public static TextureAtlasSprite getSprite(String path) {
         return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(getId(path));
-    //?}
     }
+    //?}
 
     public abstract static class FaunaFactory implements ParticleProvider<SimpleParticleType> {
         protected final SpriteSet sprite;
