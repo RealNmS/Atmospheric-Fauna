@@ -86,7 +86,7 @@ public class ModCommands {
             }
         });
     //? if <=1.21.11 {
-    //      var spawnCommand = ClientCommandManager.literal("spawn")
+    // var spawnCommand = ClientCommandManager.literal("spawn")
     //              .then(ClientCommandManager.argument("bird", StringArgumentType.word())
     //                      .suggests((context, builder) -> SharedSuggestionProvider.suggest(SpawnData.names(), builder))
     //                      .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
