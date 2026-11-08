@@ -25,7 +25,7 @@ jobs:
       - name: Build and publish to platforms
         run: ./gradlew buildAndCollect publishMods --no-parallel --no-daemon
         env:
-          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       
       - name: Create Unified GitHub Release
