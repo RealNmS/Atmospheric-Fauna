@@ -189,3 +189,28 @@ publishMods {
         optional("modmenu", "cloth-config")
     }
 }
+
+// Force Gradle tasks to execute sequentially in numerical Minecraft version order
+gradle.projectsEvaluated {
+    val orderedVersions = listOf(
+        "1.20.1", "1.20.2", "1.20.3", "1.20.5",
+        "1.21.1", "1.21.2", "1.21.4", "1.21.5", "1.21.6", "1.21.9", "1.21.11",
+        "26.1.x", "26.2", "26.3"
+    )
+    
+    val tasksToOrder = listOf("build", "buildAndCollect", "publishMods")
+
+    for (i in 0 until orderedVersions.size - 1) {
+        val currentProj = rootProject.findProject(orderedVersions[i])
+        val nextProj = rootProject.findProject(orderedVersions[i + 1])
+        if (currentProj != null && nextProj != null) {
+            for (taskName in tasksToOrder) {
+                val currentTask = currentProj.tasks.findByName(taskName)
+                val nextTask = nextProj.tasks.findByName(taskName)
+                if (currentTask != null && nextTask != null) {
+                    nextTask.mustRunAfter(currentTask)
+                }
+            }
+        }
+    }
+}
