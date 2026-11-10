@@ -1,1 +1,1 @@
-- nothing yet
+- redesigned all command feedback messages to be prettier
