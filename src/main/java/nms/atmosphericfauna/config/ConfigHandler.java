@@ -37,6 +37,7 @@ public class ConfigHandler {
         public static final boolean ENABLE_BLUE_JAY_SPAWNING = true;
         public static final int MAX_ACTIVE_BLUE_JAYS = 10;
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS = false;
+        public static final String BLUE_JAY_SPAWN_BIOMES = "#minecraft:is_forest, #minecraft:is_jungle, #minecraft:is_taiga";
         public static final boolean DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS = false;
         public static final int MIN_PACK_SIZE_BLUE_JAY = 1;
         public static final int MAX_PACK_SIZE_BLUE_JAY = 2;
@@ -45,6 +46,7 @@ public class ConfigHandler {
         public static final boolean ENABLE_COMMON_SWIFT_SPAWNING = true;
         public static final int MAX_ACTIVE_COMMON_SWIFTS = 12;
         public static final boolean DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS = false;
+        public static final String COMMON_SWIFT_SPAWN_BIOMES = "#minecraft:is_mountain, #minecraft:is_hill, #minecraft:is_savanna, #minecraft:is_badlands, #minecraft:is_river";
         public static final boolean DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS = false;
         public static final int MIN_PACK_SIZE_COMMON_SWIFT = 4;
         public static final int MAX_PACK_SIZE_COMMON_SWIFT = 12;
@@ -53,6 +55,7 @@ public class ConfigHandler {
         public static final boolean ENABLE_CROW_SPAWNING = true;
         public static final int MAX_ACTIVE_CROWS = 50;
         public static final boolean DISABLE_CROW_SPAWN_BIOME_CHECKS = false;
+        public static final String CROW_SPAWN_BIOMES = "#minecraft:is_overworld";
         public static final boolean DISABLE_CROW_SPAWN_BLOCK_CHECKS = false;
         public static final int MIN_PACK_SIZE_CROW = 3;
         public static final int MAX_PACK_SIZE_CROW = 9;
@@ -61,6 +64,7 @@ public class ConfigHandler {
         public static final boolean ENABLE_NORTHERN_CARDINAL_SPAWNING = true;
         public static final int MAX_ACTIVE_NORTHERN_CARDINALS = 10;
         public static final boolean DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS = false;
+        public static final String NORTHERN_CARDINAL_SPAWN_BIOMES = "#minecraft:is_forest, #minecraft:is_taiga, #minecraft:is_jungle";
         public static final boolean DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS = false;
         public static final int MIN_PACK_SIZE_NORTHERN_CARDINAL = 1;
         public static final int MAX_PACK_SIZE_NORTHERN_CARDINAL = 3;
@@ -90,6 +94,7 @@ public class ConfigHandler {
     public static boolean enableBlueJaySpawning = Defaults.ENABLE_BLUE_JAY_SPAWNING;
     public static int maxActiveBlueJays = Defaults.MAX_ACTIVE_BLUE_JAYS;
     public static boolean disableBlueJaySpawnBiomeChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BIOME_CHECKS;
+    public static String blueJaySpawnBiomes = Defaults.BLUE_JAY_SPAWN_BIOMES;
     public static boolean disableBlueJaySpawnBlockChecks = Defaults.DISABLE_BLUE_JAY_SPAWN_BLOCK_CHECKS;
     public static int minPackSizeBlueJay = Defaults.MIN_PACK_SIZE_BLUE_JAY;
     public static int maxPackSizeBlueJay = Defaults.MAX_PACK_SIZE_BLUE_JAY;
@@ -98,6 +103,7 @@ public class ConfigHandler {
     public static boolean enableCommonSwiftSpawning = Defaults.ENABLE_COMMON_SWIFT_SPAWNING;
     public static int maxActiveCommonSwifts = Defaults.MAX_ACTIVE_COMMON_SWIFTS;
     public static boolean disableCommonSwiftSpawnBiomeChecks = Defaults.DISABLE_COMMON_SWIFT_SPAWN_BIOME_CHECKS;
+    public static String commonSwiftSpawnBiomes = Defaults.COMMON_SWIFT_SPAWN_BIOMES;
     public static boolean disableCommonSwiftSpawnBlockChecks = Defaults.DISABLE_COMMON_SWIFT_SPAWN_BLOCK_CHECKS;
     public static int minPackSizeCommonSwift = Defaults.MIN_PACK_SIZE_COMMON_SWIFT;
     public static int maxPackSizeCommonSwift = Defaults.MAX_PACK_SIZE_COMMON_SWIFT;
@@ -106,6 +112,7 @@ public class ConfigHandler {
     public static boolean enableCrowSpawning = Defaults.ENABLE_CROW_SPAWNING;
     public static int maxActiveCrows = Defaults.MAX_ACTIVE_CROWS;
     public static boolean disableCrowSpawnBiomeChecks = Defaults.DISABLE_CROW_SPAWN_BIOME_CHECKS;
+    public static String crowSpawnBiomes = Defaults.CROW_SPAWN_BIOMES;
     public static boolean disableCrowSpawnBlockChecks = Defaults.DISABLE_CROW_SPAWN_BLOCK_CHECKS;
     public static int minPackSizeCrow = Defaults.MIN_PACK_SIZE_CROW;
     public static int maxPackSizeCrow = Defaults.MAX_PACK_SIZE_CROW;
@@ -114,6 +121,7 @@ public class ConfigHandler {
     public static boolean enableNorthernCardinalSpawning = Defaults.ENABLE_NORTHERN_CARDINAL_SPAWNING;
     public static int maxActiveNorthernCardinals = Defaults.MAX_ACTIVE_NORTHERN_CARDINALS;
     public static boolean disableNorthernCardinalSpawnBiomeChecks = Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BIOME_CHECKS;
+    public static String northernCardinalSpawnBiomes = Defaults.NORTHERN_CARDINAL_SPAWN_BIOMES;
     public static boolean disableNorthernCardinalSpawnBlockChecks = Defaults.DISABLE_NORTHERN_CARDINAL_SPAWN_BLOCK_CHECKS;
     public static int minPackSizeNorthernCardinal = Defaults.MIN_PACK_SIZE_NORTHERN_CARDINAL;
     public static int maxPackSizeNorthernCardinal = Defaults.MAX_PACK_SIZE_NORTHERN_CARDINAL;
@@ -209,6 +217,7 @@ public class ConfigHandler {
             public Boolean enableBlueJaySpawning;
             public Integer maxActiveBlueJays;
             public Boolean disableBlueJaySpawnBiomeChecks;
+            public String blueJaySpawnBiomes;
             public Boolean disableBlueJaySpawnBlockChecks;
             public Integer minPackSizeBlueJay;
             public Integer maxPackSizeBlueJay;
@@ -217,6 +226,7 @@ public class ConfigHandler {
             public Boolean enableCommonSwiftSpawning;
             public Integer maxActiveCommonSwifts;
             public Boolean disableCommonSwiftSpawnBiomeChecks;
+            public String commonSwiftSpawnBiomes;
             public Boolean disableCommonSwiftSpawnBlockChecks;
             public Integer minPackSizeCommonSwift;
             public Integer maxPackSizeCommonSwift;
@@ -225,6 +235,7 @@ public class ConfigHandler {
             public Boolean enableCrowSpawning;
             public Integer maxActiveCrows;
             public Boolean disableCrowSpawnBiomeChecks;
+            public String crowSpawnBiomes;
             public Boolean disableCrowSpawnBlockChecks;
             public Integer minPackSizeCrow;
             public Integer maxPackSizeCrow;
@@ -233,6 +244,7 @@ public class ConfigHandler {
             public Boolean enableNorthernCardinalSpawning;
             public Integer maxActiveNorthernCardinals;
             public Boolean disableNorthernCardinalSpawnBiomeChecks;
+            public String northernCardinalSpawnBiomes;
             public Boolean disableNorthernCardinalSpawnBlockChecks;
             public Integer minPackSizeNorthernCardinal;
             public Integer maxPackSizeNorthernCardinal;
@@ -275,6 +287,7 @@ public class ConfigHandler {
         data.birds.enableBlueJaySpawning = enableBlueJaySpawning;
         data.birds.maxActiveBlueJays = maxActiveBlueJays;
         data.birds.disableBlueJaySpawnBiomeChecks = disableBlueJaySpawnBiomeChecks;
+        data.birds.blueJaySpawnBiomes = blueJaySpawnBiomes;
         data.birds.disableBlueJaySpawnBlockChecks = disableBlueJaySpawnBlockChecks;
         data.birds.minPackSizeBlueJay = minPackSizeBlueJay;
         data.birds.maxPackSizeBlueJay = maxPackSizeBlueJay;
@@ -283,6 +296,7 @@ public class ConfigHandler {
         data.birds.enableCommonSwiftSpawning = enableCommonSwiftSpawning;
         data.birds.maxActiveCommonSwifts = maxActiveCommonSwifts;
         data.birds.disableCommonSwiftSpawnBiomeChecks = disableCommonSwiftSpawnBiomeChecks;
+        data.birds.commonSwiftSpawnBiomes = commonSwiftSpawnBiomes;
         data.birds.disableCommonSwiftSpawnBlockChecks = disableCommonSwiftSpawnBlockChecks;
         data.birds.minPackSizeCommonSwift = minPackSizeCommonSwift;
         data.birds.maxPackSizeCommonSwift = maxPackSizeCommonSwift;
@@ -291,6 +305,7 @@ public class ConfigHandler {
         data.birds.enableCrowSpawning = enableCrowSpawning;
         data.birds.maxActiveCrows = maxActiveCrows;
         data.birds.disableCrowSpawnBiomeChecks = disableCrowSpawnBiomeChecks;
+        data.birds.crowSpawnBiomes = crowSpawnBiomes;
         data.birds.disableCrowSpawnBlockChecks = disableCrowSpawnBlockChecks;
         data.birds.minPackSizeCrow = minPackSizeCrow;
         data.birds.maxPackSizeCrow = maxPackSizeCrow;
@@ -299,6 +314,7 @@ public class ConfigHandler {
         data.birds.enableNorthernCardinalSpawning = enableNorthernCardinalSpawning;
         data.birds.maxActiveNorthernCardinals = maxActiveNorthernCardinals;
         data.birds.disableNorthernCardinalSpawnBiomeChecks = disableNorthernCardinalSpawnBiomeChecks;
+        data.birds.northernCardinalSpawnBiomes = northernCardinalSpawnBiomes;
         data.birds.disableNorthernCardinalSpawnBlockChecks = disableNorthernCardinalSpawnBlockChecks;
         data.birds.minPackSizeNorthernCardinal = minPackSizeNorthernCardinal;
         data.birds.maxPackSizeNorthernCardinal = maxPackSizeNorthernCardinal;
@@ -335,6 +351,7 @@ public class ConfigHandler {
         enableBlueJaySpawning = data.birds.enableBlueJaySpawning;
         maxActiveBlueJays = data.birds.maxActiveBlueJays;
         disableBlueJaySpawnBiomeChecks = data.birds.disableBlueJaySpawnBiomeChecks;
+        blueJaySpawnBiomes = data.birds.blueJaySpawnBiomes;
         disableBlueJaySpawnBlockChecks = data.birds.disableBlueJaySpawnBlockChecks;
         minPackSizeBlueJay = data.birds.minPackSizeBlueJay;
         maxPackSizeBlueJay = data.birds.maxPackSizeBlueJay;
@@ -343,6 +360,7 @@ public class ConfigHandler {
         enableCommonSwiftSpawning = data.birds.enableCommonSwiftSpawning;
         maxActiveCommonSwifts = data.birds.maxActiveCommonSwifts;
         disableCommonSwiftSpawnBiomeChecks = data.birds.disableCommonSwiftSpawnBiomeChecks;
+        commonSwiftSpawnBiomes = data.birds.commonSwiftSpawnBiomes;
         disableCommonSwiftSpawnBlockChecks = data.birds.disableCommonSwiftSpawnBlockChecks;
         minPackSizeCommonSwift = data.birds.minPackSizeCommonSwift;
         maxPackSizeCommonSwift = data.birds.maxPackSizeCommonSwift;
@@ -351,6 +369,7 @@ public class ConfigHandler {
         enableCrowSpawning = data.birds.enableCrowSpawning;
         maxActiveCrows = data.birds.maxActiveCrows;
         disableCrowSpawnBiomeChecks = data.birds.disableCrowSpawnBiomeChecks;
+        crowSpawnBiomes = data.birds.crowSpawnBiomes;
         disableCrowSpawnBlockChecks = data.birds.disableCrowSpawnBlockChecks;
         minPackSizeCrow = data.birds.minPackSizeCrow;
         maxPackSizeCrow = data.birds.maxPackSizeCrow;
@@ -359,6 +378,7 @@ public class ConfigHandler {
         enableNorthernCardinalSpawning = data.birds.enableNorthernCardinalSpawning;
         maxActiveNorthernCardinals = data.birds.maxActiveNorthernCardinals;
         disableNorthernCardinalSpawnBiomeChecks = data.birds.disableNorthernCardinalSpawnBiomeChecks;
+        northernCardinalSpawnBiomes = data.birds.northernCardinalSpawnBiomes;
         disableNorthernCardinalSpawnBlockChecks = data.birds.disableNorthernCardinalSpawnBlockChecks;
         minPackSizeNorthernCardinal = data.birds.minPackSizeNorthernCardinal;
         maxPackSizeNorthernCardinal = data.birds.maxPackSizeNorthernCardinal;

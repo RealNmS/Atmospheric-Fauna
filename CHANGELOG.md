@@ -1,2 +1,3 @@
+- added custom biome whitelist for each bird in the config
 - redesigned all command feedback messages to be prettier
 - redesigned and polished the spyglass HUD overlay

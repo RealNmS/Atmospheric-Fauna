@@ -7,6 +7,8 @@ import static nms.atmosphericfauna.config.ConfigHandler.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AmbientSpawning {
 
@@ -170,8 +173,8 @@ public class AmbientSpawning {
         if (spawnData.checkBiomeTags()) {
             var biomeHolder = world.getBiome(pos);
             boolean biomeMatch = false;
-            for (TagKey<Biome> tag : spawnData.validBiomeTags()) {
-                if (biomeHolder.is(tag)) {
+            for (String biome : spawnData.validBiomes()) {
+                if (matchesBiome(biomeHolder, biome)) {
                     biomeMatch = true;
                     break;
                 }
@@ -198,6 +201,37 @@ public class AmbientSpawning {
         }
 
         return lightValid;
+    }
+
+    private static boolean matchesBiome(Holder<Biome> biomeHolder, String configuredBiome) {
+        String biome = configuredBiome.trim().toLowerCase(Locale.ROOT);
+        boolean isTag = biome.startsWith("#");
+        if (isTag) {
+            biome = biome.substring(1);
+        }
+
+        int separator = biome.indexOf(':');
+        String namespace = separator > 0 ? biome.substring(0, separator) : "minecraft";
+        String path = separator > 0 ? biome.substring(separator + 1) : biome;
+
+        try {
+            var identifier = AtmosphericFauna.id(namespace, path);
+            if (isTag) {
+                return biomeHolder.is(TagKey.create(Registries.BIOME, identifier));
+            }
+            return biomeHolder.unwrapKey()
+                    //? if <=1.21.9 {
+                    // .map(key -> key.location().equals(identifier))
+                    //?} else {
+                    .map(key -> key.identifier().equals(identifier))
+                    //?}
+                    .orElse(false);
+        } catch (IllegalArgumentException exception) {
+            if (debugTextSpawning) {
+                AtmosphericFauna.LOGGER.warn("[AS] Invalid configured biome '{}'", configuredBiome);
+            }
+            return false;
+        }
     }
 
     // MARK: --- MIDAIR BORDER SPAWNING ---

@@ -8,8 +8,20 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import java.util.function.Consumer;
 
 public class ModMenuConfig {
+    private static void addBiomeWhitelist(SubCategoryBuilder category, ConfigEntryBuilder entryBuilder,
+            String value, String defaultValue, Consumer<String> saveConsumer) {
+        category.add(entryBuilder
+                .startStrField(Component.translatable("option.atmosphericfauna.species.spawn_biomes"), value)
+                .setDefaultValue(defaultValue)
+                .setTooltip(Component.translatable(
+                        "option.atmosphericfauna.species.spawn_biomes.tooltip"))
+                .setSaveConsumer(saveConsumer)
+                .build());
+    }
+
     public static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
@@ -191,6 +203,9 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBiomeChecks = newValue)
                 .build());
+        addBiomeWhitelist(blueJays, entryBuilder, ConfigHandler.blueJaySpawnBiomes,
+                ConfigHandler.Defaults.BLUE_JAY_SPAWN_BIOMES,
+                newValue -> ConfigHandler.blueJaySpawnBiomes = newValue);
 
         blueJays.add(entryBuilder
                 .startBooleanToggle(
@@ -269,6 +284,9 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBiomeChecks = newValue)
                 .build());
+        addBiomeWhitelist(commonSwifts, entryBuilder, ConfigHandler.commonSwiftSpawnBiomes,
+                ConfigHandler.Defaults.COMMON_SWIFT_SPAWN_BIOMES,
+                newValue -> ConfigHandler.commonSwiftSpawnBiomes = newValue);
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
@@ -345,6 +363,9 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
                 .build());
+        addBiomeWhitelist(crows, entryBuilder, ConfigHandler.crowSpawnBiomes,
+                ConfigHandler.Defaults.CROW_SPAWN_BIOMES,
+                newValue -> ConfigHandler.crowSpawnBiomes = newValue);
 
         crows.add(entryBuilder
                 .startBooleanToggle(
@@ -425,6 +446,9 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBiomeChecks = newValue)
                 .build());
+        addBiomeWhitelist(northernCardinals, entryBuilder, ConfigHandler.northernCardinalSpawnBiomes,
+                ConfigHandler.Defaults.NORTHERN_CARDINAL_SPAWN_BIOMES,
+                newValue -> ConfigHandler.northernCardinalSpawnBiomes = newValue);
 
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(

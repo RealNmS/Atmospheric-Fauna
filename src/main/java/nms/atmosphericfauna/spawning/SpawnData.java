@@ -7,7 +7,6 @@ import nms.atmosphericfauna.particle.CommonSwiftParticle;
 import nms.atmosphericfauna.particle.CrowParticle;
 import nms.atmosphericfauna.particle.NorthernCardinalParticle;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -30,7 +29,7 @@ public final class SpawnData {
     private boolean spawnAllowed;
     private boolean checkBiomeTags;
     private boolean checkSpawnBlocks;
-    private final List<TagKey<Biome>> validBiomeTags;
+    private List<String> validBiomes;
     private final List<TagKey<Block>> validSpawnBlocks;
     private final IntSupplier availableSpots;
 
@@ -48,7 +47,7 @@ public final class SpawnData {
             boolean spawnAllowed,
             boolean checkBiomeTags,
             boolean checkSpawnBlocks,
-            List<TagKey<Biome>> validBiomeTags,
+            List<String> validBiomes,
             List<TagKey<Block>> validSpawnBlocks,
             IntSupplier availableSpots) {
         this.name = name;
@@ -64,7 +63,7 @@ public final class SpawnData {
         this.spawnAllowed = spawnAllowed;
         this.checkBiomeTags = checkBiomeTags;
         this.checkSpawnBlocks = checkSpawnBlocks;
-        this.validBiomeTags = validBiomeTags;
+        this.validBiomes = validBiomes;
         this.validSpawnBlocks = validSpawnBlocks;
         this.availableSpots = availableSpots;
     }
@@ -141,8 +140,15 @@ public final class SpawnData {
         this.checkSpawnBlocks = checkSpawnBlocks;
     }
 
-    public List<TagKey<Biome>> validBiomeTags() {
-        return validBiomeTags;
+    public List<String> validBiomes() {
+        return validBiomes;
+    }
+
+    public void setValidBiomes(String biomes) {
+        this.validBiomes = List.of(biomes.split(",")).stream()
+                .map(String::trim)
+                .filter(entry -> !entry.isEmpty())
+                .toList();
     }
 
     public List<TagKey<Block>> validSpawnBlocks() {
@@ -156,21 +162,25 @@ public final class SpawnData {
     public static void syncFromConfig() {
         BLUE_JAY.setSpawnAllowed(ConfigHandler.enableBlueJaySpawning);
         BLUE_JAY.setCheckBiomeTags(!ConfigHandler.disableBlueJaySpawnBiomeChecks);
+        BLUE_JAY.setValidBiomes(ConfigHandler.blueJaySpawnBiomes);
         BLUE_JAY.setCheckSpawnBlocks(!ConfigHandler.disableBlueJaySpawnBlockChecks);
         BLUE_JAY.setMinPackSize(ConfigHandler.minPackSizeBlueJay);
         BLUE_JAY.setMaxPackSize(ConfigHandler.maxPackSizeBlueJay);
         COMMON_SWIFT.setSpawnAllowed(ConfigHandler.enableCommonSwiftSpawning);
         COMMON_SWIFT.setCheckBiomeTags(!ConfigHandler.disableCommonSwiftSpawnBiomeChecks);
+        COMMON_SWIFT.setValidBiomes(ConfigHandler.commonSwiftSpawnBiomes);
         COMMON_SWIFT.setCheckSpawnBlocks(!ConfigHandler.disableCommonSwiftSpawnBlockChecks);
         COMMON_SWIFT.setMinPackSize(ConfigHandler.minPackSizeCommonSwift);
         COMMON_SWIFT.setMaxPackSize(ConfigHandler.maxPackSizeCommonSwift);
         CROW.setSpawnAllowed(ConfigHandler.enableCrowSpawning);
         CROW.setCheckBiomeTags(!ConfigHandler.disableCrowSpawnBiomeChecks);
+        CROW.setValidBiomes(ConfigHandler.crowSpawnBiomes);
         CROW.setCheckSpawnBlocks(!ConfigHandler.disableCrowSpawnBlockChecks);
         CROW.setMinPackSize(ConfigHandler.minPackSizeCrow);
         CROW.setMaxPackSize(ConfigHandler.maxPackSizeCrow);
         NORTHERN_CARDINAL.setSpawnAllowed(ConfigHandler.enableNorthernCardinalSpawning);
         NORTHERN_CARDINAL.setCheckBiomeTags(!ConfigHandler.disableNorthernCardinalSpawnBiomeChecks);
+        NORTHERN_CARDINAL.setValidBiomes(ConfigHandler.northernCardinalSpawnBiomes);
         NORTHERN_CARDINAL.setCheckSpawnBlocks(!ConfigHandler.disableNorthernCardinalSpawnBlockChecks);
         NORTHERN_CARDINAL.setMinPackSize(ConfigHandler.minPackSizeNorthernCardinal);
         NORTHERN_CARDINAL.setMaxPackSize(ConfigHandler.maxPackSizeNorthernCardinal);
@@ -196,7 +206,7 @@ public final class SpawnData {
             ConfigHandler.enableBlueJaySpawning,
             !ConfigHandler.disableBlueJaySpawnBiomeChecks,
             !ConfigHandler.disableBlueJaySpawnBlockChecks,
-            List.of(BiomeTags.IS_FOREST, BiomeTags.IS_JUNGLE, BiomeTags.IS_TAIGA),
+            List.of(ConfigHandler.Defaults.BLUE_JAY_SPAWN_BIOMES),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
                     BlockTags.LOGS, BlockTags.SNOW),
             () -> Math.max(0, BlueJayParticle.getMaxActiveBirds() - BlueJayParticle.getCount()));
@@ -208,8 +218,7 @@ public final class SpawnData {
             ConfigHandler.enableCommonSwiftSpawning,
             !ConfigHandler.disableCommonSwiftSpawnBiomeChecks,
             !ConfigHandler.disableCommonSwiftSpawnBlockChecks,
-            List.of(BiomeTags.IS_MOUNTAIN, BiomeTags.IS_HILL, BiomeTags.IS_SAVANNA, BiomeTags.IS_BADLANDS,
-                    BiomeTags.IS_RIVER),
+            List.of(ConfigHandler.Defaults.COMMON_SWIFT_SPAWN_BIOMES),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
                     BlockTags.LOGS),
             () -> Math.max(0, CommonSwiftParticle.getMaxActiveBirds() - CommonSwiftParticle.getCount()));
@@ -221,7 +230,7 @@ public final class SpawnData {
             ConfigHandler.enableCrowSpawning,
             !ConfigHandler.disableCrowSpawnBiomeChecks,
             !ConfigHandler.disableCrowSpawnBlockChecks,
-            List.of(BiomeTags.IS_OVERWORLD),
+            List.of(ConfigHandler.Defaults.CROW_SPAWN_BIOMES),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.BASE_STONE_OVERWORLD, BlockTags.DIRT, BlockTags.LEAVES,
                     BlockTags.LOGS, BlockTags.SAND,
                     BlockTags.SNOW, BlockTags.TERRACOTTA),
@@ -234,7 +243,7 @@ public final class SpawnData {
             ConfigHandler.enableNorthernCardinalSpawning,
             !ConfigHandler.disableNorthernCardinalSpawnBiomeChecks,
             !ConfigHandler.disableNorthernCardinalSpawnBlockChecks,
-            List.of(BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA, BiomeTags.IS_JUNGLE),
+            List.of(ConfigHandler.Defaults.NORTHERN_CARDINAL_SPAWN_BIOMES),
             List.of(BlockTags.ANIMALS_SPAWNABLE_ON, BlockTags.DIRT, BlockTags.LEAVES, BlockTags.LOGS, BlockTags.SNOW,
                     BlockTags.BASE_STONE_OVERWORLD),
             () -> Math.max(0, NorthernCardinalParticle.getMaxActiveBirds() - NorthernCardinalParticle.getCount()));

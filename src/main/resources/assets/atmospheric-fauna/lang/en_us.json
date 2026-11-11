@@ -34,6 +34,8 @@
   "option.atmosphericfauna.species.max_active.tooltip": "Sets the maximum number of active birds of this species in the world at any given time.",
   "option.atmosphericfauna.species.ignore_biome_checks": "Ignore Spawn Biome Checks",
   "option.atmosphericfauna.species.ignore_biome_checks.tooltip": "Disables spawn biome checks, allowing this species to spawn in any biome.",
+  "option.atmosphericfauna.species.spawn_biomes": "Spawn Biome Whitelist",
+  "option.atmosphericfauna.species.spawn_biomes.tooltip": "Comma-separated biome IDs or biome tag IDs. Prefix tags with #, for example #minecraft:is_forest, or use IDs such as minecraft:plains.",
   "option.atmosphericfauna.species.ignore_block_checks": "Ignore Spawn Block Checks",
   "option.atmosphericfauna.species.ignore_block_checks.tooltip": "Disables spawn block checks, allowing this species to spawn above any block.",
   "option.atmosphericfauna.species.min_pack_size": "Minimum Flock Spawn Size",
