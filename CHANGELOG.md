@@ -1,2 +1,2 @@
 - redesigned all command feedback messages to be prettier
-- polished the spyglass HUD texture
+- redesigned and polished the spyglass HUD overlay

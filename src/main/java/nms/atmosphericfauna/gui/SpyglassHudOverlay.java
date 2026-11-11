@@ -60,8 +60,8 @@ public class SpyglassHudOverlay {
                     int textX = spriteX + 32 + 8;
                     int textY = y + 16;
 
-                    Identifier bgMain = AtmosphericFauna.id("spyglass_background");
-                    Identifier bgSprite = AtmosphericFauna.defaultId("hud/effect_background");
+                    Identifier bgText = AtmosphericFauna.id("spyglass_text_background");
+                    Identifier bgBird = AtmosphericFauna.id("spyglass_bird_background");
                     Identifier texture = AtmosphericFauna
                             .id("textures/particle/" + lastBird.getBaseSpriteName() + "_perched_1.png");
 
@@ -69,28 +69,28 @@ public class SpyglassHudOverlay {
                     //? if <=1.20.1 {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-                    // Identifier bgMainTexture = AtmosphericFauna.id("textures/gui/sprites/spyglass_background.png");
-                    // blitNineSliced(graphics, bgMainTexture, x + 22, y, totalWidth - 14, totalHeight);
-                    // Identifier inventorySheet = AtmosphericFauna.defaultId("textures/gui/container/inventory.png");
-                    // graphics.blit(inventorySheet, spriteX - 1, spriteY, 31, 31, 141.0F, 166.0F, 24, 24, 256, 256);
+                    // Identifier bgTextTexture = AtmosphericFauna.id("textures/gui/sprites/spyglass_text_background.png");
+                    // blitNineSliced(graphics, bgTextTexture, x + 22, y, totalWidth - 14, totalHeight);
+                    // Identifier bgBirdTexture = AtmosphericFauna.id("textures/gui/sprites/spyglass_bird_background.png");
+                    // graphics.blit(bgBirdTexture, spriteX - 1, spriteY, 0, 0, 32, 32, 32, 32);
                     // graphics.blit(texture, spriteX - 1, spriteY - 5, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
                     //?} else if <=1.21.1 {
                     // com.mojang.blaze3d.systems.RenderSystem.enableBlend();
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-                    // graphics.blitSprite(bgMain, x + 24, y, totalWidth - 16, totalHeight);
-                    // graphics.blitSprite(bgSprite, spriteX, spriteY, 32, 32);
+                    // graphics.blitSprite(bgText, x + 24, y, totalWidth - 16, totalHeight);
+                    // graphics.blitSprite(bgBird, spriteX, spriteY, 32, 32);
                     // graphics.blit(texture, spriteX, spriteY - 4, 0, 0, 32, 32, 32, 32);
                     // com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     // com.mojang.blaze3d.systems.RenderSystem.disableBlend();
                     //?} else if <=1.21.5 {
-                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgMain, x + 24, y, totalWidth - 16, totalHeight, argbColor);
-                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgSprite, spriteX, spriteY, 32, 32, argbColor);
+                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgText, x + 24, y, totalWidth - 16, totalHeight, argbColor);
+                    // graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured, bgBird, spriteX, spriteY, 32, 32, argbColor);
                     // graphics.blit(net.minecraft.client.renderer.RenderType::guiTextured, texture, spriteX, spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32, argbColor);
                     //?} else {
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgMain, x + 24, y, totalWidth - 16, totalHeight, argbColor);
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgSprite, spriteX, spriteY, 32, 32, argbColor);
+                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgText, x + 24, y, totalWidth - 16, totalHeight, argbColor);
+                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, bgBird, spriteX, spriteY, 32, 32, argbColor);
                     graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, spriteX, spriteY - 4, 0.0F, 0.0F, 32, 32, 32, 32, argbColor);
                     //?}
 
