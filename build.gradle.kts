@@ -185,6 +185,7 @@ publishMods {
         minecraftVersions.addAll(compatibleVersions)
         client.set(true)
         server.set(false)
+        javaVersions.add(requiredJava)
         requires("fabric-api")
         optional("modmenu", "cloth-config")
     }
