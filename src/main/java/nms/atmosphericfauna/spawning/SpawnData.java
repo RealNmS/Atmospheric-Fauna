@@ -9,7 +9,6 @@ import nms.atmosphericfauna.particle.NorthernCardinalParticle;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import java.util.List;
 import java.util.function.IntSupplier;
