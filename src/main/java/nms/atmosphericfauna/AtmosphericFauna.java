@@ -3,6 +3,7 @@ package nms.atmosphericfauna;
 import nms.atmosphericfauna.config.ConfigHandler;
 import nms.atmosphericfauna.gui.DebugHudOverlay;
 import nms.atmosphericfauna.gui.SpyglassHudOverlay;
+import nms.atmosphericfauna.logging.ChatLogAppender;
 import nms.atmosphericfauna.particle.base.BaseBirdParticle;
 import nms.atmosphericfauna.particle.BlueJayParticle;
 import nms.atmosphericfauna.particle.CommonSwiftParticle;
@@ -77,6 +78,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+        ChatLogAppender.install();
         LOGGER.info("Atmospheric Fauna is initializing...");
 
         LOGGER.debug("loading configuration...");

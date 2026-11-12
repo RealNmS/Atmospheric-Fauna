@@ -530,6 +530,16 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.enableDebugScreenOnJoin = newValue)
                 .build());
 
+        debug.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Component.translatable("option.atmosphericfauna.show_logs_in_chat"),
+                        ConfigHandler.showLogsInChat)
+                .setDefaultValue(ConfigHandler.Defaults.SHOW_LOGS_IN_CHAT)
+                .setTooltip(Component
+                        .translatable("option.atmosphericfauna.show_logs_in_chat.tooltip"))
+                .setSaveConsumer(newValue -> ConfigHandler.showLogsInChat = newValue)
+                .build());
+
         return builder.build();
     }
 }
