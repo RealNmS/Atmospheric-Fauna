@@ -93,16 +93,18 @@ public class AmbientSpawning {
             return false;
         }
 
-        //? if <=1.21.4 {
-        // boolean isDay = world.getDayTime() % 24000 < 13000;
-        //?} else {
-        boolean isDay = world.isBrightOutside();
-        //?}
+        if (world.dimensionType().hasSkyLight()) {
+            //? if <=1.21.4 {
+            // boolean isDay = world.getDayTime() % 24000 < 13000;
+            //?} else {
+            boolean isDay = world.isBrightOutside();
+            //?}
 
-        if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
-            if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day");
-            return false;
+            if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
+                if (debugTextSpawning)
+                    AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day");
+                return false;
+            }
         }
 
         return true;
@@ -193,11 +195,14 @@ public class AmbientSpawning {
             }
         }
 
-        int lightLevel = world.getMaxLocalRawBrightness(pos);
-        boolean lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
+        boolean lightValid = true;
+        if (world.dimensionType().hasSkyLight()) {
+            int lightLevel = world.getMaxLocalRawBrightness(pos);
+            lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
 
-        if (!lightValid && debugTextSpawning) {
-            AtmosphericFauna.LOGGER.info("[AS] Invalid light level");
+            if (!lightValid && debugTextSpawning) {
+                AtmosphericFauna.LOGGER.info("[AS] Invalid light level");
+            } 
         }
 
         return lightValid;

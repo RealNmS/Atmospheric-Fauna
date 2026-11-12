@@ -1,3 +1,4 @@
-- added custom biome whitelist for each bird in the config
-- redesigned all command feedback messages to be prettier
-- redesigned and polished the spyglass HUD overlay
+- Added custom biome whitelist for each bird in the config
+- Redesigned all command feedback messages to be prettier
+- Redesigned and polished the spyglass HUD overlay
+- Fixed daytime and light level checks when spawning birds (now ignored in dimensions without skylight)
