@@ -15,6 +15,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -146,7 +148,8 @@ public class AmbientSpawning {
                     || !stateAtPos.getCollisionShape(world, pos).isEmpty()
                     || !world.isEmptyBlock(pos.above())
                     || world.isEmptyBlock(pos.below())
-                    || !stateBelow.getFluidState().isEmpty()) {
+                    || !stateBelow.getFluidState().isEmpty()
+                    || isTechnicalBlock(stateBelow)) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER
                             .info("[AS] Could not find a valid block to spawn at " + pos.toShortString());
@@ -241,6 +244,10 @@ public class AmbientSpawning {
             }
             return false;
         }
+    }
+
+    private static boolean isTechnicalBlock(BlockState state) {
+        return state.is(Blocks.BARRIER) || state.is(Blocks.STRUCTURE_VOID) || state.is(Blocks.LIGHT);
     }
 
     // MARK: --- MIDAIR BORDER SPAWNING ---
@@ -381,14 +388,16 @@ public class AmbientSpawning {
     // MARK: --- SPAWN LOCATION SEARCH HELPERS ---
 
     private static BlockPos adjustToGround(ClientLevel world, BlockPos pos) {
-        if (!world.isEmptyBlock(pos.below()) && world.isEmptyBlock(pos))
+        if (!world.isEmptyBlock(pos.below()) && !isTechnicalBlock(world.getBlockState(pos.below())) && world.isEmptyBlock(pos))
             return pos;
 
         for (int i = 1; i <= 3; i++) {
-            if (!world.isEmptyBlock(pos.below(i).below()) && world.isEmptyBlock(pos.below(i)))
-                return pos.below(i);
-            if (!world.isEmptyBlock(pos.above(i).below()) && world.isEmptyBlock(pos.above(i)))
-                return pos.above(i);
+            BlockPos down = pos.below(i);
+            if (!world.isEmptyBlock(down.below()) && !isTechnicalBlock(world.getBlockState(down.below())) && world.isEmptyBlock(down))
+                return down;
+            BlockPos up = pos.above(i);
+            if (!world.isEmptyBlock(up.below()) && !isTechnicalBlock(world.getBlockState(up.below())) && world.isEmptyBlock(up))
+                return up;
         }
         return pos;
     }
@@ -402,6 +411,31 @@ public class AmbientSpawning {
             int sz = centerZ + dz;
             int sy = world.getHeight(Heightmap.Types.WORLD_SURFACE, sx, sz);
             BlockPos candidate = new BlockPos(sx, sy, sz);
+
+            // If WORLD_SURFACE landed on a barrier/technical ceiling, scan downward for the ground below
+            if (isTechnicalBlock(world.getBlockState(candidate.below()))) {
+                //? if <=1.21.1 {
+                // int minY = world.getMinBuildHeight();
+                //?} else {
+                int minY = world.getMinY();
+                //?}
+                BlockPos foundBelow = null;
+                for (int y = sy - 1; y > minY; y--) {
+                    BlockPos checkPos = new BlockPos(sx, y, sz);
+                    BlockState belowState = world.getBlockState(checkPos.below());
+                    if (!world.isEmptyBlock(checkPos.below())
+                            && !isTechnicalBlock(belowState)
+                            && world.isEmptyBlock(checkPos)
+                            && world.isEmptyBlock(checkPos.above())) {
+                        foundBelow = checkPos;
+                        break;
+                    }
+                }
+                if (foundBelow == null) {
+                    continue;
+                }
+                candidate = foundBelow;
+            }
 
             // Pass false for the isMidair boolean
             if (isValidSpawnLocation(world, candidate, spawnData, false))

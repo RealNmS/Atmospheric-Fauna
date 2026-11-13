@@ -1,6 +1,8 @@
 - Added custom biome whitelist for each bird in the config
-- Added debug option to show logs in in-game chat
+- Added debug option to show debug logs in in-game chat
 - Redesigned all command feedback messages to be prettier
 - Changed bird background sprite in spyglass hud to my custom one
 - Polished slightly text background sprite in spyglass hud
+- Improved debugging messages for bird spawning
 - Fixed daytime and light level checks when spawning birds (now ignored in dimensions without skylight)
+- Fixed spawning under invisible blocks (barriers, light, structure void)
