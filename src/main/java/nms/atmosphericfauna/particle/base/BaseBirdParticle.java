@@ -328,10 +328,10 @@ public abstract class BaseBirdParticle extends BaseParticle {
         // Debug
         if (debugTextBirds) {
             if ((this.age + this.tickOffset) % 10 == 0) {
-                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
+                AtmosphericFauna.LOGGER.info("[BBP] " + this.baseSpriteName + " #" + this.hashCode() + " | State: " + this.state +
                         " | Height: "
                         + String.format("%.2f", this.y));
-                AtmosphericFauna.LOGGER.info(this.baseSpriteName + " #" + this.hashCode() + " | xd: " +
+                AtmosphericFauna.LOGGER.info("[BBP] " + this.baseSpriteName + " #" + this.hashCode() + " | xd: " +
                         String.format("%.3f", this.xd) + " | yd: "
                         + String.format("%.3f", this.yd) + " | zd: " + String.format("%.3f",
                                 this.zd));
@@ -1721,7 +1721,7 @@ public abstract class BaseBirdParticle extends BaseParticle {
         if (this.dyingGroundTicks >= 30 || this.y < env.getLevelMinY() - 4.0 || this.age > this.lifetime) {
 
             if (debugTextBirds) {
-                AtmosphericFauna.LOGGER.info("Bird particle removed due to death impact: " + this.baseSpriteName);
+                AtmosphericFauna.LOGGER.info("[BBP] Bird particle removed due to death impact: " + this.baseSpriteName);
             }
             this.remove();
         }

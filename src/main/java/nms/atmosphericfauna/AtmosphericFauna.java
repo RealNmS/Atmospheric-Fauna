@@ -79,18 +79,18 @@ public class AtmosphericFauna implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
         ChatLogAppender.install();
-        LOGGER.info("Atmospheric Fauna is initializing...");
+        LOGGER.info("[AF] Atmospheric Fauna is initializing...");
 
-        LOGGER.debug("loading configuration...");
+        LOGGER.debug("[AF] Loading configuration...");
 		ConfigHandler.load();
 
-        LOGGER.debug("registering particle types...");
+        LOGGER.debug("[AF] Registering particle types...");
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("blue_jay"), BLUE_JAY);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("common_swift"), COMMON_SWIFT);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("crow"), CROW);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("northern_cardinal"), NORTHERN_CARDINAL);
 
-        LOGGER.debug("registering particle factories...");
+        LOGGER.debug("[AF] Registering particle factories...");
 		//? if <=1.21.11 {
 		/*
 		ParticleFactoryRegistry.getInstance().register(AtmosphericFauna.BLUE_JAY, BlueJayParticle.Factory::new);
@@ -106,7 +106,7 @@ public class AtmosphericFauna implements ClientModInitializer {
 		ParticleProviderRegistry.getInstance().register(AtmosphericFauna.NORTHERN_CARDINAL, NorthernCardinalParticle.Factory::new);
 		//?}
 
-        LOGGER.debug("setting up ambient spawning...");
+        LOGGER.debug("[AF] Setting up ambient spawning...");
 		//? if <=1.21.11 {
 		// ClientTickEvents.END_WORLD_TICK.register(AmbientSpawning::tick);
 		//?} else {
@@ -135,20 +135,20 @@ public class AtmosphericFauna implements ClientModInitializer {
                     }
 					AmbientSpawning.runSpawnAttempt(world);
                 } catch (Exception e) {
-                    AtmosphericFauna.LOGGER.error("Failed to dynamically adjust bird caps for chunk load spawning", e);
+                    AtmosphericFauna.LOGGER.error("[AF] Failed to dynamically adjust bird caps for chunk load spawning", e);
 				} finally {
                     for (Map.Entry<Field, Integer> entry : originalValues.entrySet()) {
                         try {
                             entry.getKey().setInt(null, entry.getValue());
                         } catch (Exception e) {
-                            AtmosphericFauna.LOGGER.error("Failed to restore bird caps", e);
+                            AtmosphericFauna.LOGGER.error("[AF] Failed to restore bird caps", e);
                         }
                     }
 				}
 			}
 		});
 
-        LOGGER.debug("registeting projectile hit events...");
+        LOGGER.debug("[AF] Registering projectile hit events...");
         ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof Projectile projectile) {
                 ACTIVE_PROJECTILES.add(projectile);
@@ -160,7 +160,7 @@ public class AtmosphericFauna implements ClientModInitializer {
             }
         });
 
-        LOGGER.debug("registering client tick events...");
+        LOGGER.debug("[AF] Registering client tick events...");
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.level == null)
                 return;
@@ -186,17 +186,17 @@ public class AtmosphericFauna implements ClientModInitializer {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("Error checking for projectile hits", e);
+                LOGGER.error("[AF] Error checking for projectile hits", e);
             }
         });
 
-        LOGGER.debug("registering spyglass HUD overlay...");
+        LOGGER.debug("[AF] Registering spyglass HUD overlay...");
         SpyglassHudOverlay.register();
 
-        LOGGER.debug("loading client commands...");
+        LOGGER.debug("[AF] Loading client commands...");
         ModCommands.registerClientCommands();
 
-        LOGGER.debug("registering debug HUD overlay...");
+        LOGGER.debug("[AF] Registering debug HUD overlay...");
         DebugHudOverlay.register();
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (ConfigHandler.enableDebugScreenOnJoin) {
@@ -204,6 +204,6 @@ public class AtmosphericFauna implements ClientModInitializer {
 			}
         });
 
-        LOGGER.debug("Atmospheric Fauna client initialization complete.");
+        LOGGER.debug("[AF] Atmospheric Fauna client initialization complete.");
 	}
 }
