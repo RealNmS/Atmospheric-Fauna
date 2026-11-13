@@ -193,6 +193,10 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveBlueJays = newValue)
                 .build());
 
+        addBiomeWhitelist(blueJays, entryBuilder, ConfigHandler.blueJaySpawnBiomes,
+                ConfigHandler.Defaults.BLUE_JAY_SPAWN_BIOMES,
+                newValue -> ConfigHandler.blueJaySpawnBiomes = newValue);
+
         blueJays.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
@@ -203,9 +207,6 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableBlueJaySpawnBiomeChecks = newValue)
                 .build());
-        addBiomeWhitelist(blueJays, entryBuilder, ConfigHandler.blueJaySpawnBiomes,
-                ConfigHandler.Defaults.BLUE_JAY_SPAWN_BIOMES,
-                newValue -> ConfigHandler.blueJaySpawnBiomes = newValue);
 
         blueJays.add(entryBuilder
                 .startBooleanToggle(
@@ -273,6 +274,10 @@ public class ModMenuConfig {
                 .setTooltip(Component.translatable("option.atmosphericfauna.species.max_active.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveCommonSwifts = newValue)
                 .build());
+        
+        addBiomeWhitelist(commonSwifts, entryBuilder, ConfigHandler.commonSwiftSpawnBiomes,
+                ConfigHandler.Defaults.COMMON_SWIFT_SPAWN_BIOMES,
+                newValue -> ConfigHandler.commonSwiftSpawnBiomes = newValue);
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
@@ -284,9 +289,6 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCommonSwiftSpawnBiomeChecks = newValue)
                 .build());
-        addBiomeWhitelist(commonSwifts, entryBuilder, ConfigHandler.commonSwiftSpawnBiomes,
-                ConfigHandler.Defaults.COMMON_SWIFT_SPAWN_BIOMES,
-                newValue -> ConfigHandler.commonSwiftSpawnBiomes = newValue);
 
         commonSwifts.add(entryBuilder
                 .startBooleanToggle(
@@ -353,6 +355,10 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveCrows = newValue)
                 .build());
 
+        addBiomeWhitelist(crows, entryBuilder, ConfigHandler.crowSpawnBiomes,
+                ConfigHandler.Defaults.CROW_SPAWN_BIOMES,
+                newValue -> ConfigHandler.crowSpawnBiomes = newValue);
+
         crows.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
@@ -363,9 +369,6 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableCrowSpawnBiomeChecks = newValue)
                 .build());
-        addBiomeWhitelist(crows, entryBuilder, ConfigHandler.crowSpawnBiomes,
-                ConfigHandler.Defaults.CROW_SPAWN_BIOMES,
-                newValue -> ConfigHandler.crowSpawnBiomes = newValue);
 
         crows.add(entryBuilder
                 .startBooleanToggle(
@@ -436,6 +439,10 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> ConfigHandler.maxActiveNorthernCardinals = newValue)
                 .build());
 
+        addBiomeWhitelist(northernCardinals, entryBuilder, ConfigHandler.northernCardinalSpawnBiomes,
+                ConfigHandler.Defaults.NORTHERN_CARDINAL_SPAWN_BIOMES,
+                newValue -> ConfigHandler.northernCardinalSpawnBiomes = newValue);
+
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(
                         Component.translatable(
@@ -446,9 +453,6 @@ public class ModMenuConfig {
                         "option.atmosphericfauna.species.ignore_biome_checks.tooltip"))
                 .setSaveConsumer(newValue -> ConfigHandler.disableNorthernCardinalSpawnBiomeChecks = newValue)
                 .build());
-        addBiomeWhitelist(northernCardinals, entryBuilder, ConfigHandler.northernCardinalSpawnBiomes,
-                ConfigHandler.Defaults.NORTHERN_CARDINAL_SPAWN_BIOMES,
-                newValue -> ConfigHandler.northernCardinalSpawnBiomes = newValue);
 
         northernCardinals.add(entryBuilder
                 .startBooleanToggle(
