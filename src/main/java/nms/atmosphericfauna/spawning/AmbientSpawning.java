@@ -190,7 +190,8 @@ public class AmbientSpawning {
             if (!biomeMatch) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Could not find a valid biome: " + world.getBiome(pos).toString());
+                            .info("[AS] Could not find a valid biome: " + world.getBiome(pos).unwrapKey()
+                                    .map(key -> key.identifier().toString()).orElse("unknown") + " for " + spawnData.name());
                 return false;
             }
         }/* else {
