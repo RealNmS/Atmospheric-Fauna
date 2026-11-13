@@ -65,7 +65,8 @@ public class AmbientSpawning {
         if (selectedSpawn != null) {
             if (selectedSpawn.availableSpots().getAsInt() <= 0) {
                 if (debugTextSpawning) {
-                    AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Species limit reached.");
+                    AtmosphericFauna.LOGGER
+                            .info("[AS] Skipped attempt: Species limit reached. (" + selectedSpawn.name() + ")");
                 }
                 return;
             }
@@ -83,13 +84,13 @@ public class AmbientSpawning {
     private static boolean passesBasicConditions(ClientLevel world, SpawnData spawnData, int availableSpots) {
         if (availableSpots < spawnData.minPackSize()) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Not enough spots available");
+                AtmosphericFauna.LOGGER.info("[AS] Not enough spots available for " + spawnData.name());
             return false;
         }
 
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to bad weather");
+                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to bad weather for " + spawnData.name());
             return false;
         }
 
@@ -102,7 +103,7 @@ public class AmbientSpawning {
 
             if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day");
+                    AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day for " + spawnData.name());
                 return false;
             }
         }
@@ -133,7 +134,8 @@ public class AmbientSpawning {
         if (isMidair) {
             if (!world.isEmptyBlock(pos)) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid air block for midair spawn");
+                    AtmosphericFauna.LOGGER
+                            .info("[AS] Could not find a valid air block for midair spawn at " + pos.toShortString());
                 return false;
             }
         } else {
@@ -146,7 +148,8 @@ public class AmbientSpawning {
                     || world.isEmptyBlock(pos.below())
                     || !stateBelow.getFluidState().isEmpty()) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid block to spawn");
+                    AtmosphericFauna.LOGGER
+                            .info("[AS] Could not find a valid block to spawn at " + pos.toShortString());
                 return false;
             }
 
@@ -160,7 +163,7 @@ public class AmbientSpawning {
                 }
                 if (!isValidBlock) {
                     if (debugTextSpawning)
-                        AtmosphericFauna.LOGGER.info("[AS] Invalid block tag");
+                        AtmosphericFauna.LOGGER.info("[AS] Invalid block tag: " + stateBelow.getBlock().toString());
                     return false;
                 }
             }
@@ -183,17 +186,18 @@ public class AmbientSpawning {
             }
             if (!biomeMatch) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Could not find a valid biome");
+                    AtmosphericFauna.LOGGER
+                            .info("[AS] Could not find a valid biome: " + world.getBiome(pos).toString());
                 return false;
             }
-        } else {
+        }/* else {
             if (!world.getBiome(pos).is(BiomeTags.IS_OVERWORLD)) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER
                             .info("[AS] Aborted: Ignored biome checks, but dimension is not the Overworld");
                 return false;
             }
-        }
+        } */
 
         boolean lightValid = true;
         if (world.dimensionType().hasSkyLight()) {
@@ -201,7 +205,7 @@ public class AmbientSpawning {
             lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
 
             if (!lightValid && debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Invalid light level");
+                AtmosphericFauna.LOGGER.info("[AS] Invalid light level: " + lightLevel);
             } 
         }
 
