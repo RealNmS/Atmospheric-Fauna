@@ -1,4 +1,4 @@
-- Added custom biome whitelist for each bird in the config
+- Added custom biome whitelist for each bird in the config [#4](https://github.com/RealNmS/Atmospheric-Fauna/issues/4)
 - Added debug option to show debug logs in in-game chat
 - Redesigned all command feedback messages to be prettier
 - Changed bird background sprite in spyglass hud to my custom one
@@ -6,3 +6,4 @@
 - Improved debugging messages for bird spawning
 - Fixed daytime and light level checks when spawning birds (now ignored in dimensions without skylight)
 - Fixed spawning under invisible blocks (barriers, light, structure void)
+- Fixed biome tags not syncing on multiplayer servers [#7](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)

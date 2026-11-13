@@ -181,7 +181,7 @@ public class AmbientSpawning {
             var biomeHolder = world.getBiome(pos);
             boolean biomeMatch = false;
             for (String biome : spawnData.validBiomes()) {
-                if (matchesBiome(biomeHolder, biome)) {
+                if (matchesBiome(world, biomeHolder, biome)) {
                     biomeMatch = true;
                     break;
                 }
@@ -193,14 +193,7 @@ public class AmbientSpawning {
                                     .map(key -> key.identifier().toString()).orElse("unknown") + " for " + spawnData.name());
                 return false;
             }
-        }/* else {
-            if (!world.getBiome(pos).is(BiomeTags.IS_OVERWORLD)) {
-                if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER
-                            .info("[AS] Aborted: Ignored biome checks, but dimension is not the Overworld");
-                return false;
-            }
-        } */
+        }
 
         boolean lightValid = true;
         if (world.dimensionType().hasSkyLight()) {
@@ -215,7 +208,7 @@ public class AmbientSpawning {
         return lightValid;
     }
 
-    private static boolean matchesBiome(Holder<Biome> biomeHolder, String configuredBiome) {
+    private static boolean matchesBiome(ClientLevel world, Holder<Biome> biomeHolder, String configuredBiome) {
         String biome = configuredBiome.trim().toLowerCase(Locale.ROOT);
         boolean isTag = biome.startsWith("#");
         if (isTag) {
@@ -229,7 +222,21 @@ public class AmbientSpawning {
         try {
             var identifier = AtmosphericFauna.id(namespace, path);
             if (isTag) {
-                return biomeHolder.is(TagKey.create(Registries.BIOME, identifier));
+                var tagKey = TagKey.create(Registries.BIOME, identifier);
+                if (biomeHolder.is(tagKey)) {
+                    return true;
+                }
+                // Fallback for multiplayer servers (Paper, proxies, ViaVersion) that do not sync worldgen biome tags
+                if (biomeHolder.tags().findAny().isEmpty()) {
+                    if (namespace.equals("minecraft") && path.equals("is_overworld")) {
+                        return world.dimensionType().hasSkyLight();
+                    }
+                    if (debugTextSpawning) {
+                        AtmosphericFauna.LOGGER.info(
+                                "[AS] Server did not sync biome tags; cannot match tag '{}'", configuredBiome);
+                    }
+                }
+                return false;
             }
             return biomeHolder.unwrapKey()
                     //? if <=1.21.9 {
