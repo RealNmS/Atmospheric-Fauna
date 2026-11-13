@@ -44,7 +44,7 @@ public class AmbientSpawning {
         int currentBirdCount = BaseBirdParticle.getAllBirds().size();
         if (currentBirdCount >= BaseBirdParticle.getMaxActiveBirds()) {
             if (debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Skipped attempt: Global bird limit ("
+                AtmosphericFauna.LOGGER.warn("[AS] Skipped attempt: Global bird limit ("
                         + BaseBirdParticle.getMaxActiveBirds() + ") reached.");
             }
             return;
@@ -67,7 +67,7 @@ public class AmbientSpawning {
             if (selectedSpawn.availableSpots().getAsInt() <= 0) {
                 if (debugTextSpawning) {
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Skipped attempt: Species limit reached. (" + selectedSpawn.name() + ")");
+                            .warn("[AS] Skipped attempt: Species limit reached. (" + selectedSpawn.name() + ")");
                 }
                 return;
             }
@@ -85,13 +85,13 @@ public class AmbientSpawning {
     private static boolean passesBasicConditions(ClientLevel world, SpawnData spawnData, int availableSpots) {
         if (availableSpots < spawnData.minPackSize()) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Not enough spots available for " + spawnData.name());
+                AtmosphericFauna.LOGGER.warn("[AS] Not enough spots available for " + spawnData.name());
             return false;
         }
 
         if (!spawnData.spawnInBadWeather() && (world.isRaining() || world.isThundering())) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Not spawning due to bad weather for " + spawnData.name());
+                AtmosphericFauna.LOGGER.warn("[AS] Not spawning due to bad weather for " + spawnData.name());
             return false;
         }
 
@@ -104,7 +104,7 @@ public class AmbientSpawning {
 
             if ((!spawnData.spawnDuringDay() && isDay) || (!spawnData.spawnDuringNight() && !isDay)) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Not spawning due to time of day for " + spawnData.name());
+                    AtmosphericFauna.LOGGER.warn("[AS] Not spawning due to time of day for " + spawnData.name());
                 return false;
             }
         }
@@ -117,7 +117,7 @@ public class AmbientSpawning {
 
         if (!world.getChunkSource().hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
             if (debugTextSpawning)
-                AtmosphericFauna.LOGGER.info("[AS] Could not spawn: Chunk is not loaded");
+                AtmosphericFauna.LOGGER.warn("[AS] Could not spawn: Chunk is not loaded");
             return false;
         }
 
@@ -127,7 +127,7 @@ public class AmbientSpawning {
             double maxDist = mc.options.renderDistance().get() * 16.0;
             if (distSq > maxDist * maxDist) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Could not spawn: Location is outside render distance");
+                    AtmosphericFauna.LOGGER.warn("[AS] Could not spawn: Location is outside render distance");
                 return false;
             }
         }
@@ -136,7 +136,7 @@ public class AmbientSpawning {
             if (!world.isEmptyBlock(pos)) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Could not find a valid air block for midair spawn at " + pos.toShortString());
+                            .warn("[AS] Could not find a valid air block for midair spawn at " + pos.toShortString());
                 return false;
             }
         } else {
@@ -151,7 +151,7 @@ public class AmbientSpawning {
                     || isTechnicalBlock(stateBelow)) {
                 if (debugTextSpawning)
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Could not find a valid block to spawn at " + pos.toShortString());
+                            .warn("[AS] Could not find a valid block to spawn at " + pos.toShortString());
                 return false;
             }
 
@@ -165,14 +165,14 @@ public class AmbientSpawning {
                 }
                 if (!isValidBlock) {
                     if (debugTextSpawning)
-                        AtmosphericFauna.LOGGER.info("[AS] Invalid block tag: " + stateBelow.getBlock().toString());
+                        AtmosphericFauna.LOGGER.warn("[AS] Invalid block tag: " + stateBelow.getBlock().toString());
                     return false;
                 }
             }
 
             if (!spawnBelowSeaLevel && (pos.getY() < world.getSeaLevel())) {
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] Spawn is below sea level");
+                    AtmosphericFauna.LOGGER.warn("[AS] Spawn is below sea level");
                 return false;
             }
         }
@@ -196,7 +196,7 @@ public class AmbientSpawning {
                             //?}
                             .orElse("unknown");
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Could not find a valid biome: " + biomeName + " for " + spawnData.name());
+                            .warn("[AS] Could not find a valid biome: " + biomeName + " for " + spawnData.name());
                 }
                 return false;
             }
@@ -208,7 +208,7 @@ public class AmbientSpawning {
             lightValid = lightLevel >= spawnData.minLightLevel() && lightLevel <= spawnData.maxLightLevel();
 
             if (!lightValid && debugTextSpawning) {
-                AtmosphericFauna.LOGGER.info("[AS] Invalid light level: " + lightLevel);
+                AtmosphericFauna.LOGGER.warn("[AS] Invalid light level: " + lightLevel);
             } 
         }
 
@@ -239,7 +239,7 @@ public class AmbientSpawning {
                         return world.dimensionType().hasSkyLight();
                     }
                     if (debugTextSpawning) {
-                        AtmosphericFauna.LOGGER.info(
+                        AtmosphericFauna.LOGGER.warn(
                                 "[AS] Server did not sync biome tags; cannot match tag '{}'", configuredBiome);
                     }
                 }
@@ -315,7 +315,7 @@ public class AmbientSpawning {
                 }
 
                 if (debugTextSpawning)
-                    AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned midair pack of " + spawnData.name());
+                    AtmosphericFauna.LOGGER.info("[AS] Spawned midair pack of " + spawnData.name());
                 return;
             }
         }
@@ -387,12 +387,12 @@ public class AmbientSpawning {
                     }
 
                     if (debugTextSpawning) {
-                        AtmosphericFauna.LOGGER.info("[AS] SUCCESS: Spawned full pack of " + targetPackSize + " "
+                        AtmosphericFauna.LOGGER.info("[AS] Spawned full pack of " + targetPackSize + " "
                                 + spawnData.name() + " at " + foundCenter.toShortString());
                     }
                     return;
                 } else if (debugTextSpawning) {
-                    AtmosphericFauna.LOGGER.info("[AS] ABORTED: Wanted " + targetPackSize + " but only found spots for "
+                    AtmosphericFauna.LOGGER.warn("[AS] Wanted " + targetPackSize + " but only found spots for "
                             + validSpots.size());
                 }
             }

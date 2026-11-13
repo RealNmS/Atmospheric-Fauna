@@ -5,5 +5,5 @@
 - Polished slightly text background sprite in spyglass hud
 - Improved debugging messages for bird spawning
 - Fixed daytime and light level checks when spawning birds (now ignored in dimensions without skylight)
-- Fixed spawning under invisible blocks (barriers, light, structure void)
+- Fixed spawning under invisible blocks (barriers, light, structure void) [#7](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
 - Fixed biome tags not syncing on multiplayer servers [#7](https://github.com/RealNmS/Atmospheric-Fauna/issues/7)
