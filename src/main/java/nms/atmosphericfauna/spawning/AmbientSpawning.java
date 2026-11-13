@@ -187,10 +187,17 @@ public class AmbientSpawning {
                 }
             }
             if (!biomeMatch) {
-                if (debugTextSpawning)
+                if (debugTextSpawning) {
+                    String biomeName = biomeHolder.unwrapKey()
+                            //? if <=1.21.9 {
+                            // .map(key -> key.location().toString())
+                            //?} else {
+                            .map(key -> key.identifier().toString())
+                            //?}
+                            .orElse("unknown");
                     AtmosphericFauna.LOGGER
-                            .info("[AS] Could not find a valid biome: " + world.getBiome(pos).unwrapKey()
-                                    .map(key -> key.identifier().toString()).orElse("unknown") + " for " + spawnData.name());
+                            .info("[AS] Could not find a valid biome: " + biomeName + " for " + spawnData.name());
+                }
                 return false;
             }
         }
